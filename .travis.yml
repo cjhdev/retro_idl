@@ -4,4 +4,5 @@ language: Ruby
 rvm:
   - 2.0.0
 script:
+    - rake compile
     - rake test_ext_parser    
