@@ -588,8 +588,7 @@ BitStringType:
     BIT STRING
     {
         $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BITSTRING")));
-        rb_hash_aset($$, ID2SYM(rb_intern("bitList")), rb_ary_new());
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BITSTRING")));        
     }
     |
     BIT STRING '{' NamedNumberList '}'
