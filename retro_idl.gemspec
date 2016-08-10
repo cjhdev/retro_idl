@@ -10,6 +10,8 @@ Gem::Specification.new do |s|
     s.homepage = "https://github.com/cjhdev/retro_idl"
     s.files = Dir.glob("ext/**/*.{c,h,y,l,rb}") + Dir.glob("lib/**/*.rb") + Dir.glob("test/**/*.rb") + ["rakefile"]
     s.extensions = "ext/retro_idl/asn/ext_parser/extconf.rb"
+    s.executables << 'retroidl-encode'
+    s.executables << 'retroidl-decode'
     s.license = 'MIT'
     s.test_files = Dir.glob("test/**/*.rb")
     s.has_rdoc = 'yard'

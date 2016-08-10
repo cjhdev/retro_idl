@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'retro_idl'
+require 'optparse'
+require 'ostruct'
+
+options = OpenStruct.new
+
+argv = ARGV
+
+options = OptionParser.new do |opts|
+
+    opts.banner = "Usage: retroidr-encode [options] <schema> <input> <ouput>"
+
+    opts.separator "<schema> asn1 file"
+    opts.separator "<input> encoded input file"
+    opts.separator "<output> output file"
+    
+    opts.separator "Common options:"
+
+    opts.on_tail("-h", "--help", "Show this message") do
+        puts opts
+        exit
+    end
+    opts.on_tail("--version", "Show version") do
+        puts "#{RetroIDL::VERSION}"
+        exit
+    end
+
+end
+
+options.parse!(argv)
+
+schema = argv.shift
+input = argv.shift
+output = argv.shift
+
+
