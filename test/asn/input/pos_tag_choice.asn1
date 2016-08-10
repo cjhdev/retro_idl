@@ -1,0 +1,13 @@
+
+    Double ::= [four] IMPLICIT CHOICE
+    {
+        one [0] NULL,
+        two [1] NULL,
+        three [ APPLICATION three] EXPLICIT INTEGER
+    }
+
+    three INTEGER ::= 3
+    four INTEGER ::= 4
+
+
+

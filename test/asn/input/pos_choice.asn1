@@ -1,0 +1,16 @@
+
+    Single ::= CHOICE { one NULL }
+
+    Couple ::= CHOICE { one NULL, two INTEGER }
+
+    Few ::= CHOICE { one NULL, two INTEGER, three OCTET STRING }
+
+    FewExtensible ::= CHOICE { one NULL, two INTEGER, three OCTET STRING, ... }
+
+    FewExtensibleException ::= CHOICE { one NULL, two INTEGER, three OCTET STRING, ... ! 127 }
+
+    FewAdditional ::= CHOICE { one NULL, two INTEGER, three OCTET STRING, ... , four NULL, five BOOLEAN }
+
+    FewAdditionalException ::= CHOICE { one NULL, two INTEGER, three OCTET STRING, ... ! 127 , four NULL, five BOOLEAN }
+
+    

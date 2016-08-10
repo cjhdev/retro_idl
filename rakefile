@@ -1,0 +1,33 @@
+require 'rake/testtask'
+require 'rake/extensiontask'
+
+DIR_SRC = "ext/attn/asn/ext_parser"
+DIR_ETC = "etc/attn/asn/ext_parser"
+
+Rake::ExtensionTask.new  do |ext|
+    ext.name = "ext_parser"
+    ext.ext_dir = "ext/attn/asn/ext_parser"
+    ext.lib_dir = "lib/attn/asn"
+end
+
+desc "ext_parser (only) tests"
+Rake::TestTask.new do |t|
+    t.name = :test_ext_parser
+    t.libs << "lib"
+    t.test_files = FileList["test/asn/ext_parser/tc_*.rb"]
+end
+
+desc "parser tests"
+Rake::TestTask.new do |t|
+    t.name = :test_parser
+    t.libs << "lib"
+    t.test_files = FileList["test/asn/parser/tc_*.rb"]
+end
+
+task :default => :test
+
+desc "run flex-bison"
+task :flexbison do    
+    system "flex --outfile=#{DIR_SRC}/lexer.c --header-file=#{DIR_SRC}/lexer.h #{DIR_SRC}/ext_parser.l"
+    system "bison -d #{DIR_SRC}/ext_parser.y --output=#{DIR_SRC}/parser.c --report=all --report-file=#{DIR_SRC}/report.txt"    
+end
