@@ -19,7 +19,7 @@ end
 
 desc "parser tests"
 Rake::TestTask.new do |t|
-    t.name = :test
+    t.name = :test_parser
     t.libs << "lib"
     t.test_files = FileList["test/asn/parser/tc_*.rb"]
 end
