@@ -1,0 +1,7 @@
+notifications:
+    email: false
+language: Ruby
+rvm:
+  - 2.0.0
+script:
+    - rake test_ext_parser    
