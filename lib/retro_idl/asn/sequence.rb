@@ -18,114 +18,110 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-class RetroIDL::ASN::SEQUENCE < RetroIDL::ASN::BaseType
+module RetroIDL
 
-    TAG_CLASS_NUMBER = 16
-    TAG_CLASS = :universal
-
-    def initialize(**opts)
-
-        super(**opts)
-
-        errors = false
-
-        @exception = opts[:exception]
-        @extensible = opts[:extensible]
-        @head = nil
-        @tail = nil
-        @additional = nil
+    module ASN
         
-        if opts[:head]
 
-            begin
-        
-            @head = TypeList.new(opts[:head], ComponentType)
+        class SEQUENCE < BaseType
 
-            rescue ASNError
+            TAG_CLASS_NUMBER = 16
+            TAG_CLASS = :universal
 
-            errors = true
+            def initialize(**opts)
 
-            end
+                super(**opts)
 
-        end
+                errors = false
 
-        if opts[:additional]
+                @exception = opts[:exception]
+                @extensible = opts[:extensible]
+                @head = nil
+                @tail = nil
+                @additional = nil
+                
+                if opts[:head]
 
-            begin
+                    begin
+                
+                    @head = TypeList.new(opts[:head], ComponentType)
 
-            @additional = TypeList.new(opts[:additional], ComponentType)
+                    rescue ASNError
 
-            rescue ASNError
-
-            errors = true
-
-            end                    
-
-        end
-
-        if opts[:tail]
-
-            begin
-
-            @tail = TypeList.new(opts[:tail], ComponentType)
-
-            rescue ASNError
-
-            errors = true
-
-            end
-        
-        end
-
-        if errors
-
-            raise ASNError.new
-
-        end
-        
-    end
-
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
-
-            @mod = nil
-
-            if @head.nil? or @head.link(mod, stack)
-
-                if @tail.nil? or @tail.link(mod, stack)
-
-                    if @additional.nil? or @additional.link(mod, stack)
-
-                        super(mod, [])
+                    errors = true
 
                     end
 
                 end
 
+                if opts[:additional]
+
+                    begin
+
+                    @additional = TypeList.new(opts[:additional], ComponentType)
+
+                    rescue ASNError
+
+                    errors = true
+
+                    end                    
+
+                end
+
+                if opts[:tail]
+
+                    begin
+
+                    @tail = TypeList.new(opts[:tail], ComponentType)
+
+                    rescue ASNError
+
+                    errors = true
+
+                    end
+                
+                end
+
+                if errors
+
+                    raise ASNError.new
+
+                end
+                
             end
 
-        else
+            # @macro common_link
+            def link(mod, stack)
+                if @mod.nil? or @mod != mod
+                    @mod = nil
+                    if @head.nil? or @head.link(mod, stack)
+                        if @tail.nil? or @tail.link(mod, stack)
+                            if @additional.nil? or @additional.link(mod, stack)
+                                super(mod, [])
+                            end
+                        end
+                    end
+                else
+                    @mod
+                end                
+            end
 
-            @mod
+            # @macro common_to_s
+            def to_s
+
+                result = "#{@tag} SEQUENCE { #{@head} "
+
+                if @extensible
+
+                    result << ", ... "
+
+                end
+
+                result << "} #{@constraint}"
+
+            end
 
         end
-        
-    end
-
-    # @macro common_to_s
-    def to_s
-
-        result = "#{@tag} SEQUENCE { #{@head} "
-
-        if @extensible
-
-            result << ", ... "
-
-        end
-
-        result << "} #{@constraint}"
 
     end
 

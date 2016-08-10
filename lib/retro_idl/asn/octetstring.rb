@@ -17,32 +17,34 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+module RetroIDL::ASN
 
-class RetroIDL::ASN::OCTETSTRING < RetroIDL::ASN::BaseType
+    class OCTETSTRING <BaseType
 
-    TAG_CLASS_NUMBER = 4
-    TAG_CLASS = :universal
+        TAG_CLASS_NUMBER = 4
+        TAG_CLASS = :universal
 
-    # @macro common_to_s
-    def to_s
+        # @macro common_to_s
+        def to_s
 
-        return "#{@tag} OCTET STRING #{@constraint}"
+            return "#{@tag} OCTET STRING #{@constraint}"
 
-    end
+        end
 
-    def evaluate(value)
-        value.kind_of?(String)
-    end
+        def evaluate(value)
+            value.kind_of?(String)
+        end
 
-    def evaluateConstraint(value)
+        def evaluateConstraint(value)
 
-        if evaluate(value) and ( @constraint or @constraint.evaluate(value) )
-            true
-        else
-            false
+            if evaluate(value) and ( @constraint or @constraint.evaluate(value) )
+                true
+            else
+                false
+            end
+
         end
 
     end
 
 end
-

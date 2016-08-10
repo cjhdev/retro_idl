@@ -17,34 +17,38 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::BOOLEAN < RetroIDL::ASN::BaseType
+module RetroIDL::ASN
 
-    TAG_CLASS_NUMBER = 1
-    TAG_CLASS = :universal
+    class BOOLEAN < BaseType
 
-    # @macro common_to_s
-    def to_s
-        "#{@tag} BOOLEAN #{@constraint}"
-    end
+        TAG_CLASS_NUMBER = 1
+        TAG_CLASS = :universal
 
-    def evaluate(value)
-
-        if value.class != TrueClass and value.class != FalseClass
-            false
-        else
-            true
+        # @macro common_to_s
+        def to_s
+            "#{@tag} BOOLEAN #{@constraint}"
         end
 
-    end
+        def evaluate(value)
 
-    def evaluateConstraint(value)
+            if value.class != TrueClass and value.class != FalseClass
+                false
+            else
+                true
+            end
 
-        if evaluate(value) and ( @constraint or @constraint.evaluate(value) )
-            true
-        else
-            false
         end
-        
+
+        def evaluateConstraint(value)
+
+            if evaluate(value) and ( @constraint or @constraint.evaluate(value) )
+                true
+            else
+                false
+            end
+            
+        end
+
     end
 
 end

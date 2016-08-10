@@ -17,27 +17,29 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::AlternativeType
+module RetroIDL::ASN
 
-    def initialize(**opts)
+    class AlternativeType
 
-        @type = RetroIDL::ASN.const_get(opts[:class]).new(**opts)
-        @parent = parent
+        def initialize(**opts)
 
-    end
+            @type = RetroIDL::ASN.const_get(opts[:class]).new(**opts)
 
-    def link(mod, stack)
+        end
 
-        @type.link(mod, stack)
+        def link(mod, stack)
 
-    end
+            @type.link(mod, stack)
 
-    # @macro common_to_s
-    def to_s
+        end
 
-        @type.to_s
+        # @macro common_to_s
+        def to_s
+
+            @type.to_s
+
+        end
 
     end
 
 end
-

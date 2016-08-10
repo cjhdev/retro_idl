@@ -1,44 +1,47 @@
 
-class RetroIDL::ASN::BITSTRING < RetroIDL::ASN::BaseType
+module  RetroIDL::ASN
 
-    TAG_CLASS_NUMBER = 3
-    TAG_CLASS = :universal
+    class BITSTRING < BaseType
 
-    def initialize(**opts)
+        TAG_CLASS_NUMBER = 3
+        TAG_CLASS = :universal
 
-        super(**opts)
-        @bitList = nil
-        if opts[:bitList]
-            @bitList = ValueList.new(opts[:bitList], NamedNumber)
-        end
+        def initialize(**opts)
 
-    end
-
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
-            @mod = nil
-            if @bitList.nil? or @bitList.link(mod, [])
-                super(mod, stack)
+            super(**opts)
+            @bitList = nil
+            if opts[:bitList]
+                @bitList = ValueList.new(opts[:bitList], NamedNumber)
             end
-        else
-            @mod
+
         end
-        
+
+        # @macro common_link
+        def link(mod, stack)
+
+            if @mod.nil? or @mod != mod
+                @mod = nil
+                if @bitList.nil? or @bitList.link(mod, [])
+                    super(mod, stack)
+                end
+            else
+                @mod
+            end
+            
+        end
+
+        # @macro common_to_s
+        def to_s
+
+            result = "#{@tag} BIT STRING"
+            if @bitList
+                result << @bitList.to_s
+            end
+            result << " #{@constraint}"
+            
+        end
+            
     end
 
-    # @macro common_to_s
-    def to_s
-
-        result = "#{@tag} BIT STRING"
-        if @bitList
-            result << @bitList.to_s
-        end
-        result << " #{@constraint}"
-        
-    end
-        
 end
-
 

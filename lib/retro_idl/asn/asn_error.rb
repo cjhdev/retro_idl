@@ -1,2 +1,7 @@
-class RetroIDL::ASN::ASNError < Exception
+module RetroIDL
+    module ASN
+
+        class ASNError < Exception
+        end
+    end
 end

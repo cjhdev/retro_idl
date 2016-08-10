@@ -17,146 +17,102 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# X.680 section 31.2
-class RetroIDL::ASN::Tag
+module RetroIDL::ASN
 
-    def initialize(**opts)
+    # X.680 section 31.2
+    class Tag
 
-        errors = false
-
-        @mod = nil
-        @tag = nil
-        @symbol = nil
-        @encodingReference = opts[:encodingReference]
-        @tagClass = opts[:class]
-        @location = opts[:location]
-        @tagType = opts[:type]
-        
-
-        if opts[:classNumber][:ref]
-
-            if RetroIDL::ASN.is_identifier?(@location, opts[:classNumber][:ref])
-
-                @symbol = opts[:classNumber][:ref]
-
-            else
-
-                errors = true
-
-            end
-
-        else
-
-            @tagClassNumber = opts[:classNumber][:number]
-
-            if @tagClassNumber < 0
-
-                ASN.putError(opts[:classNumber][:location], "ClassNumber must be an integer >= 0")
-                errors = true
-                
-            end
-            
-        end
-
-        if errors
-
-            raise ASNError.new
-
-        end
-
-    end
-
-    # @return [String] EncodingReference
-    attr_reader :encodingReference
-
-    # @return [:IMPLICIT, :EXPLICIT] tag 
-    attr_reader :tagClass
-
-    # Return the tag ClassNumber
-    #
-    # @return [Integer] ClassNumber
-    #
-    # @raise [ASNError] tag has not been linked
-    #
-    def tagClassNumber
-
-        if @mod
-
-            if @symbol
-
-                @symbol.value
-
-            else
-
-                @tagClassNumber
-
-            end
-
-        else
-            
-            raise ASNError.new LINK_ERROR
-
-        end
-
-    end
-
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
+        def initialize(**opts)
 
             @mod = nil
+            @tag = nil
+            @symbol = nil
+            @tagClass = opts[:class]
+            @location = opts[:location]
+            @tagType = opts[:type]
+            
+            if opts[:classNumber].is_a? String            
+                if RetroIDL::ASN.is_identifier?(@location, opts[:classNumber])
+                    @symbol = opts[:classNumber].to_s
+                else
+                    raise ASNError
+                end
+            else
+                @tagClassNumber = opts[:classNumber].to_i
+                if @tagClassNumber < 0
+                    ASN.putError(@location, "ClassNumber must be an integer >= 0")                
+                end            
+            end
 
-            if @symbol
+        end
 
-                if mod.symbols(@symbol).nil?
+        # @return [:IMPLICIT, :EXPLICIT] tag 
+        attr_reader :tagClass
 
-                    ASN.putError(@location, SYMBOL_UNDEFINED_ERROR)
+        # Return the tag ClassNumber
+        #
+        # @return [Integer] ClassNumber
+        #
+        # @raise [ASNError] tag has not been linked
+        #
+        def tagClassNumber
+
+            if @mod
+
+                if @symbol
+
+                    @symbol.value
 
                 else
 
-                    @mod = mod.symbols(@symbol).link(mod, stack)
+                    @tagClassNumber
 
                 end
 
+            else
+                
+                raise ASNError.new LINK_ERROR
+
             end
 
-        else
+        end
 
-            @mod
+        # @macro common_link
+        def link(mod, stack)
+
+            if @mod.nil? or @mod != mod
+                @mod = nil
+                if @symbol
+                    if mod.symbols(@symbol).nil?
+                        ASN.putError(@location, SYMBOL_UNDEFINED_ERROR)
+                    else
+                        @mod = mod.symbols(@symbol).link(mod, stack)
+                    end
+                end
+            else
+                @mod
+            end
 
         end
 
-    end
+        # @macro common_to_s
+        def to_s
 
-    # @macro common_to_s
-    def to_s
+            result = "["
 
-        result = "["
+            if @tagClass
+                result << " #{@tagClass}"
+            end
 
-        if @encodingReference
+            if @symbol
+                result << " #{@symbol}"
+            else
+                result << " #{@tagClassNumber}"
+            end
 
-            result << " #{@encodingReference} :"
-
-        end
-
-        if @tagClass
-
-            result << " #{@tagClass}"
-
-        end
-
-        if @symbol
-
-            result << " #{@symbol}"
-
-        else
-
-            result << " #{@tagClassNumber}"
+            result << " ] #{@tagType}"
 
         end
-
-        result << " ] #{@tagType}"
 
     end
 

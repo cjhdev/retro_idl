@@ -17,46 +17,47 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+module RetroIDL::ASN
 
-class RetroIDL::ASN::SEQUENCEOF < RetroIDL::ASN::BaseType
+    class SEQUENCEOF < BaseType
 
-    TAG_CLASS_NUMBER = 16
-    TAG_CLASS = :universal
+        TAG_CLASS_NUMBER = 16
+        TAG_CLASS = :universal
 
-    def initialize(**opts)
+        def initialize(**opts)
 
-        super(**opts)
-        @type = RetroIDL::ASN.const_get(opts[:type][:class]).new( **opts[:type] )
+            super(**opts)
+            @type = RetroIDL::ASN.const_get(opts[:type][:class]).new( **opts[:type] )
 
-    end
+        end
 
-    def link(mod, stack)
+        def link(mod, stack)
 
-        if @mod.nil? or @mod != mod
+            if @mod.nil? or @mod != mod
 
-            @mod = nil
+                @mod = nil
 
-            if @type.link(mod, stack)
+                if @type.link(mod, stack)
 
-                super(mod, stack)
+                    super(mod, stack)
+
+                end
+
+            else
+
+                @mod
 
             end
+            
+        end
 
-        else
+        # @macro common_to_s
+        def to_s
 
-            @mod
+            "#{@tag} SEQUENCE #{@constraint} OF #{@type}"
 
         end
         
     end
 
-    # @macro common_to_s
-    def to_s
-
-        "#{@tag} SEQUENCE #{@constraint} OF #{@type}"
-
-    end
-    
 end
-
-

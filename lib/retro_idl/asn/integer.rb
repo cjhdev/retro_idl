@@ -18,67 +18,71 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-# X.680 section 19
-class RetroIDL::ASN::INTEGER < RetroIDL::ASN::BaseType
+module RetroIDL::ASN
 
-    TAG_CLASS_NUMBER = 2
-    TAG_CLASS = :universal
+    # X.680 section 19
+    class INTEGER < BaseType
 
-    # @see BaseType#initialize
-    #
-    # @param opts [Hash]
-    #
-    # @option opts [Array<Hash>] :numberList NamedNumberList
-    #
-    # @raise [ASNError]
-    #
-    def initialize(**opts)
-        super(**opts)
-        @numberList = nil
-        if opts[:numberList]
-            @numberList = ValueList.new(opts[:numberList], NamedNumber)
+        TAG_CLASS_NUMBER = 2
+        TAG_CLASS = :universal
+
+        # @see BaseType#initialize
+        #
+        # @param opts [Hash]
+        #
+        # @option opts [Array<Hash>] :numberList NamedNumberList
+        #
+        # @raise [ASNError]
+        #
+        def initialize(**opts)
+            super(**opts)
+            @numberList = nil
+            if opts[:numberList]
+                @numberList = ValueList.new(opts[:numberList], NamedNumber)
+            end
         end
-    end
 
-    # @macro common_link
-    def link(mod, stack)
+        # @macro common_link
+        def link(mod, stack)
 
-        if @mod.nil? or @mod != mod
+            if @mod.nil? or @mod != mod
 
-            @mod = nil
+                @mod = nil
 
-            if @numberList.nil? or @numberList.link(mod, [])
+                if @numberList.nil? or @numberList.link(mod, [])
 
-                super(mod, stack)
+                    super(mod, stack)
+
+                end
 
             end
 
+            @mod
+
+        end
+        
+        # @macro common_to_s
+        def to_s
+
+            result = "#{@tag} INTEGER"
+            if @numberList
+                result << @numberList.to_s
+            end
+            result << " #{@constraint}"
+
         end
 
-        @mod
-
-    end
-    
-    # @macro common_to_s
-    def to_s
-
-        result = "#{@tag} INTEGER"
-        if @numberList
-            result << @numberList.to_s
+        # @macro common_evaluate
+        def evaluate(value)
+            value.kind_of?(Integer)
         end
-        result << " #{@constraint}"
 
-    end
-
-    # @macro common_evaluate
-    def evaluate(value)
-        value.kind_of?(Integer)
-    end
-
-    def evaluateConstraint(value)
-        if evaluate(value) and ( @constrant.nil? or @constraint.evaluate(value) )
-            true
+        def evaluateConstraint(value)
+            if evaluate(value) and ( @constrant.nil? or @constraint.evaluate(value) )
+                true
+            end
         end
+
     end
 
 end

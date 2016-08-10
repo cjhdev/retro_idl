@@ -218,6 +218,10 @@ module RetroIDL
 
         class ASN
 
+            def symbols(id)
+                @assignments[id]
+            end
+
             def initialize(input)
 
                 errors = false
@@ -233,8 +237,8 @@ module RetroIDL
 
                 # initialise the assignments
                 @assignments = {}
-                tree[:assignments].each do |assignment|
-                
+                tree.each do |assignment|
+
                     if @assignments[assignment[:id]]
                         ASN.putError(assignment[:location], "duplicate assignment")
                         errors = true
@@ -251,8 +255,8 @@ module RetroIDL
                     raise
                 end
 
-                @assignments.each do |assignment|
-                    assignment.link(self)
+                @assignments.each do |id, assignment|
+                    assignment.link(self, [])
                 end
                 
             end
@@ -289,6 +293,8 @@ require "retro_idl/asn/ext_parser"
 
 require 'retro_idl/asn/tag'
 
+require 'retro_idl/asn/builtin_value'
+require 'retro_idl/asn/defined_value'
 require 'retro_idl/asn/base_type'
 require 'retro_idl/asn/component_type'
 require 'retro_idl/asn/type_list'

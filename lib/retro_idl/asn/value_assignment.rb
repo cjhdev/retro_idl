@@ -1,21 +1,22 @@
 
-class RetroIDL::ASN::ValueAssignment
+module RetroIDL::ASN
 
-    def initialize(**opts)
+    class ValueAssignment
 
-        @parent = parent
-        @location = opts[:location]
-        @mod = nil
-        @id = opts[:id]
-        @governor = RetroIDL::ASN.const_get(opts[:governor][:class]).new(**opts[:governor])
-        @value = RetroIDL::ASN.const_get(opts[:value][:class]).new(**opts[:governor])
+        def initialize(**opts)
 
-        if !RetroIDL::ASN.is_identifier?(@location, @id)
-            raise ASNError                    
+            @location = opts[:location]
+            @mod = nil
+            @id = opts[:id]
+            @governor = RetroIDL::ASN.const_get(opts[:governor][:class]).new(**opts[:governor])
+            @value = RetroIDL::ASN.const_get(opts[:value][:class]).new(**opts[:governor])
+
+            if !RetroIDL::ASN.is_identifier?(@location, @id)
+                raise ASNError                    
+            end
+
         end
-
+        
     end
-    
+
 end
-
-

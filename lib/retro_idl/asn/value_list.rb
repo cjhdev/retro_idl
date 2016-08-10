@@ -17,31 +17,35 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::ValueList < RetroIDL::ASN::TypeList
+module RetroIDL::ASN
 
-    # @macro common_link
-    def link(mod, stack)
+    class ValueList < TypeList
 
-        if @mod.nil? or @mod != mod
+        # @macro common_link
+        def link(mod, stack)
 
-            @mod = nil
-            ok = true
+            if @mod.nil? or @mod != mod
 
-            @list.values.each do |item|
-                if item.link(mod, []).nil?
-                    ok = false                        
-                end                    
-            end
+                @mod = nil
+                ok = true
 
-            if ok
-                @mod = mod
+                @list.values.each do |item|
+                    if item.link(mod, []).nil?
+                        ok = false                        
+                    end                    
+                end
+
+                if ok
+                    @mod = mod
+                else
+                    @mod
+                end
+
             else
                 @mod
-            end
+            end                
 
-        else
-            @mod
-        end                
+        end
 
     end
 

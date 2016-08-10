@@ -17,37 +17,45 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::NamedNumber
+module RetroIDL::ASN
 
-    def initialize(**opts)
+    class NamedNumber
 
-        @id = opts[:id].to_s
-        @location = opts[:location]
-        @mod = nil
-        @number = nil
-        @symbol = nil
-        
-        if RetroIDL::ASN.is_identifier?(@location, @id)
-            if opts[:number].is_a? String
-                @symbol = opts[:number].to_s            
+        def initialize(**opts)
+
+            @id = opts[:id].to_s
+            @location = opts[:location]
+            @mod = nil
+            @number = nil
+            @symbol = nil
+            
+            if RetroIDL::ASN.is_identifier?(@location, @id)
+                if opts[:number].is_a? String
+                    @symbol = opts[:number].to_s            
+                else
+                    @number = opts[:number].to_i
+                end
             else
-                @number = opts[:number].to_i
+                raise ASNError
             end
-        else
-            raise ASNError
+
         end
 
-    end
+        def link(mod, stack)
 
-    def link(mod, stack)
+            if @mod.nil? or @mod != mod
 
-        if @mod.nil? or @mod != mod
+                @mod = nil
 
-            @mod = nil
+                if @symbol
 
-            if @symbol
+                    if mod.symbols(@symbol)
 
-                if mod.symbols(@symbol)
+                        @mod = mod
+
+                    end
+
+                else
 
                     @mod = mod
 
@@ -55,29 +63,24 @@ class RetroIDL::ASN::NamedNumber
 
             else
 
-                @mod = mod
+                @mod
 
             end
 
-        else
-
-            @mod
-
         end
 
-    end
 
+        # @macro common_to_s
+        def to_s
 
-    # @macro common_to_s
-    def to_s
+            if @symbol        
+                "#{@id} (#{@symbol})"
+            else
+                "#{@id} (#{@number})"
+            end
 
-        if @symbol        
-            "#{@id} (#{@symbol})"
-        else
-            "#{@id} (#{@number})"
         end
 
     end
 
 end
-

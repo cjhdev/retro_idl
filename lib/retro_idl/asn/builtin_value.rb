@@ -17,35 +17,38 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# BuiltinValue aggregation
-#
-# X.680 section 17.2
-class RetroIDL::ASN::BuiltinValue
+module RetroIDL::ASN
 
-    def initialize(**opts)
-
-        @location = opts[:location]
-        @mod = nil
-        @value = opts[:value]
-        
-    end
-
-    # return the Ruby native representation of this BuiltinType
+    # BuiltinValue aggregation
     #
-    # @return [Array, Hash, Numeric, String] native value
-    #
-    # @raise [ASNError] value cannot be returned if object is not linked
-    attr_reader :value
+    # X.680 section 17.2
+    class BuiltinValue
 
-    # @macro common_to_s
-    def to_s
+        def initialize(**opts)
 
-        "#{@value}"
-        
+            @location = opts[:location]
+            @mod = nil
+            @value = opts[:value]
+            
+        end
+
+        # return the Ruby native representation of this BuiltinType
+        #
+        # @return [Array, Hash, Numeric, String] native value
+        #
+        # @raise [ASNError] value cannot be returned if object is not linked
+        attr_reader :value
+
+        # @macro common_to_s
+        def to_s
+
+            "#{@value}"
+            
+        end
+
+        def link(mod, stack)
+            @mod = mod
+        end
+
     end
-
-    def link(mod, stack)
-        @mod = mod
-    end
-
 end

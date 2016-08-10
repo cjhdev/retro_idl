@@ -17,40 +17,42 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::ComponentType
+module RetroIDL::ASN
 
-    def initialize(**opts)
+    class ComponentType
 
-        @optional = opts[:optional]
-        @type = RetroIDL::ASN.const_get(opts[:class]).new( **opts )
+        def initialize(**opts)
 
-    end
+            @optional = opts[:optional]
+            @type = RetroIDL::ASN.const_get(opts[:class]).new( **opts )
 
-    def link(mod, stack)
-
-        @type.link(mod, stack.push(self))
-
-    end
-
-    # @macro common_to_s
-    def to_s
-
-        @type.to_s
-
-    end
-
-    # @return [true] this component is optional
-    # @return [false] this component is not optional
-    def optional?
-
-        if @optional
-            true
-        else
-            false
         end
 
+        def link(mod, stack)
+
+            @type.link(mod, stack.push(self))
+
+        end
+
+        # @macro common_to_s
+        def to_s
+
+            @type.to_s
+
+        end
+
+        # @return [true] this component is optional
+        # @return [false] this component is not optional
+        def optional?
+
+            if @optional
+                true
+            else
+                false
+            end
+
+        end
+        
     end
-    
+
 end
-
-

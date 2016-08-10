@@ -18,77 +18,81 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-class RetroIDL::ASN::CHOICE < RetroIDL::ASN::BaseType
+module RetroIDL::ASN
 
-    def initialize(**opts)
+    class CHOICE < BaseType
 
-        super(**opts)
+        def initialize(**opts)
 
-        errors = false
+            super(**opts)
 
-        @exception = opts[:exception]
-        @extensible = opts[:extensible]
-        @additional = nil
+            errors = false
 
-        @root = TypeList.new(opts[:root], AlternativeType, self)
+            @exception = opts[:exception]
+            @extensible = opts[:extensible]
+            @additional = nil
 
-        if opts[:additional]
+            @root = TypeList.new(opts[:root], AlternativeType)
 
-            @additional = TypeList.new(opts[:additional], AlternativeType, self)
+            if opts[:additional]
 
-            @additional.list.each do |id, item|
+                @additional = TypeList.new(opts[:additional], AlternativeType)
 
-                if @root.list.keys.include? id
+                @additional.list.each do |id, item|
 
-                    ASN.putError(item.location, "duplicate EnumerationItem")
-                    errors = true
+                    if @root.list.keys.include? id
 
-                end
+                        ASN.putError(item.location, "duplicate EnumerationItem")
+                        errors = true
 
-            end
-
-        end
-
-        if errors
-
-            raise ASNError.new
-
-        end
-
-    end
-
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
-
-            @mod = nil
-
-            if @root.nil? or @root.link(mod, stack)
-
-                if @additional.nil? or @additional.link(mod, stack)
-
-
-                    super(mod, [])
+                    end
 
                 end
 
             end
 
+            if errors
+
+                raise ASNError.new
+
+            end
+
         end
 
-        @mod
-        
-    end
+        # @macro common_link
+        def link(mod, stack)
 
-    # @macro common_to_s
-    def to_s
+            if @mod.nil? or @mod != mod
 
-        result = "#{@tag} CHOICE { #{@root} "
-        if @extensible
-            result << ", ... "
+                @mod = nil
+
+                if @root.nil? or @root.link(mod, stack)
+
+                    if @additional.nil? or @additional.link(mod, stack)
+
+
+                        super(mod, [])
+
+                    end
+
+                end
+
+            end
+
+            @mod
+            
         end
-        result << "} #{@constraint}"       
+
+        # @macro common_to_s
+        def to_s
+
+            result = "#{@tag} CHOICE { #{@root} "
+            if @extensible
+                result << ", ... "
+            end
+            result << "} #{@constraint}"       
+
+        end
 
     end
 

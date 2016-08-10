@@ -17,56 +17,61 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# methods and attributes common to ASN.1 values
-class RetroIDL::ASN::BaseValue
 
-    def initialize(**opts)            
-        @value = opts[:value]                
-    end
+module RetroIDL::ASN
 
-    attr_reader :governor
+    # methods and attributes common to ASN.1 values
+    class BaseValue
 
-    # @return [String, NilClass] identifier
-    attr_reader :id
-    
-    # @macro common_link
-    def link(mod, stack)
+        def initialize(**opts)            
+            @value = opts[:value]                
+        end
 
-        if @mod.nil? or @mod != mod
+        attr_reader :governor
 
-            @mod = nil
+        # @return [String, NilClass] identifier
+        attr_reader :id
+        
+        # @macro common_link
+        def link(mod, stack)
 
-            if @governor.link(mod, stack.push(self))
+            if @mod.nil? or @mod != mod
 
-                if @governor.evaluate(value)
+                @mod = nil
 
-                    @mod = mod
+                if @governor.link(mod, stack.push(self))
 
-                else
+                    if @governor.evaluate(value)
 
-                    ASN.putError(@location, "evaluate didn't work")
-                    
+                        @mod = mod
+
+                    else
+
+                        ASN.putError(@location, "evaluate didn't work")
+                        
+                    end
+
                 end
 
+            else
+
+                @mod
+
             end
-
-        else
-
-            @mod
-
+            
         end
-        
-    end
 
-    def self.===(otherClass)
+        def self.===(otherClass)
 
-        if self == otherClass
+            if self == otherClass
 
-            true
+                true
 
-        else
+            else
 
-            false
+                false
+
+            end
 
         end
 

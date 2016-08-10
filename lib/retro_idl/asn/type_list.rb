@@ -17,105 +17,107 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::TypeList
+module RetroIDL::ASN
+    
+    class TypeList
 
-    def initialize(list, type)
+        def initialize(list, type)
 
-        @mod = nil
-        @parent = parent
-        errors = false
+            @mod = nil
+            errors = false
 
-        @list = {}
+            @list = {}
 
-        list.each do |item|
+            list.each do |item|
 
-            if @list[item[:id]].nil?
+                if @list[item[:id]].nil?
 
-                if RetroIDL::ASN.is_identifier?(item[:location], item[:id])
+                    if RetroIDL::ASN.is_identifier?(item[:location], item[:id])
 
-                    begin
+                        begin
 
-                    @list[item[:id]] = type.new(item, self)
-                    
-                    rescue ASNError
+                        @list[item[:id]] = type.new(**item)
+                        
+                        rescue ASNError
 
-                    errors = true
+                        errors = true
+
+                        end
+
+                    else
+
+                        errors = true
 
                     end
 
                 else
 
+                    ASN.putError(item[:location], "duplicate identifier")
                     errors = true
 
                 end
 
-            else
+            end
 
-                ASN.putError(item[:location], "duplicate identifier")
-                errors = true
+            if errors
+
+                raise ASNError
 
             end
 
         end
 
-        if errors
+        # return [Hash] type list
+        attr_reader :list
 
-            raise ASNError.new
+        # @macro common_link
+        def link(mod, stack)
 
+            if @mod.nil? or @mod != mod
+
+                @mod = nil
+
+                @list.values.each do |item|
+
+                    if item.link(mod, stack.dup).nil?
+
+                        return @mod
+                    
+                    end
+
+                end
+
+                @mod = mod
+
+            else
+
+                @mod
+
+            end
+            
         end
 
-    end
+        # @macro common_to_s
+        def to_s
 
-    # return [Hash] type list
-    attr_reader :list
-
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
-
-            @mod = nil
+            result = ""
 
             @list.values.each do |item|
+            
+                result << "#{item}"
 
-                if item.link(mod, stack.dup).nil?
+                if item != @list.values.last
 
-                    return @mod
-                
+                    result << ", "
+
                 end
 
             end
 
-            @mod = mod
-
-        else
-
-            @mod
+            result
 
         end
-        
-    end
-
-    # @macro common_to_s
-    def to_s
-
-        result = ""
-
-        @list.values.each do |item|
-        
-            result << "#{item}"
-
-            if item != @list.values.last
-
-                result << ", "
-
-            end
-
-        end
-
-        result
 
     end
 
 end
-

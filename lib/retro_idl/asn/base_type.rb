@@ -17,71 +17,59 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::BaseType
+module RetroIDL::ASN
 
-    attr_reader :id        
+    class BaseType
 
-    # Common type object initialisation
-    #
-    # @param opts [Hash]
-    #
-    # @option opts [String, NilClass] :id object identifer or type reference (nil for anon objects)
-    # @option opts [Location] :location
-    # @option opts [Hash] :tag
-    #
-    # @raise [ASNError]
-    #
-    def initialize(**opts)
+        attr_reader :id        
 
-        @mod = nil
-        @tag = nil
-        @parent = parent
-        @id = opts[:id]
-        @location = opts[:location]
-        @constraint = nil
-
-        if opts[:tag]
-            @tag = Tag.new(**opts[:tag])
-        end                
-        if opts[:constraint]
-            @constraint = Constraint.new(self, **opts[:constraint])
-        end
-
-    end
-    
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
+        # Common type object initialisation
+        #
+        # @param opts [Hash]
+        #
+        # @option opts [String, NilClass] :id object identifer or type reference (nil for anon objects)
+        # @option opts [Location] :location
+        # @option opts [Hash] :tag
+        #
+        # @raise [ASNError]
+        #
+        def initialize(**opts)
 
             @mod = nil
-            
-            if @tag.nil? or @tag.link(mod, [])
+            @tag = nil
+            @id = opts[:id]
+            @location = opts[:location]
+            @constraint = nil
 
-                @mod = mod
-                stack.push self
-                @mod.setBranch stack
+            if opts[:tag]
+                @tag = Tag.new(**opts[:tag])
+            end                            
 
+        end
+        
+        # @macro common_link
+        def link(mod, stack)
+
+            if @mod.nil? or @mod != mod
+                @mod = nil                
+                if @tag.nil? or @tag.link(mod, [])
+                    @mod = mod
+                    stack.push self                    
+                end
+            else
+                @mod
             end
 
-        else
+        end
 
-            @mod
-
+        def self.===(otherClass)
+            if self == otherClass
+                true
+            else
+                false
+            end
         end
 
     end
-
-    def self.===(otherClass)
-
-        if self == otherClass
-            true
-        else
-            false
-        end
-
-    end
-
-
 
 end

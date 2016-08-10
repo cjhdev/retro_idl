@@ -17,45 +17,49 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::DefinedType < RetroIDL::ASN::BaseType
+module RetroIDL::ASN
 
-    def initialize(**opts)
+    class DefinedType < BaseType
 
-        super(**opts)
+        def initialize(**opts)
 
-        if ASN.is_typereference?(@location, opts[:ref])                
-            @symbol = opts[:ref]
-        else
-            raise ASNError
-        end
+            super(**opts)
 
-    end
-
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
-
-            @mod = nil
-
-            if mod.symbols(@symbol)
-
-                if mod.symbols(@symbol).link(mod, stack)
-
-                    super(mod, stack)
-
-                end
-                
+            if ASN.is_typereference?(@location, opts[:ref])                
+                @symbol = opts[:ref]
             else
-
-                ASN.putError(@location, "symbol is undefined")
-                
+                raise ASNError
             end
 
         end
 
-        @mod
+        # @macro common_link
+        def link(mod, stack)
 
+            if @mod.nil? or @mod != mod
+
+                @mod = nil
+
+                if mod.symbols(@symbol)
+
+                    if mod.symbols(@symbol).link(mod, stack)
+
+                        super(mod, stack)
+
+                    end
+                    
+                else
+
+                    ASN.putError(@location, "symbol is undefined")
+                    
+                end
+
+            end
+
+            @mod
+
+        end
+        
     end
-    
+
 end

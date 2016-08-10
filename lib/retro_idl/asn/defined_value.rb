@@ -18,65 +18,69 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-# X.680 section 17.3
-class RetroIDL::ASN::DefinedValue
+module RetroIDL::ASN
 
-    def initialize(**opts)
+    # X.680 section 17.3
+    class DefinedValue
 
-        @location = opts[:location]
-        @mod = nil
+        def initialize(**opts)
 
-        if RetroIDL::ASN.is_identifier?(@location, **opts[:ref])                
-            @symbol = opts[:ref].to_s
-        else
-            raise ASNError
-        end
-        
-    end
-
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
-
+            @location = opts[:location]
             @mod = nil
 
-            if mod.symbol(@symbol)
+            if RetroIDL::ASN.is_identifier?(@location, **opts[:ref])                
+                @symbol = opts[:ref].to_s
+            else
+                raise ASNError
+            end
+            
+        end
 
-                if mod.symbol(@symbol).link(mod, [])
+        # @macro common_link
+        def link(mod, stack)
 
-                    super(mod, stack)
+            if @mod.nil? or @mod != mod
+
+                @mod = nil
+
+                if mod.symbol(@symbol)
+
+                    if mod.symbol(@symbol).link(mod, [])
+
+                        super(mod, stack)
+
+                    end
+                    
+                else
+
+                    ASN.putError(@location, "DefinedValue governing type is not defined")
 
                 end
-                
-            else
-
-                ASN.putError(@location, "DefinedValue governing type is not defined")
 
             end
 
+            @mod
+
         end
 
-        @mod
+        # return the Ruby native representation of this DefinedType
+        #
+        # @return [Array, Hash, Numeric, String] native value
+        #
+        # @raise [ASNError] value cannot be returned if object is not linked
+        def value
 
-    end
+            @mod.symbol(@symbol).value
 
-    # return the Ruby native representation of this DefinedType
-    #
-    # @return [Array, Hash, Numeric, String] native value
-    #
-    # @raise [ASNError] value cannot be returned if object is not linked
-    def value
+        end
 
-        @mod.symbol(@symbol).value
+        # @macro common_to_s
+        def to_s
 
-    end
+            "#{@symbol}"
+            
+        end
 
-    # @macro common_to_s
-    def to_s
-
-        "#{@symbol}"
-        
     end
 
 end

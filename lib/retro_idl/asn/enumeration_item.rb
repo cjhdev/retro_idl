@@ -17,87 +17,88 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+module RetroIDL::ASN
 
-# An item within an ENUMERATED type
-#
-# X.680 section 20
-class RetroIDL::ASN::EnumerationItem
+    # An item within an ENUMERATED type
+    #
+    # X.680 section 20
+    class EnumerationItem
 
-    def initialize(**opts)
+        def initialize(**opts)
 
-        @id = opts[:id].to_s
-        @location = opts[:location]                
-        @mod = nil
-        @symbol = nil
-        @number = nil
-        
-        if RetroIDL::ASN.is_identifier?(@location, @id)
-            if opts[:number]
-                if opts[:number].is_a? String
-                    @symbol = opts[:number].to_s            
-                else
-                    @number = opts[:number].to_i
-                end
-            end
-        else
-            raise ASNError
-        end                
-
-    end
-
-    # @return [Hash] location record
-    attr_reader :location
-    
-    # @macro common_link
-    def link(mod, stack)
-
-        if @mod.nil? or @mod != mod
-
+            @id = opts[:id].to_s
+            @location = opts[:location]                
             @mod = nil
+            @symbol = nil
+            @number = nil
+            
+            if RetroIDL::ASN.is_identifier?(@location, @id)
+                if opts[:number]
+                    if opts[:number].is_a? String
+                        @symbol = opts[:number].to_s            
+                    else
+                        @number = opts[:number].to_i
+                    end
+                end
+            else
+                raise ASNError
+            end                
 
-            if @symbol
+        end
 
-                if mod.symbols(@symbol)
+        # @return [Hash] location record
+        attr_reader :location
+        
+        # @macro common_link
+        def link(mod, stack)
+
+            if @mod.nil? or @mod != mod
+
+                @mod = nil
+
+                if @symbol
+
+                    if mod.symbols(@symbol)
+
+                        @mod = mod
+
+                    else
+
+                        ASN.putError(@location, SYMBOL_UNDEFINED_ERROR)
+
+                    end
+
+                else
 
                     @mod = mod
 
-                else
-
-                    ASN.putError(@location, SYMBOL_UNDEFINED_ERROR)
-
                 end
+
+            end
+
+            @mod
+
+        end
+
+        # @macro common_to_s
+        def to_s
+
+            if @symbol
+
+                "#{@id} (#{@symbol})"
+
+            elsif @number
+
+                "#{@id} (#{@number})"
 
             else
 
-                @mod = mod
+                "#{@id}"
 
             end
 
         end
-
-        @mod
-
+        
     end
 
-    # @macro common_to_s
-    def to_s
-
-        if @symbol
-
-            "#{@id} (#{@symbol})"
-
-        elsif @number
-
-            "#{@id} (#{@number})"
-
-        else
-
-            "#{@id}"
-
-        end
-
-    end
-    
 end
-
-

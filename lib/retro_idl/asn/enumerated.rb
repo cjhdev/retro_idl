@@ -18,51 +18,55 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # X.680 section 20
-class RetroIDL::ASN::ENUMERATED < RetroIDL::ASN::BaseType
+module RetroIDL::ASN
 
-    TAG_CLASS_NUMBER = 10
-    TAG_CLASS = :universal
+    class ENUMERATED < BaseType
 
-    def initialize(**opts)
+        TAG_CLASS_NUMBER = 10
+        TAG_CLASS = :universal
 
-        super(**opts)
+        def initialize(**opts)
 
-        errors = false
-        
-        @exception = opts[:exception]
-        @extensible = opts[:extensible]
-        @additional = nil
+            super(**opts)
 
-        begin
-
-        @root = ValueList.new(opts[:root], EnumerationItem)
-
-        rescue ASNError
-
-        errors = true
-        
-        end
-
-        if opts[:additional]
+            errors = false
+            
+            @exception = opts[:exception]
+            @extensible = opts[:extensible]
+            @additional = nil
 
             begin
 
-            @additional = ValueList.new(opts[:additional], EnumerationItem)
+            @root = ValueList.new(opts[:root], EnumerationItem)
 
             rescue ASNError
 
             errors = true
-
+            
             end
 
-            if @additional
+            if opts[:additional]
 
-                @additional.list.each do |id, item|
+                begin
 
-                    if @root.list.keys.include? id
+                @additional = ValueList.new(opts[:additional], EnumerationItem)
 
-                        ASN.putError(item.location, "duplicate EnumerationItem")
-                        errors = true
+                rescue ASNError
+
+                errors = true
+
+                end
+
+                if @additional
+
+                    @additional.list.each do |id, item|
+
+                        if @root.list.keys.include? id
+
+                            ASN.putError(item.location, "duplicate EnumerationItem")
+                            errors = true
+
+                        end
 
                     end
 
@@ -70,58 +74,58 @@ class RetroIDL::ASN::ENUMERATED < RetroIDL::ASN::BaseType
 
             end
 
+            if errors
+
+                raise ASNError.new
+
+            end
+            
         end
 
-        if errors
+        # @macro common_link
+        def link(mod, stack)
 
-            raise ASNError.new
+            if @mod.nil? or @mod != mod
 
-        end
-        
-    end
+                @mod = nil
 
-    # @macro common_link
-    def link(mod, stack)
+                if @root.link(mod, stack)
 
-        if @mod.nil? or @mod != mod
+                    if @additional.nil? or @additional.link(mod, stack)
+                    
+                        super(mod, stack)
 
-            @mod = nil
-
-            if @root.link(mod, stack)
-
-                if @additional.nil? or @additional.link(mod, stack)
-                
-                    super(mod, stack)
-
+                    end
+                    
                 end
-                
+
             end
 
+            @mod
+            
         end
 
-        @mod
+        # @macro common_to_s
+        def to_s
+
+            result = "#{@tag} ENUMERATED { #{@root} "
+
+            if @extensible
+
+                result << ", ... "
+
+            end
+
+            result << "} #{@constraint}"
+
+        end
+
+        def evaluate(value)
+
+            false
+
+        end
         
     end
 
-    # @macro common_to_s
-    def to_s
-
-        result = "#{@tag} ENUMERATED { #{@root} "
-
-        if @extensible
-
-            result << ", ... "
-
-        end
-
-        result << "} #{@constraint}"
-
-    end
-
-    def evaluate(value)
-
-        false
-
-    end
-    
 end

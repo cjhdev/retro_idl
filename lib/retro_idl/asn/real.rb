@@ -17,20 +17,24 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::REAL < RetroIDL::ASN::BaseType
+module RetroIDL::ASN
 
-    TAG_CLASS_NUMBER = 9
-    TAG_CLASS = :universal
+    class REAL < BaseType
 
-    # @macro common_to_s
-    def to_s
+        TAG_CLASS_NUMBER = 9
+        TAG_CLASS = :universal
 
-        "#{@tag} REAL #{@constraint}"
+        # @macro common_to_s
+        def to_s
 
-    end
+            "#{@tag} REAL #{@constraint}"
 
-    def evaluate(value)
-        value.kind_of?(Numeric)
+        end
+
+        def evaluate(value)
+            value.kind_of?(Numeric)
+        end
+
     end
 
 end
