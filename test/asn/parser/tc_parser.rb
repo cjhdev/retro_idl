@@ -3,7 +3,7 @@ require "test/unit"
 require "retro_idl"
 
 inputs = {}
-root = "../test/asn/input"
+root = "test/asn/input"
 
 # generate TestParser at runtime with one test per input file
 testClass = Class.new(Test::Unit::TestCase) do
@@ -31,7 +31,7 @@ testClass = Class.new(Test::Unit::TestCase) do
                 # run stage 1 and intercept stderr output
                 err = capture_stderr do
 
-                    output = AASN1::ASN::ASN.new(inputs[__method__])
+                    output = RetroIDL::ASN::ASN.new(inputs[__method__])
                 
                 end
 
@@ -59,7 +59,7 @@ testClass = Class.new(Test::Unit::TestCase) do
                 # run stage 1 and intercept stderr output
                 err = capture_stderr do
 
-                    output = AASN1::ASN::ASN.new(inputs[__method__])
+                    output = RetroIDL::ASN::ASN.new(inputs[__method__])
                 
                 end
 
