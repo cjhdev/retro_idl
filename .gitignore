@@ -5,3 +5,4 @@
 tmp/*
 !.gitignore
 Gemfile.lock
+.yardoc
