@@ -1,19 +1,20 @@
-module ATTN
+module RetroIDL
     module ASN
     end
 end
 
 require_relative "capture_stderr"
 require "test/unit"
-require "attn/asn/ext_parser"
+require "retro_idl/asn/location"
+require "retro_idl/asn/ext_parser"
 
 inputs = {}
-root = "../test/asn/input"
+root = "test/asn/input"
 
 # generate TestParserCore at runtime with one test per input file
 testClass = Class.new(Test::Unit::TestCase) do
 
-    include ATTN::ASN
+    include RetroIDL::ASN
 
     class << self
 

@@ -1,13 +1,13 @@
 require 'rake/testtask'
 require 'rake/extensiontask'
 
-DIR_SRC = "ext/attn/asn/ext_parser"
-DIR_ETC = "etc/attn/asn/ext_parser"
+DIR_SRC = "ext/retro_idl/asn/ext_parser"
+DIR_ETC = "etc/retro_idl/asn/ext_parser"
 
 Rake::ExtensionTask.new  do |ext|
     ext.name = "ext_parser"
-    ext.ext_dir = "ext/attn/asn/ext_parser"
-    ext.lib_dir = "lib/attn/asn"
+    ext.ext_dir = "ext/retro_idl/asn/ext_parser"
+    ext.lib_dir = "lib/retro_idl/asn"
 end
 
 desc "ext_parser (only) tests"

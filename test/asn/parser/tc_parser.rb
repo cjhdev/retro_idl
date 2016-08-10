@@ -1,6 +1,6 @@
 require_relative "capture_stderr"
 require "test/unit"
-require "attn"
+require "retro_idl"
 
 inputs = {}
 root = "../test/asn/input"
