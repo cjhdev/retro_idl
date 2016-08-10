@@ -1,6 +1,9 @@
+require File.expand_path("../lib/retro_idl/version", __FILE__)
+
 Gem::Specification.new do |s|
     s.name    = "retro_idl"
-    s.version = "0.0.1"
+    s.version = RetroIDL::VERSION
+    s.date = Date.today.to_s
     s.summary = "ASN.1 and standard encoding rules as an IDL"
     s.author  = "Cameron Harper"
     s.email = "contact@cjh.id.au"
