@@ -19,7 +19,7 @@ end
 
 desc "parser tests"
 Rake::TestTask.new do |t|
-    t.name = :test_parser
+    t.name = :test
     t.libs << "lib"
     t.test_files = FileList["test/asn/parser/tc_*.rb"]
 end
@@ -30,4 +30,7 @@ desc "run flex-bison"
 task :flexbison do    
     system "flex --outfile=#{DIR_SRC}/lexer.c --header-file=#{DIR_SRC}/lexer.h #{DIR_SRC}/ext_parser.l"
     system "bison -d #{DIR_SRC}/ext_parser.y --output=#{DIR_SRC}/parser.c --report=all --report-file=#{DIR_SRC}/report.txt"    
+end
+
+task :local => [:flexbison, :test] do    
 end

@@ -18,7 +18,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-class RetroIDL::ASN::CHOICE < BaseType
+class RetroIDL::ASN::CHOICE < RetroIDL::ASN::BaseType
 
     def initialize(**opts)
 

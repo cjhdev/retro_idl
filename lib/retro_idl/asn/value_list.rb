@@ -17,7 +17,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class RetroIDL::ASN::ValueList < TypeList
+class RetroIDL::ASN::ValueList < RetroIDL::ASN::TypeList
 
     # @macro common_link
     def link(mod, stack)

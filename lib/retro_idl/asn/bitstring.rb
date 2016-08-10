@@ -1,5 +1,5 @@
 
-class RetroIDL::ASN::BITSTRING < BaseType
+class RetroIDL::ASN::BITSTRING < RetroIDL::ASN::BaseType
 
     TAG_CLASS_NUMBER = 3
     TAG_CLASS = :universal

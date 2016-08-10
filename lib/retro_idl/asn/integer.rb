@@ -19,7 +19,7 @@
 
 
 # X.680 section 19
-class RetroIDL::ASN::INTEGER < BaseType
+class RetroIDL::ASN::INTEGER < RetroIDL::ASN::BaseType
 
     TAG_CLASS_NUMBER = 2
     TAG_CLASS = :universal
