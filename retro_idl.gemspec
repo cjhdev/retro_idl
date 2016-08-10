@@ -1,12 +1,12 @@
-spec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
     s.name    = "RetroIDL"
-    s.version = "1.0.0"
-    s.summary = "ASN.1 and standard encoding rules as a DSL"
+    s.version = "0.0.1"
+    s.summary = "ASN.1 and standard encoding rules as an IDL"
     s.author  = "Cameron Harper"
-    s.email = "contact@cjh.id.com"
-    s.homepage = "https://github.com/cjhdev/retro_dsl"
+    s.email = "contact@cjh.id.au"
+    s.homepage = "https://github.com/cjhdev/retro_idl"
     s.files = Dir.glob("ext/**/*.{c,h,y,l,rb}") + Dir.glob("lib/**/*.rb") + Dir.glob("test/**/*.rb") + ["rakefile"]
-    s.extensions = "ext/retro_dsl/asn/ext_parser/extconf.rb"
+    s.extensions = "ext/retro_idl/asn/ext_parser/extconf.rb"
     s.license = 'MIT'
     s.test_files = Dir.glob("test/**/*.rb")
     s.has_rdoc = 'yard'
