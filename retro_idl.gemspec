@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
     s.license = 'MIT'
     s.test_files = Dir.glob("test/**/*.rb")
     s.has_rdoc = 'yard'
-    s.add_development_dependency 'rake-compiler', '~> 0'
-    s.add_development_dependency 'rake', '~> 0'
-    s.add_development_dependency 'test-unit', '~> 0'
+    s.add_development_dependency 'rake-compiler'
+    s.add_development_dependency 'rake'
+    s.add_development_dependency 'test-unit'
     s.required_ruby_version = '>= 2.0'
 end
