@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-    s.name    = "RetroIDL"
+    s.name    = "retro_idl"
     s.version = "0.0.1"
     s.summary = "ASN.1 and standard encoding rules as an IDL"
     s.author  = "Cameron Harper"
@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
     s.license = 'MIT'
     s.test_files = Dir.glob("test/**/*.rb")
     s.has_rdoc = 'yard'
-    s.add_development_dependency 'rake-compiler'
-    s.add_development_dependency 'rake'
-    s.add_development_dependency 'test-unit'
+    s.add_development_dependency 'rake-compiler', '~> 0'
+    s.add_development_dependency 'rake', '~> 0'
+    s.add_development_dependency 'test-unit', '~> 0'
     s.required_ruby_version = '>= 2.0'
 end
