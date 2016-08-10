@@ -6,3 +6,4 @@ rvm:
 script:
     - rake compile
     - rake test_ext_parser    
+    - rake test_parser    
