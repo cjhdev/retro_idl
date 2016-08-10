@@ -22,22 +22,16 @@ module RetroIDL::ASN
     class AlternativeType
 
         def initialize(**opts)
-
             @type = RetroIDL::ASN.const_get(opts[:class]).new(**opts)
-
         end
 
         def link(mod, stack)
-
             @type.link(mod, stack)
-
         end
 
         # @macro common_to_s
         def to_s
-
-            @type.to_s
-
+            "#{@type.id} #{@type}"
         end
 
     end

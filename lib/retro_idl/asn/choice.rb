@@ -63,20 +63,12 @@ module RetroIDL::ASN
         def link(mod, stack)
 
             if @mod.nil? or @mod != mod
-
                 @mod = nil
-
                 if @root.nil? or @root.link(mod, stack)
-
                     if @additional.nil? or @additional.link(mod, stack)
-
-
                         super(mod, [])
-
                     end
-
                 end
-
             end
 
             @mod

@@ -2448,7 +2448,7 @@ yyreduce:
 #line 899 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {   
         (yyval) = (yyvsp[-1]);
-        rb_hash_aset((yyvsp[-1]), ID2SYM(rb_intern("type")), ID2SYM(rb_intern("Implicit")));        
+        rb_hash_aset((yyvsp[-1]), ID2SYM(rb_intern("type")), ID2SYM(rb_intern("EXPLICIT")));        
     }
 #line 2454 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
@@ -2457,7 +2457,7 @@ yyreduce:
 #line 905 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {   
         (yyval) = (yyvsp[-1]);
-        rb_hash_aset((yyvsp[-1]), ID2SYM(rb_intern("type")), ID2SYM(rb_intern("Explicit")));        
+        rb_hash_aset((yyvsp[-1]), ID2SYM(rb_intern("type")), ID2SYM(rb_intern("EXPLICIT")));        
     }
 #line 2463 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
@@ -2483,7 +2483,7 @@ yyreduce:
     {
         (yyval) = rb_hash_new();
         rb_hash_aset((yyval), ID2SYM(rb_intern("classNumber")), (yyvsp[0]));
-        rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("Universal")));        
+        rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("UNIVERSAL")));        
     }
 #line 2489 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
@@ -2493,7 +2493,7 @@ yyreduce:
     {
         (yyval) = rb_hash_new();
         rb_hash_aset((yyval), ID2SYM(rb_intern("classNumber")), (yyvsp[0]));
-        rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("Application")));        
+        rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("APPLICATION")));        
     }
 #line 2499 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
@@ -2503,7 +2503,7 @@ yyreduce:
     {
         (yyval) = rb_hash_new();
         rb_hash_aset((yyval), ID2SYM(rb_intern("classNumber")), (yyvsp[0]));
-        rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("Private")));
+        rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("PRIVATE")));
     }
 #line 2509 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
@@ -2940,7 +2940,7 @@ static VALUE parseFileBuffer(VALUE self, VALUE attr)
 
     if(yylex_init(&scanner) == 0){
 
-        if(yy_scan_bytes((const char *)RSTRING_PTR(buffer), RSTRING_LEN(buffer), scanner)){
+            if(yy_scan_bytes((const char *)RSTRING_PTR(buffer), RSTRING_LEN(buffer), scanner)){
 
             yyparse(scanner, filename, &tree);
         }

@@ -66,7 +66,7 @@ module RetroIDL::ASN
 
             result = "#{@tag} INTEGER"
             if @numberList
-                result << @numberList.to_s
+                result << "{ #{@numberList} }"
             end
             result << " #{@constraint}"
 

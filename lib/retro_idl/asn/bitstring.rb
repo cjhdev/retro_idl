@@ -35,7 +35,7 @@ module  RetroIDL::ASN
 
             result = "#{@tag} BIT STRING"
             if @bitList
-                result << @bitList.to_s
+                result << "{ #{@bitList} }"
             end
             result << " #{@constraint}"
             

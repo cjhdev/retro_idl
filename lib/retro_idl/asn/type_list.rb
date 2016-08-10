@@ -101,19 +101,12 @@ module RetroIDL::ASN
         def to_s
 
             result = ""
-
-            @list.values.each do |item|
-            
+            @list.values.each do |item|            
                 result << "#{item}"
-
                 if item != @list.values.last
-
                     result << ", "
-
                 end
-
             end
-
             result
 
         end

@@ -22,23 +22,17 @@ module RetroIDL::ASN
     class ComponentType
 
         def initialize(**opts)
-
             @optional = opts[:optional]
             @type = RetroIDL::ASN.const_get(opts[:class]).new( **opts )
-
         end
 
         def link(mod, stack)
-
             @type.link(mod, stack.push(self))
-
         end
 
         # @macro common_to_s
         def to_s
-
-            @type.to_s
-
+            "#{@type.id} #{@type}"
         end
 
         # @return [true] this component is optional
