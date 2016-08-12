@@ -1002,25 +1002,29 @@ ConstraintSpec:
 ElementSetSpec:
     ALL EXCEPT Elements 
     {
-        $$ = rb_ary_new();
-
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ElementSetSpec")));
+        rb_hash_aset($$, ID2SYM(rb_intern("set")), rb_ary_new());
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
+        
         VALUE all = rb_hash_new();
         rb_hash_aset(all, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ALL")));
         rb_hash_aset(all, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
-        rb_ary_push($$, all);
+        rb_ary_push(rb_hash_aref($$, ID2SYM(rb_intern("set"))), all);
 
         VALUE except = rb_hash_new();
-        rb_hash_aset(all, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("EXCEPT")));
-        rb_hash_aset(all, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
-        rb_ary_push($$, except);
+        rb_hash_aset(except, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("EXCEPT")));
+        rb_hash_aset(except, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
+        rb_ary_push(rb_hash_aref($$, ID2SYM(rb_intern("set"))), except);
 
-        rb_ary_push($$, $Elements);
+        rb_ary_push(rb_hash_aref($$, ID2SYM(rb_intern("set"))), $Elements);
     }
     |
     Elements NextElements
     {
         $$ = $NextElements;
-        rb_ary_unshift($$, $Elements);
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
+        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("set"))), $Elements);
     }
     ;
 
@@ -1029,31 +1033,34 @@ NextElements:
     {
         $$ = $next;
 
-        rb_ary_unshift($$, $Elements);
+        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("set"))), $Elements);
 
         VALUE mark = rb_hash_new();
         rb_hash_aset(mark, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("UNION")));
         rb_hash_aset(mark, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
 
-        rb_ary_unshift($$, mark);
+        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("set"))), mark);
+
     }
     |
     IntersectionMark Elements NextElements[next]
     {
         $$ = $next;
     
-        rb_ary_unshift($$, $Elements);
+        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("set"))), $Elements);
         
         VALUE mark = rb_hash_new();
         rb_hash_aset(mark, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("INTERSECTION")));
         rb_hash_aset(mark, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
 
-        rb_ary_unshift($$, mark);
+        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("set"))), mark);
     }    
     |
     empty
     {
-        $$ = rb_ary_new();
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ElementSetSpec")));
+        rb_hash_aset($$, ID2SYM(rb_intern("set")), rb_ary_new());
     }
     ;
 
@@ -1071,6 +1078,9 @@ UnionMark:
     
 Elements:
     '(' ElementSetSpec ')'
+    {
+        $$ = $ElementSetSpec;
+    }       
     |
     SubTypeElements
     ;

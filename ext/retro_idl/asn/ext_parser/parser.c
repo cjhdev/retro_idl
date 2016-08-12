@@ -616,10 +616,10 @@ static const yytype_uint16 yyrline[] =
      789,   797,   802,   808,   816,   818,   825,   834,   840,   848,
      856,   862,   868,   876,   878,   887,   892,   901,   903,   907,
      909,   915,   923,   928,   935,   942,   949,   956,   964,   966,
-     973,   980,   986,   993,  1003,  1020,  1028,  1041,  1054,  1061,
-    1063,  1067,  1069,  1073,  1075,  1079,  1081,  1083,  1087,  1097,
-    1108,  1110,  1114,  1116,  1123,  1125,  1132,  1134,  1141,  1154,
-    1156,  1160,  1162,  1164
+     973,   980,   986,   993,  1003,  1023,  1032,  1046,  1059,  1068,
+    1070,  1074,  1076,  1080,  1085,  1089,  1091,  1093,  1097,  1107,
+    1118,  1120,  1124,  1126,  1133,  1135,  1142,  1144,  1151,  1164,
+    1166,  1170,  1172,  1174
 };
 #endif
 
@@ -2557,85 +2557,100 @@ yyreduce:
   case 144:
 #line 1004 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
-        (yyval) = rb_ary_new();
-
+        (yyval) = rb_hash_new();
+        rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ElementSetSpec")));
+        rb_hash_aset((yyval), ID2SYM(rb_intern("set")), rb_ary_new());
+        rb_hash_aset((yyval), ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
+        
         VALUE all = rb_hash_new();
         rb_hash_aset(all, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ALL")));
         rb_hash_aset(all, ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
-        rb_ary_push((yyval), all);
+        rb_ary_push(rb_hash_aref((yyval), ID2SYM(rb_intern("set"))), all);
 
         VALUE except = rb_hash_new();
-        rb_hash_aset(all, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("EXCEPT")));
-        rb_hash_aset(all, ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
-        rb_ary_push((yyval), except);
+        rb_hash_aset(except, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("EXCEPT")));
+        rb_hash_aset(except, ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
+        rb_ary_push(rb_hash_aref((yyval), ID2SYM(rb_intern("set"))), except);
 
-        rb_ary_push((yyval), (yyvsp[0]));
+        rb_ary_push(rb_hash_aref((yyval), ID2SYM(rb_intern("set"))), (yyvsp[0]));
     }
-#line 2575 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2578 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 145:
-#line 1021 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1024 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = (yyvsp[0]);
-        rb_ary_unshift((yyval), (yyvsp[-1]));
+        rb_hash_aset((yyval), ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
+        rb_ary_unshift(rb_hash_aref((yyval), ID2SYM(rb_intern("set"))), (yyvsp[-1]));
     }
-#line 2584 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2588 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 146:
-#line 1029 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1033 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = (yyvsp[0]);
 
-        rb_ary_unshift((yyval), (yyvsp[-1]));
+        rb_ary_unshift(rb_hash_aref((yyval), ID2SYM(rb_intern("set"))), (yyvsp[-1]));
 
         VALUE mark = rb_hash_new();
         rb_hash_aset(mark, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("UNION")));
         rb_hash_aset(mark, ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
 
-        rb_ary_unshift((yyval), mark);
+        rb_ary_unshift(rb_hash_aref((yyval), ID2SYM(rb_intern("set"))), mark);
+
     }
-#line 2600 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2605 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 147:
-#line 1042 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1047 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = (yyvsp[0]);
     
-        rb_ary_unshift((yyval), (yyvsp[-1]));
+        rb_ary_unshift(rb_hash_aref((yyval), ID2SYM(rb_intern("set"))), (yyvsp[-1]));
         
         VALUE mark = rb_hash_new();
         rb_hash_aset(mark, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("INTERSECTION")));
         rb_hash_aset(mark, ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
 
-        rb_ary_unshift((yyval), mark);
+        rb_ary_unshift(rb_hash_aref((yyval), ID2SYM(rb_intern("set"))), mark);
     }
-#line 2616 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2621 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 148:
-#line 1055 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1060 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
-        (yyval) = rb_ary_new();
+        (yyval) = rb_hash_new();
+        rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ElementSetSpec")));
+        rb_hash_aset((yyval), ID2SYM(rb_intern("set")), rb_ary_new());
     }
-#line 2624 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2631 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+    break;
+
+  case 153:
+#line 1081 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+    {
+        (yyval) = (yyvsp[-1]);
+    }
+#line 2639 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 158:
-#line 1088 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1098 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = rb_hash_new();
         rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SingleValue")));
         rb_hash_aset((yyval), ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
         rb_hash_aset((yyval), ID2SYM(rb_intern("value")), (yyvsp[0]));        
     }
-#line 2635 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2650 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 159:
-#line 1098 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1108 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = rb_hash_new();
         rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ValueRange")));
@@ -2643,46 +2658,46 @@ yyreduce:
         rb_hash_aset((yyval), ID2SYM(rb_intern("lower")), (yyvsp[-2]));
         rb_hash_aset((yyval), ID2SYM(rb_intern("upper")), (yyvsp[0]));
     }
-#line 2647 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2662 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 163:
-#line 1117 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1127 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = (yyvsp[0]);
     }
-#line 2655 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2670 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 165:
-#line 1126 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1136 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = ID2SYM(rb_intern("MIN"));
     }
-#line 2663 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2678 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 167:
-#line 1135 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1145 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = ID2SYM(rb_intern("MAX"));
     }
-#line 2671 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2686 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
   case 168:
-#line 1142 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
+#line 1152 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1646  */
     {
         (yyval) = rb_hash_new();
         rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SizeConstraint")));        
         rb_hash_aset((yyval), ID2SYM(rb_intern("location")), newLocation(filename, &(yyloc)));
         rb_hash_aset((yyval), ID2SYM(rb_intern("constraint")), (yyvsp[0]));
     }
-#line 2682 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2697 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;
 
 
-#line 2686 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
+#line 2701 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2917,7 +2932,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1167 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1906  */
+#line 1177 "ext/retro_idl/asn/ext_parser/ext_parser.y" /* yacc.c:1906  */
 
 
 

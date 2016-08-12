@@ -8,6 +8,10 @@
 
     SingleSingle ::= INTEGER (0) (1)
 
+    Nested ::= INTEGER (0 | ( 0 ))
+
+    AllExcept ::= INTEGER (ALL EXCEPT ( 0 | 1 | 2) )
+
 
 
 

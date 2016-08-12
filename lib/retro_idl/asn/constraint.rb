@@ -28,21 +28,14 @@ module RetroIDL::ASN
 
         def initialize(**opts)
 
-            @root = []
+            @root = nil
             @additional = nil
             @mod = nil
 
-            opts[:root].each do |element|
-                @root << RetroIDL::ASN.const_get(element[:class]).new(**element)
-            end
-            
+            @root = ElementSetSpec.new(true, opts[:root])
             @extensible = opts[:extensible]
-            
             if opts[:additional]
-                @additional = []
-                opts[:additional].each do |element|
-                    @additional << RetroIDL::ASN.const_get(element[:class]).new(**element)
-                end
+                @additional = ElementSetSpec.new(true, opts[:additional])
             end
             
         end
@@ -64,15 +57,36 @@ module RetroIDL::ASN
         def to_s
             if @extensible
                 if @additional
-                    "( #{@root.inject(""){|acc,e|acc<<e.to_s}}, ... , #{@additional.inject(""){|acc,e|acc<<e.to_s}} )"
+                    "( #{@root}, ... , #{@additional} )"
                 else
-                    "( #{@root.inject(""){|acc,e|acc<<e.to_s}}, ... )"
+                    "( #{@root}, ... )"
                 end
             else
-                "( #{@root.inject(""){|acc,e|acc<<e.to_s}} )"
+                "( #{@root} )"
             end
         end
 
+    end
+
+    class ElementSetSpec
+
+        def initialize(top=false, **opts)
+            @set = []
+            @top = top
+            @location = opts[:location]
+            opts[:set].each do |element|
+                @set << RetroIDL::ASN.const_get(element[:class]).new(**element)
+            end            
+        end
+
+        def to_s
+            if @top
+                @set.inject(""){|acc,e|acc<<e.to_s}
+            else
+                "(#{@set.inject(""){|acc,e|acc<<e.to_s}})"
+            end
+        end
+        
     end
 
     class Element
