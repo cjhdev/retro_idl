@@ -33,13 +33,7 @@ module RetroIDL::ASN
         end
 
         def to_s
-
-            out = "( "    
-            @root.each do |element|
-                out << element.to_s
-            end
-            out << " )"
-
+            "( #{@root.inject(""){|acc,e|acc<<e.to_s}} )"                
         end
 
     end
@@ -101,6 +95,8 @@ module RetroIDL::ASN
                     end
                 end
             end
+            @mod
+            
         end
 
         def to_s

@@ -30,17 +30,11 @@ module RetroIDL::ASN
         end
 
         def evaluate(value)
-            true
+            value.class == TrueClass or value.class == FalseClass
         end
 
         def evaluateConstraint(value)
-
-            if @constraint or @constraint.evaluate(value)
-                true
-            else
-                false
-            end
-            
+            @constraint.nil? or @constraint.evaluate(value)            
         end
 
     end
