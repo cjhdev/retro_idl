@@ -958,6 +958,12 @@ ClassNumber:
 /**********************************************************************/
 
 
+Constraints:
+    Constraint
+    |
+    Constraints ',' Constraint
+    ;
+
 
 Constraint:
     '(' ConstraintSpec ')'
@@ -977,12 +983,21 @@ ConstraintSpec:
     ;
 
 ElementSetSpec:
-    ALL EXCEPT Elements
+    ALL EXCEPT Elements 
     {
         $$ = rb_ary_new();
-        rb_ary_push($$, ID2SYM(rb_intern("ALL")));
-        rb_ary_push($$, ID2SYM(rb_intern("EXCEPT")));
-        rb_ary_push($$, $Elements);    
+
+        VALUE all = rb_hash_new();
+        rb_hash_aset(all, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ALL")));
+        rb_hash_aset(all, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
+        rb_ary_push($$, all);
+
+        VALUE except = rb_hash_new();
+        rb_hash_aset(all, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("EXCEPT")));
+        rb_hash_aset(all, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
+        rb_ary_push($$, except);
+
+        rb_ary_push($$, $Elements);
     }
     |
     Elements NextElements
@@ -995,20 +1010,27 @@ ElementSetSpec:
 NextElements:
     UnionMark Elements NextElements[next]
     {
-        rb_ary_unshift($next, $Elements);
+        $$ = $next;
+
+        rb_ary_unshift($$, $Elements);
+
         VALUE mark = rb_hash_new();
         rb_hash_aset(mark, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("UNION")));
         rb_hash_aset(mark, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
+
         rb_ary_unshift($$, mark);
     }
     |
     IntersectionMark Elements NextElements[next]
     {
-        rb_ary_unshift($next, $Elements);
+        $$ = $next;
+    
+        rb_ary_unshift($$, $Elements);
+        
         VALUE mark = rb_hash_new();
         rb_hash_aset(mark, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("INTERSECTION")));
         rb_hash_aset(mark, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
-        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
+
         rb_ary_unshift($$, mark);
     }    
     |

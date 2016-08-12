@@ -5,6 +5,7 @@ Nonterminals useless in grammar
    cstring
    modulereference
    NamedValue
+   Constraints
 
 
 Terminals unused in grammar
@@ -64,6 +65,9 @@ Rules useless in grammar
   173 modulereference: typereference
 
   174 NamedValue: identifier Value
+
+  175 Constraints: Constraint
+  176            | Constraints ',' Constraint
 
 
 State 18 conflicts: 1 shift/reduce

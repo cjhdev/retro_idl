@@ -39,22 +39,16 @@ module RetroIDL::ASN
                 @additional = TypeList.new(opts[:additional], AlternativeType)
 
                 @additional.list.each do |id, item|
-
                     if @root.list.keys.include? id
-
                         ASN.putError(item.location, "duplicate EnumerationItem")
                         errors = true
-
                     end
-
                 end
 
             end
 
             if errors
-
-                raise ASNError.new
-
+                raise ASNError
             end
 
         end

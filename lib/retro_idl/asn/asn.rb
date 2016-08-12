@@ -293,6 +293,7 @@ require "retro_idl/asn/ext_parser"
 
 require 'retro_idl/asn/tag'
 
+require 'retro_idl/asn/constraint'
 require 'retro_idl/asn/builtin_value'
 require 'retro_idl/asn/defined_value'
 require 'retro_idl/asn/base_type'

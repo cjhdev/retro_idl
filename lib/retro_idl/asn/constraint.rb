@@ -9,12 +9,11 @@ module RetroIDL::ASN
 
         def initialize(**opts)
 
-            @location = opts[:location]
             @root = []
             @mod = nil
 
             opts[:rootElementSetSpec].each do |element|
-                @root << RetroIDL::ASN.const_get(element[:class]).new(parent, element)
+                @root << RetroIDL::ASN.const_get(element[:class]).new(**element)
             end
             
         end
@@ -37,7 +36,6 @@ module RetroIDL::ASN
 
             out = "( "    
             @root.each do |element|
-                puts element.class
                 out << element.to_s
             end
             out << " )"
@@ -48,8 +46,7 @@ module RetroIDL::ASN
 
     class Element
 
-        def initialize(parent, opts)
-            @parent = parent
+        def initialize(**opts)
             @location = opts[:location]                                
         end
 
@@ -60,11 +57,9 @@ module RetroIDL::ASN
 
     class SingleValue < Element
 
-        def initialize(parent, opts)
-
-            super
-            @value = RetroIDL::ASN.const_get(opts[:value][:class]).new(opts[:value])
-
+        def initialize(**opts)
+            super(**opts)
+            @value = RetroIDL::ASN.const_get(opts[:value][:class]).new(**opts[:value])
         end
 
         def link(mod, stack)
@@ -88,9 +83,9 @@ module RetroIDL::ASN
 
         def initialize(**opts)
 
-            super
-            @upper = RetroIDL::ASN.const_get(opts[:upper][:class]).new(opts[:upper])
-            @lower = RetroIDL::ASN.const_get(opts[:lower][:class]).new(opts[:lower])
+            super(**opts)
+            @upper = RetroIDL::ASN.const_get(opts[:upper][:class]).new(**opts[:upper])
+            @lower = RetroIDL::ASN.const_get(opts[:lower][:class]).new(**opts[:lower])
             
         end
 
@@ -109,7 +104,7 @@ module RetroIDL::ASN
         end
 
         def to_s
-            "#{@lower} ... #{@upper}"
+            "#{@lower} .. #{@upper}"
         end
         
     end
@@ -117,10 +112,8 @@ module RetroIDL::ASN
     class SizeConstraint < Element
 
         def initialize(**opts)
-
-            super
-            @constraint = Constraint.new(self, opts[:constraint])
-        
+            super(**opts)
+            @constraint = Constraint.new(**opts[:constraint])        
         end
 
         def link(mod)
@@ -132,34 +125,31 @@ module RetroIDL::ASN
         end
 
         def evaluate
-
-            if @parent.class 
-
         end
 
     end
 
-    class UnionMark < Element
+    class UNION < Element
         def to_s
-            "|"
+            " | "
         end
     end
 
     class ALL < Element
         def to_s
-            "ALL"
+            " ALL "
         end        
     end
 
-    class IntersectionMark < Element
+    class INTERSECTION < Element
         def to_s
-            "^"
+            " ^ "
         end
     end
 
     class EXCEPT < Element
         def to_s
-            "EXCEPT"
+            " EXCEPT "
         end
     end
 

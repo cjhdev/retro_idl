@@ -1,0 +1,9 @@
+
+    Single ::= INTEGER (0)
+    Range ::= INTEGER (0..1)
+    SingleUnion ::= INTEGER (0 | 1)
+    SingleUnion2 ::= INTEGER (0 | 1 ^ 2 | 3)
+
+
+
+
