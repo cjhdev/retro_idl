@@ -111,9 +111,10 @@ module RetroIDL::ASN
             result = "#{@tag} ENUMERATED { #{@root} "
 
             if @extensible
-
                 result << ", ... "
-
+            end
+            if @additional
+                result << ", #{@additional} "
             end
 
             result << "} #{@constraint}"

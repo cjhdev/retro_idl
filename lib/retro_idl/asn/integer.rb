@@ -78,7 +78,7 @@ module RetroIDL::ASN
         end
 
         def evaluateConstraint(value)
-            if evaluate(value) and ( @constrant.nil? or @constraint.evaluate(value) )
+            if evaluate(value) and ( @constraint.nil? or @constraint.evaluate(value) )
                 true
             end
         end

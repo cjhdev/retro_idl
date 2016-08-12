@@ -76,6 +76,9 @@ module RetroIDL::ASN
             if @extensible
                 result << ", ... "
             end
+            if @additional
+                result << ", #{@additional} "
+            end
             result << "} #{@constraint}"       
 
         end

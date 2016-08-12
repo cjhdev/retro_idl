@@ -986,16 +986,22 @@ ConstraintSpec:
     ElementSetSpec[root] ',' ELLIPSES
     {
         $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);        
         rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+
+        rb_hash_aset($root, ID2SYM(rb_intern("top")), Qtrue);
     }
     |
     ElementSetSpec[root] ',' ELLIPSES ',' ElementSetSpec[additional]
     {
         $$ = rb_hash_new();
         rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
+        
         rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
         rb_hash_aset($$, ID2SYM(rb_intern("additional")), $additional);
+
+        rb_hash_aset($root, ID2SYM(rb_intern("top")), Qtrue);
+        rb_hash_aset($additional, ID2SYM(rb_intern("additional")), Qtrue);
     }
     ;
 
