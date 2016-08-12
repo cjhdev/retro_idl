@@ -44,8 +44,8 @@ module RetroIDL::ASN
             if opts[:tag]
                 @tag = Tag.new(**opts[:tag])
             end
-            if opts[:constraint]
-                @constraint = Constraint.new(**opts[:constraint])
+            if opts[:constraints]
+                @constraint = Constraints.new(opts[:constraints])            
             end 
 
         end

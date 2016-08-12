@@ -241,13 +241,13 @@ Assignment:
     ;
 
 TypeAssignment:
-     typereference[ref] ASSIGN optTypePrefix[tag] Type Constraint
+     typereference[ref] ASSIGN optTypePrefix[tag] Type
     {
         $$ = $Type;
         rb_hash_aset($$, ID2SYM(rb_intern("id")), $ref);
         rb_hash_aset($$, ID2SYM(rb_intern("tag")), $tag);
         rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
-        rb_hash_aset($$, ID2SYM(rb_intern("constraint")), $Constraint);
+        
     }
     ;
 
@@ -343,8 +343,20 @@ Type:
     SequenceType    
     |
     DefinedType
+    |
+    ConstrainedType
     ;
 
+ConstrainedType:
+    Type Constraint
+    {
+        if(rb_hash_aref($$, ID2SYM(rb_intern("constraints"))) == Qnil){
+            rb_hash_aset($$, ID2SYM(rb_intern("constraints")), rb_ary_new());
+        }
+        rb_ary_push(rb_hash_aref($$, ID2SYM(rb_intern("constraints"))), $Constraint);
+    }
+    ;
+    
 /**********************************************************************/
 
 CharacterStringType:
@@ -760,13 +772,13 @@ ComponentType:
     ;
     
 NamedType:
-    identifier optTypePrefix[tag] Type Constraint
+    identifier optTypePrefix[tag] Type
     {
         $$ = $Type;
         rb_hash_aset($$, ID2SYM(rb_intern("id")), $identifier); 
         rb_hash_aset($$, ID2SYM(rb_intern("tag")), $tag);
         rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
-        rb_hash_aset($$, ID2SYM(rb_intern("constraint")), $Constraint);
+        
     }
     ;
 
@@ -957,28 +969,33 @@ ClassNumber:
 
 /**********************************************************************/
 
-
-Constraints:
-    Constraint
-    |
-    Constraints ',' Constraint
-    ;
-
-
 Constraint:
     '(' ConstraintSpec ')'
     {        
         $$ = $ConstraintSpec;        
-    }
-    |
-    empty
+    }    
     ;
 
 ConstraintSpec:
-    ElementSetSpec
+    ElementSetSpec[root]
     {
         $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("rootElementSetSpec")), $ElementSetSpec);
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
+    }
+    |
+    ElementSetSpec[root] ',' ELLIPSES
+    {
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+    }
+    |
+    ElementSetSpec[root] ',' ELLIPSES ',' ElementSetSpec[additional]
+    {
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $additional);
     }
     ;
 

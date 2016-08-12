@@ -5,15 +5,44 @@
 
 module RetroIDL::ASN
 
+    class Constraints
+        
+        def initialize(ar)
+            @constraints = []
+            if ar                
+                ar.each do |c|
+                    @constraints << Constraint.new(**c)
+                end
+            end                    
+        end
+
+        def to_s
+            @constraints.inject("") do |acc, c|
+                acc << c.to_s
+            end
+        end
+        
+    end
+
     class Constraint
 
         def initialize(**opts)
 
             @root = []
+            @additional = nil
             @mod = nil
 
-            opts[:rootElementSetSpec].each do |element|
+            opts[:root].each do |element|
                 @root << RetroIDL::ASN.const_get(element[:class]).new(**element)
+            end
+            
+            @extensible = opts[:extensible]
+            
+            if opts[:additional]
+                @additional = []
+                opts[:additional].each do |element|
+                    @additional << RetroIDL::ASN.const_get(element[:class]).new(**element)
+                end
             end
             
         end
@@ -33,7 +62,15 @@ module RetroIDL::ASN
         end
 
         def to_s
-            "( #{@root.inject(""){|acc,e|acc<<e.to_s}} )"                
+            if @extensible
+                if @additional
+                    "( #{@root.inject(""){|acc,e|acc<<e.to_s}}, ... , #{@additional.inject(""){|acc,e|acc<<e.to_s}} )"
+                else
+                    "( #{@root.inject(""){|acc,e|acc<<e.to_s}}, ... )"
+                end
+            else
+                "( #{@root.inject(""){|acc,e|acc<<e.to_s}} )"
+            end
         end
 
     end
