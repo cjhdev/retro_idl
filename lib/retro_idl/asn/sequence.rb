@@ -18,108 +18,101 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-module RetroIDL
+module RetroIDL::ASN
 
-    module ASN
-        
+    class SEQUENCE < BaseType
 
-        class SEQUENCE < BaseType
+        TAG_CLASS_NUMBER = 16
+        TAG_CLASS = :universal
 
-            TAG_CLASS_NUMBER = 16
-            TAG_CLASS = :universal
+        def initialize(**opts)
 
-            def initialize(**opts)
+            super(**opts)
 
-                super(**opts)
+            errors = false
 
-                errors = false
+            @exception = opts[:exception]
+            @extensible = opts[:extensible]
+            @head = nil
+            @tail = nil
+            @additional = nil
+            
+            if opts[:head]
 
-                @exception = opts[:exception]
-                @extensible = opts[:extensible]
-                @head = nil
-                @tail = nil
-                @additional = nil
-                
-                if opts[:head]
+                begin
+            
+                @head = TypeList.new(opts[:head], ComponentType)
 
-                    begin
-                
-                    @head = TypeList.new(opts[:head], ComponentType)
+                rescue ASNError
 
-                    rescue ASNError
-
-                    errors = true
-
-                    end
+                errors = true
 
                 end
 
-                if opts[:additional]
-
-                    begin
-
-                    @additional = TypeList.new(opts[:additional], ComponentType)
-
-                    rescue ASNError
-
-                    errors = true
-
-                    end                    
-
-                end
-
-                if opts[:tail]
-
-                    begin
-
-                    @tail = TypeList.new(opts[:tail], ComponentType)
-
-                    rescue ASNError
-
-                    errors = true
-
-                    end
-                
-                end
-
-                if errors
-
-                    raise ASNError.new
-
-                end
-                
             end
 
-            # @macro common_link
-            def link(mod, stack)
-                if @mod.nil? or @mod != mod
-                    @mod = nil
-                    if @head.nil? or @head.link(mod, stack)
-                        if @tail.nil? or @tail.link(mod, stack)
-                            if @additional.nil? or @additional.link(mod, stack)
-                                super(mod, [])
-                            end
+            if opts[:additional]
+
+                begin
+
+                @additional = TypeList.new(opts[:additional], ComponentType)
+
+                rescue ASNError
+
+                errors = true
+
+                end                    
+
+            end
+
+            if opts[:tail]
+
+                begin
+
+                @tail = TypeList.new(opts[:tail], ComponentType)
+
+                rescue ASNError
+
+                errors = true
+
+                end
+            
+            end
+
+            if errors
+
+                raise ASNError
+
+            end
+            
+        end
+
+        # @macro common_link
+        def link(mod, stack)
+            if @mod.nil? or @mod != mod
+                @mod = nil
+                if @head.nil? or @head.link(mod, stack)
+                    if @tail.nil? or @tail.link(mod, stack)
+                        if @additional.nil? or @additional.link(mod, stack)
+                            super(mod, [])
                         end
                     end
-                else
-                    @mod
-                end                
-            end
-
-            # @macro common_to_s
-            def to_s
-
-                result = "#{@tag} SEQUENCE { #{@head} "
-
-                if @extensible
-
-                    result << ", ... "
-
                 end
+            else
+                @mod
+            end                
+        end
 
-                result << "} #{@constraint}"
+        # @macro common_to_s
+        def to_s
 
+            result = "#{@tag} SEQUENCE { #{@head} "
+
+            if @extensible
+                result << ", ... "
             end
+
+            result << "} #{@constraint}"
 
         end
 

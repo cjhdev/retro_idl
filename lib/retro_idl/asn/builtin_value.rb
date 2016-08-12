@@ -22,32 +22,17 @@ module RetroIDL::ASN
     # BuiltinValue aggregation
     #
     # X.680 section 17.2
-    class BuiltinValue
+    class BuiltinValue < BaseValue
 
-        def initialize(**opts)
-
-            @location = opts[:location]
-            @mod = nil
-            @value = opts[:value]
-            
-        end
-
-        # return the Ruby native representation of this BuiltinType
-        #
-        # @return [Array, Hash, Numeric, String] native value
-        #
-        # @raise [ASNError] value cannot be returned if object is not linked
-        attr_reader :value
+        attr_reader :id, :governor, :location
 
         # @macro common_to_s
         def to_s
-
-            "#{@value}"
-            
+            "#{@value}"            
         end
 
         def link(mod, stack)
-            @mod = mod
+            mod
         end
 
     end

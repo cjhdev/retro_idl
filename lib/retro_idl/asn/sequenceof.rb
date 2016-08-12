@@ -25,37 +25,26 @@ module RetroIDL::ASN
         TAG_CLASS = :universal
 
         def initialize(**opts)
-
             super(**opts)
             @type = RetroIDL::ASN.const_get(opts[:type][:class]).new( **opts[:type] )
-
         end
 
         def link(mod, stack)
 
             if @mod.nil? or @mod != mod
-
                 @mod = nil
-
                 if @type.link(mod, stack)
-
                     super(mod, stack)
-
                 end
-
             else
-
                 @mod
-
             end
             
         end
 
         # @macro common_to_s
         def to_s
-
             "#{@tag} SEQUENCE #{@constraint} OF #{@type}"
-
         end
         
     end

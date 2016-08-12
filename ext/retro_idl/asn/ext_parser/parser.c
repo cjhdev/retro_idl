@@ -1838,7 +1838,7 @@ yyreduce:
     {
         (yyval) = rb_hash_new();        
         rb_hash_aset((yyval), ID2SYM(rb_intern("class")), ID2SYM(rb_intern("DefinedValue")));
-        rb_hash_aset((yyval), ID2SYM(rb_intern("ref")), (yyvsp[0]));      
+        rb_hash_aset((yyval), ID2SYM(rb_intern("value")), (yyvsp[0]));      
     }
 #line 1844 "ext/retro_idl/asn/ext_parser/parser.c" /* yacc.c:1646  */
     break;

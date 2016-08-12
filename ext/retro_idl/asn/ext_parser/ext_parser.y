@@ -275,7 +275,7 @@ Value:
     {
         $$ = rb_hash_new();        
         rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("DefinedValue")));
-        rb_hash_aset($$, ID2SYM(rb_intern("ref")), $value);      
+        rb_hash_aset($$, ID2SYM(rb_intern("value")), $value);      
     }
     ;
 

@@ -264,20 +264,13 @@ module RetroIDL
             # @macro common_to_s
             def to_s
 
-                result = ""
-
-                @assignments.each do |id, assignment|
-
-                    case assignment.class
-                    when DefinedValue, BuiltinValue
-                        result << "#{id} #{assignment.governor} ::= #{assignment}"
+                @assignments.values.inject("") do |result, assignment|
+                    if assignment.kind_of? BaseType
+                        result << " #{assignment.id} ::= #{assignment}"
                     else
-                        result << " #{id} ::= #{assignment}"
-                    end
-
+                        result << "#{assignment.id} #{assignment.governor} ::= #{assignment}"
+                    end            
                 end
-
-                result
 
             end
 
@@ -294,6 +287,7 @@ require "retro_idl/asn/ext_parser"
 require 'retro_idl/asn/tag'
 
 require 'retro_idl/asn/constraint'
+require 'retro_idl/asn/base_value'
 require 'retro_idl/asn/builtin_value'
 require 'retro_idl/asn/defined_value'
 require 'retro_idl/asn/base_type'

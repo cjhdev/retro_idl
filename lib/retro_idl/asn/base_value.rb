@@ -23,15 +23,19 @@ module RetroIDL::ASN
     # methods and attributes common to ASN.1 values
     class BaseValue
 
-        def initialize(**opts)            
-            @value = opts[:value]                
+        attr_reader :governor, :id, :value, :location
+        
+        def initialize(**opts)
+            @value = opts[:value]
+            @location = opts[:location]
+            @id = opts[:id]
+            @mod = nil
+            @governor = nil
+            if opts[:governor]
+                @governor = RetroIDL::ASN.const_get(opts[:governor][:class]).new(**opts[:governor])
+            end            
         end
 
-        attr_reader :governor
-
-        # @return [String, NilClass] identifier
-        attr_reader :id
-        
         # @macro common_link
         def link(mod, stack)
 

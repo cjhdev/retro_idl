@@ -21,15 +21,14 @@
 module RetroIDL::ASN
 
     # X.680 section 17.3
-    class DefinedValue
+    class DefinedValue < BaseValue
 
         def initialize(**opts)
 
-            @location = opts[:location]
-            @mod = nil
+            super(**opts)
 
-            if RetroIDL::ASN.is_identifier?(@location, **opts[:ref])                
-                @symbol = opts[:ref].to_s
+            if RetroIDL::ASN.is_identifier?(@location, opts[:value])                
+                @symbol = opts[:value].to_s
             else
                 raise ASNError
             end
@@ -69,16 +68,12 @@ module RetroIDL::ASN
         #
         # @raise [ASNError] value cannot be returned if object is not linked
         def value
-
             @mod.symbol(@symbol).value
-
         end
 
         # @macro common_to_s
         def to_s
-
-            "#{@symbol}"
-            
+            "#{@symbol}"            
         end
 
     end
