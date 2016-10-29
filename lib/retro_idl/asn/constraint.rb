@@ -44,6 +44,15 @@ module RetroIDL::ASN
                 end                    
             end
         end
+
+        def link(mod, stack)
+            @constraint.each do |c|
+                @mod = c.link(mod, stack)
+                if @mod.nil?
+                    return nil
+                end
+            end                
+        end
         
     end
 
@@ -75,6 +84,11 @@ module RetroIDL::ASN
                 @mod = nil
                 @root.each do |element|
                     elem.link(@mod, [])
+                end
+                if @additional
+                    @additional.each do |element|
+                        elem.link(@mod, [])
+                    end
                 end
             else
                 @mod
@@ -141,11 +155,22 @@ module RetroIDL::ASN
             left
 
         end
+
+        def link(mod, stack)
+            @set.each do |s|
+                @mod = s.link(mod, [])
+            end
+            @mod
+        end
         
     end
 
     class Element
         def initialize(type, **opts)
+            @mod = nil
+        end
+        def link(mod, stack)
+            @mod = mod
         end
     end
 
@@ -183,12 +208,10 @@ module RetroIDL::ASN
 
         def initialize(type, **opts)
             @location = opts[:location]
-            @type = opts[:type]
-
+            @type = type
             @upper = RetroIDL::ASN.const_get(opts[:upper][:class]).new(**opts[:upper])
-            @lower = RetroIDL::ASN.const_get(opts[:lower][:class]).new(**opts[:lower])            
-            
-    
+            @lower = RetroIDL::ASN.const_get(opts[:lower][:class]).new(**opts[:lower])
+            @mod = nil
         end
 
         def link(mod, stack)
@@ -197,9 +220,7 @@ module RetroIDL::ASN
                 @mod = nil
                 if @upper.link(mod, stack) == mod
                     if @lower.link(mod, stack) == mod
-                        if @parent.evaluate(@upper) and @parent.evaluate(@lower)
-                            @mod = mod
-                        end
+                        @mod = mod
                     end
                 end
             end
@@ -224,11 +245,12 @@ module RetroIDL::ASN
             @location = opts[:location]
             @type = opts[:type]
             opts[:constraint][:type] = @type
-            @constraint = Constraint.new(@type, **opts[:constraint])        
+            @constraint = Constraint.new(@type, **opts[:constraint])
+            @mod = nil
         end
 
-        def link(mod)
-            @constraint.link(mod)
+        def link(mod, stack)
+            @mod = @constraint.link(mod, stack)
         end
 
         # @macro common_to_s

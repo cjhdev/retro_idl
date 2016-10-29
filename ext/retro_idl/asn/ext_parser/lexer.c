@@ -1,5 +1,5 @@
 #line 2 "ext/retro_idl/asn/ext_parser/lexer.c"
-#line 32 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 32 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 
     #include "ext_common.h"
 
@@ -803,9 +803,9 @@ static yyconst flex_int16_t yy_chk[777] =
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-#line 1 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 1 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 /* Flex Configuration */
-#line 3 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 3 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 
 /* includes ***********************************************************/
 
@@ -1080,7 +1080,7 @@ YY_DECL
 	register int yy_act;
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-#line 45 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 45 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 
 
 #line 1087 "ext/retro_idl/asn/ext_parser/lexer.c"
@@ -1172,534 +1172,534 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 47 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 47 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { BEGIN(BLOCK_COMMENT); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 48 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 48 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 49 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 49 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 51 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 51 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { /* skip comments */ }
 	YY_BREAK
 case 5:
-#line 54 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 54 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 6:
-#line 55 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 55 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 7:
-#line 56 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 56 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 8:
-#line 57 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 57 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 9:
-#line 58 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 58 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 10:
-#line 59 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 59 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 11:
-#line 60 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 60 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 12:
-#line 61 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 61 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 13:
-#line 62 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 62 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 14:
-#line 63 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 63 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 15:
-#line 64 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 64 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 16:
-#line 65 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 65 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 17:
-#line 66 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 66 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 18:
-#line 67 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 67 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 19:
-#line 68 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 68 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 case 20:
 YY_RULE_SETUP
-#line 68 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 68 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return *yytext; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 70 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 70 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_LVERSION; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 71 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 71 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = Qnil; return TOK_RVERSION; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 72 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 72 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_ASSIGN; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 73 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 73 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_RANGE; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 74 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 74 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_ELLIPSES; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 77 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 77 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_DEFINITIONS; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 78 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 78 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_BEGIN; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 79 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 79 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_END; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 80 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 80 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_SET; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 81 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 81 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = Qnil; return TOK_NULL; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 82 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 82 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_BOOLEAN; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 83 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 83 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_INTEGER; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 84 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 84 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_ENUMERATED; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 85 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 85 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_REAL; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 86 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 86 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_OCTET; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 87 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 87 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_CHARACTER; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 88 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 88 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_BIT; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 89 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 89 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_STRING; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 90 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 90 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_SIZE; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 91 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 91 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_CHOICE; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 92 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 92 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_SEQUENCE; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 93 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 93 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_OF; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 94 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 94 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_EXCEPT; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 95 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 95 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_INTERSECTION; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 96 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 96 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_UNION; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 97 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 97 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_ALL; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 98 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 98 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_MIN; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 99 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 99 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_MAX; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 100 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 100 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = Qtrue; return TOK_TRUE; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 101 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 101 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = Qfalse; return TOK_FALSE; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 102 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 102 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_OPTIONAL; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 103 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 103 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_DEFAULT; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 104 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 104 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_IMPLICIT; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 105 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 105 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_EXPLICIT; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 106 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 106 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_APPLICATION; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 107 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 107 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_PRIVATE; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 108 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 108 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_UNIVERSAL; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 110 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 110 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_DATE; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 111 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 111 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_DATE_TIME; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 112 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 112 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_DURATION; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 113 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 113 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_EMBEDDED; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 114 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 114 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_PDV; }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 115 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 115 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_EXTERNAL; }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 116 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 116 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_RELATIVE_OID_IRI; }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 117 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 117 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_OBJECT; }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 118 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 118 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_IDENTIFIER; }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 119 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 119 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_RELATIVE_IRI; }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 120 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 120 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_RELATIVE_OID; }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 121 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 121 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_TIME; }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 122 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 122 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_TIME_OF_DAY; }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 124 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 124 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = rb_float_new(INFINITY); return TOK_PLUS_INFINITY; }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 125 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 125 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = rb_float_new(-INFINITY); return TOK_MINUS_INFINITY; }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 126 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 126 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = rb_float_new(NAN); return TOK_NOT_A_NUMBER; }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 128 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 128 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_BMPString; }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 129 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 129 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_GeneralString; }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 130 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 130 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_GraphicString; }
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 131 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 131 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_IA5String; }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 132 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 132 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_ISO646String; }
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 133 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 133 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_NumericString; }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 134 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 134 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_PrintableString; }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 135 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 135 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_TeletexString; }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 136 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 136 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_T61String; }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 137 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 137 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_UniversalString; }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 138 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 138 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_UTF8String; }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 139 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 139 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_VideotexString; }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 140 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 140 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_VisibleString; }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 142 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 142 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_CONTAINS; }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 143 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 143 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_INCLUDES; }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 144 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 144 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_FROM; }
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 145 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 145 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_COMPONENT; }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 146 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 146 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_COMPONENTS; }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 147 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 147 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_PRESENT; }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 148 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 148 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_ABSENT; }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 149 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 149 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_PATTERN; }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 150 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 150 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_SETTINGS; }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 151 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 151 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_TAGS; }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 152 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 152 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_INSTRUCTIONS; }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 153 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 153 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_EXPORTS; }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 154 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 154 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_IMPORTS; }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 155 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 155 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_EXTENSIBILITY; }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 156 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 156 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_IMPLIED; }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 157 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 157 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { return TOK_AUTOMATIC; }
 	YY_BREAK
 case 103:
 /* rule 103 can match eol */
 YY_RULE_SETUP
-#line 159 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 159 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 ;
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 161 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 161 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { unsigned int tmp = 0; sscanf(yytext, "%u", &tmp); *yylval = UINT2NUM(tmp); return TOK_POSINT; }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 162 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 162 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { int tmp = 0; sscanf(yytext, "%i", &tmp); *yylval = INT2NUM(tmp); return TOK_NEGINT; }
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 163 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 163 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { unsigned int tmp = 0; sscanf(yytext, "%x", &tmp); *yylval = UINT2NUM(tmp); return TOK_HEXINT; }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 164 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 164 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { float tmp = 0; sscanf(yytext, "%f", &tmp); *yylval = rb_float_new(tmp); return TOK_POSREAL; }
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 165 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 165 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { float tmp = 0; sscanf(yytext, "%f", &tmp); *yylval = rb_float_new(tmp); return TOK_NEGREAL; }
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 167 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 167 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = rb_str_new(yytext, yyleng); return TOK_ID; }
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 169 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 169 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = rb_str_new(yytext, yyleng); return TOK_TYPEREF; }
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 171 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 171 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = rb_str_new(yytext, yyleng); return TOK_HSTRING; }
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 172 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 172 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = rb_str_new(yytext, yyleng); return TOK_BSTRING; }
 	YY_BREAK
 case 113:
 /* rule 113 can match eol */
 YY_RULE_SETUP
-#line 174 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 174 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 { *yylval = rb_str_new(yytext, yyleng); return TOK_CSTRING; }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 176 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 176 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 ;
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 178 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 178 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 ECHO;
 	YY_BREAK
 #line 1706 "ext/retro_idl/asn/ext_parser/lexer.c"
@@ -2844,7 +2844,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 178 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 178 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 
 
 

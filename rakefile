@@ -6,7 +6,7 @@ DIR_ETC = "etc/retro_idl/asn/ext_parser"
 
 Rake::ExtensionTask.new  do |ext|
     ext.name = "ext_parser"
-    ext.ext_dir = "ext/retro_idl/asn/ext_parser"
+    ext.ext_dir = DIR_SRC
     ext.lib_dir = "lib/retro_idl/asn"
 end
 
@@ -28,8 +28,8 @@ task :default => :test
 
 desc "run flex-bison"
 task :flexbison do    
-    system "flex --outfile=#{DIR_SRC}/lexer.c --header-file=#{DIR_SRC}/lexer.h #{DIR_SRC}/ext_parser.l"
-    system "bison -d #{DIR_SRC}/ext_parser.y --output=#{DIR_SRC}/parser.c --report=all --report-file=#{DIR_SRC}/report.txt"    
+    system "flex --outfile=#{DIR_SRC}/lexer.c --header-file=#{DIR_SRC}/lexer.h #{DIR_ETC}/ext_parser.l"
+    system "bison -d #{DIR_ETC}/ext_parser.y --output=#{DIR_SRC}/parser.c --report=all --report-file=#{DIR_SRC}/report.txt"    
 end
 
 task :local => [:flexbison, :test] do    

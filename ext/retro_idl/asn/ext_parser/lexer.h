@@ -3,7 +3,7 @@
 #define yyIN_HEADER 1
 
 #line 6 "ext/retro_idl/asn/ext_parser/lexer.h"
-#line 32 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 32 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 
     #include "ext_common.h"
 
@@ -358,7 +358,7 @@ extern int yylex \
 #undef YY_DECL
 #endif
 
-#line 178 "ext/retro_idl/asn/ext_parser/ext_parser.l"
+#line 178 "etc/retro_idl/asn/ext_parser/ext_parser.l"
 
 
 #line 365 "ext/retro_idl/asn/ext_parser/lexer.h"

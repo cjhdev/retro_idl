@@ -15,50 +15,14 @@
 
 #include "lexer.h"
 
-/* local prototypes ***************************************************/
+/* function prototypes ************************************************/
 
-/**
- * - Ruby method to take a hash of attributes and return a tree of parsed data
- *
- * <code>
- *  attr = {
- *      :buffer => [a ruby string containing the file],
- *      :filename => [a ruby string containing the filename]
- *  }
- * </code>
- * 
- * @param[in] self reciever
- * @param[in] attr hash of attributes
- *
- * @return tree of parsed data
- *
- * */
-static VALUE parseFileBuffer(VALUE self, VALUE attr);
-
-/**
- * - Create a Ruby location record from YYLTYPE structure
- * - Returned structure is a Hash with keys for location values
- *
- * @param[in] filename filename corresponding to location record
- * @param[in] location pointer to Bison location record
- *
- * @return Ruby location instance
- *
- * */
-static VALUE newLocation(VALUE filename, YYLTYPE *location);
-
-/**
- * - Mandatory yyerror function called by Flex/Bison
- * - variadic like printf
- *
- * @param[in] locp pointer to Bison location record
- * @param[in] scanner pointer to scanner instance (this is a pure parser)
- * @param[in] filename filename corresponding to location record
- * @param[out] tree the return structure
- * @param[in] msg printf format string
- *
- * */
 void yyerror(YYLTYPE *locp, yyscan_t scanner, VALUE filename, VALUE *tree, char const *msg, ... );
+
+/* static function prototypes *****************************************/
+
+static VALUE parseFileBuffer(VALUE self, VALUE attr);
+static VALUE newLocation(VALUE filename, const YYLTYPE *location);
 
 /* static variables ***************************************************/
 
@@ -1249,13 +1213,19 @@ static VALUE parseFileBuffer(VALUE self, VALUE attr)
     return tree;
 }
 
-static VALUE newLocation(VALUE filename, YYLTYPE *location)
+static VALUE newLocation(VALUE filename, const YYLTYPE *location)
 {
-    return rb_funcall(rb_const_get(ASN, rb_intern("Location")), rb_intern("new"), 5,
-        filename,
-        INT2NUM(location->first_line),
-        INT2NUM(location->last_line),
-        INT2NUM(location->first_column),
-        INT2NUM(location->last_column)
-    );    
+    char msg[500];    
+    int len = 0;
+
+    if(filename != Qnil){
+
+        len = snprintf(msg, sizeof(msg), "%s:%i:%i", (const char *)RSTRING_PTR(filename), location->first_line, location->first_column);
+    }
+    else{
+
+        len = snprintf(msg, sizeof(msg), "%i:%i", location->first_line, location->first_column);
+    }
+    
+    return rb_str_new(msg, len);
 }
