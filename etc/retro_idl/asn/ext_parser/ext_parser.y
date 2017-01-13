@@ -27,17 +27,21 @@ static VALUE newLocation(VALUE filename, const YYLTYPE *location);
 /* static variables ***************************************************/
 
 static VALUE ASN;
+static VALUE cLog;
+static VALUE cParseError;
 
 /* generated **********************************************************/
 
 %}
 
 %define api.value.type {VALUE}
-%define api.pure full
+%define api.pure
 %locations
 %lex-param {yyscan_t scanner}
 %parse-param {yyscan_t scanner}{VALUE filename}{VALUE *tree}
 %define parse.error verbose
+%glr-parser
+%debug
 
 %nonassoc   EXCEPT
 %left       CARET INTERSECTION
@@ -165,23 +169,43 @@ empty:
     }   
     ;
 
-hstring: HSTRING;
+hstring:
+    HSTRING
+    ;
 
-bstring: BSTRING;
+bstring:
+    BSTRING
+    ;
 
-cstring: CSTRING;
+cstring:
+    CSTRING
+    ;
 
-identifier: ID;
+identifier:
+    ID
+    ;
 
-typereference: TYPEREF;
+typereference:
+    TYPEREF
+    ;
 
-modulereference: typereference;
+modulereference:
+    typereference
+    ;
 
-valuereference: identifier;
+valuereference:
+    identifier
+    ;
     
-number: POSINT | NEGINT;
+number:
+    POSINT
+    |
+    NEGINT
+    ;
     
-encodingreference: identifier;
+encodingreference:
+    identifier
+    ;
     
 /**********************************************************************/
 
@@ -492,51 +516,60 @@ SignedNumber:
 
 /**********************************************************************/
 
-EnumeratedType:    
-    ENUMERATED '{' EnumerationItem[item] NextEnumerationItem[list]
+EnumeratedType:
+    ENUMERATED '{' Enumerations '}'
     {
-        $$ = $list;
+        $$ = $Enumerations;
         rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ENUMERATED")));        
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("root"))), $item);        
     }
     ;
 
-NextEnumerationItem:
-    '}'
+Enumerations:
+    RootEnumeration
     {
         $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("root")), rb_ary_new());
-    }
-    |    
-    ',' EnumerationItem[item] NextEnumerationItem[list]
-    {
-        $$ = $list;
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("root"))), $item);
-    }
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $RootEnumeration);
+    }    
     |
-    ',' ELLIPSES ExceptionSpec NextAddEnumerationItem[list]
+    RootEnumeration ',' ELLIPSES ExceptionSpec
     {
-        $$ = $list;
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $RootEnumeration);
         rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
-        rb_hash_aset($$, ID2SYM(rb_intern("exceptionSpec")), $ExceptionSpec);        
+        rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec); 
+    }
+    |
+    RootEnumeration ',' ELLIPSES ExceptionSpec ',' AdditionalEnumeration
+    {
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $RootEnumeration);
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+        rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec);
+        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $AdditionalEnumeration);
     }
     ;
 
-NextAddEnumerationItem:
-    '}'
+RootEnumeration:
+    Enumeration
+    ;
+
+AdditionalEnumeration:
+    Enumeration
+    ;
+
+Enumeration:
+    EnumerationItem
     {
-        $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("additional")), rb_ary_new());
-        rb_hash_aset($$, ID2SYM(rb_intern("root")), rb_ary_new());
+        $$ = rb_ary_new();
+        rb_ary_push($$, $EnumerationItem);
     }
     |
-    ',' EnumerationItem[item] NextAddEnumerationItem[list]
+    Enumeration ',' EnumerationItem
     {
-        $$ = $list;
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("additional"))), $item);
+        rb_ary_push($$, $EnumerationItem);
     }
     ;
-    
+
 EnumerationItem:
     identifier
     {
@@ -598,122 +631,140 @@ NullType:
 /**********************************************************************/    
 
 SequenceType:
-    SEQUENCE '{' HeadComponentTypeList[list]
+    SEQUENCE '{' '}'
     {
-        $$ = $list;
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCE")));  
+    }
+    |
+    SEQUENCE '{' ELLIPSES ExceptionSpec OptionalExtensionMarker '}'
+    {
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCE")));
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+        rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec); 
+    }
+    |
+    SEQUENCE '{' ComponentTypeLists '}'
+    {
+        $$ = $ComponentTypeLists;
         rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCE")));
     }
     ;
-
-HeadComponentTypeList:
-    '}'
+    
+OptionalExtensionMarker:
+    ',' ELLIPSES
+    |
+    empty
+    ;
+    
+ComponentTypeLists:
+    RootComponentTypeList[head]
     {
         $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("head")), $head);                
     }
     |
-    ELLIPSES ExceptionSpec AdditionalComponentTypeList[list]
+    RootComponentTypeList[head] ',' ELLIPSES ExceptionSpec ExtensionAdditions OptionalExtensionMarker
     {
-        $$ = $list;
-        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);        
-        rb_hash_aset($$, ID2SYM(rb_intern("exceptionSpec")), $ExceptionSpec);
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("head")), $head);
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+        rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec);
+        rb_hash_aset($$, ID2SYM(rb_intern("head")), $ExtensionAdditions);
     }
     |
-    ComponentType[item] NextHeadComponentType[list]
+    RootComponentTypeList[head] ',' ELLIPSES ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList[tail]
     {
-        $$ = $list;
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("head"))), $item);
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("head")), $head);
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+        rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec);
+        rb_hash_aset($$, ID2SYM(rb_intern("head")), $ExtensionAdditions);
+        rb_hash_aset($$, ID2SYM(rb_intern("tail")), $tail);
+    }
+    |
+    ELLIPSES ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList[tail]
+    {
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+        rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec);
+        rb_hash_aset($$, ID2SYM(rb_intern("head")), $ExtensionAdditions);
+        rb_hash_aset($$, ID2SYM(rb_intern("tail")), $tail);
+    }
+    |
+    ELLIPSES ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+    {
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
+        rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec);
+        rb_hash_aset($$, ID2SYM(rb_intern("head")), $ExtensionAdditions);
+    }
+    ;
+
+RootComponentTypeList:
+    ComponentTypeList
+    ;
+
+ExtensionEndMarker:
+    ',' ELLIPSES
+    ;
+
+ExtensionAdditions:
+    ',' ExtensionAdditionList
+    {
+        $$ = $ExtensionAdditionList;
+    }
+    |
+    empty
+    ;
+
+ExtensionAdditionList:
+    ExtensionAddition
+    {
+        $$ = rb_ary_new();
+        rb_ary_push($$, $ExtensionAddition);
+    }
+    |
+    ExtensionAdditionList ',' ExtensionAddition
+    {
+        rb_ary_push($$, $ExtensionAddition);
     }
     ;
     
-NextHeadComponentType:
-    '}'
-    {
-        $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("head")), rb_ary_new());
-    }
-    |
-    ',' ELLIPSES ExceptionSpec AdditionalComponentTypeList[list]
-    {
-        $$ = $list;
-        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);        
-        rb_hash_aset($$, ID2SYM(rb_intern("exceptionSpec")), $ExceptionSpec);
-    }
-    |
-    ',' ComponentType[item] NextHeadComponentType[list]
-    {
-        $$ = $list;
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("head"))), $item);
-    }
-    ;
-
-AdditionalComponentTypeList:
-    '}'
-    {
-        $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("head")), rb_ary_new());
-    }
-    |
-    ',' AdditionalComponentType[item] NextAdditionalComponentType[list]
-    {
-        $$ = $list;
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("additional"))), $item); 
-    }
-    ;
-
-NextAdditionalComponentType:
-    '}'
-    {
-        $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("additional")), rb_ary_new());
-        rb_hash_aset($$, ID2SYM(rb_intern("head")), rb_ary_new());
-    }
-    |
-    ',' ELLIPSES TailComponentTypeList[list] '}'
-    {
-        $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("additional")), rb_ary_new());
-        rb_hash_aset($$, ID2SYM(rb_intern("tail")), $list);
-        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
-    }
-    |
-    ',' AdditionalComponentType[item] NextAdditionalComponentType[list]
-    {
-        $$ = $list;
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("additional"))), $item);         
-    }
-    ;        
-
-AdditionalComponentType:
+ExtensionAddition:
     ComponentType
     |
-    LVERSION VersionNumber[version] ComponentTypeList[additional] RVERSION
+    ExtensionAdditionGroup
+    ;
+    
+ExtensionAdditionGroup:
+    LVERSION VersionNumber ComponentTypeList RVERSION
     {
         $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("version")), $version);
-        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $additional);
+        rb_hash_aset($$, ID2SYM(rb_intern("version")), $VersionNumber);
+        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $ComponentTypeList);
         rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
-    }
-    ;
-
-ComponentTypeList:
-    ComponentType
-    |
-    ComponentTypeList ',' ComponentType
-    ;
-
-TailComponentTypeList:
-    empty
-    |
-    ',' ComponentTypeList[list]
-    {
-        $$ = $list;
     }
     ;
     
 VersionNumber:
     empty
     |
-    POSINT ':'
+    number ':'    
+    ;
+    
+ComponentTypeList:
+    ComponentType
+    {
+        $$ = rb_ary_new();
+        rb_ary_push($$, $ComponentType);
+    }    
+    |
+    ComponentTypeList ',' ComponentType
+    {
+        rb_ary_push($$, $ComponentType);
+    }
     ;
 
 ComponentType:
@@ -741,8 +792,7 @@ NamedType:
         $$ = $Type;
         rb_hash_aset($$, ID2SYM(rb_intern("id")), $identifier); 
         rb_hash_aset($$, ID2SYM(rb_intern("tag")), $tag);
-        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
-        
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));        
     }
     ;
 
@@ -784,80 +834,86 @@ SequenceOfTypeTarget:
     
 /**********************************************************************/
 
-
-ChoiceType:    
-    CHOICE '{' NamedType[item] NextAltType[list]
+ChoiceType:
+    CHOICE '{' AlternativeTypeLists '}'
     {
-        $$ = $list;
+        $$ = $AlternativeTypeLists;
         rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("CHOICE")));
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("root"))), $item);        
     }
     ;
 
-NextAltType:
-    '}'
+AlternativeTypeLists:
+    RootAlternativeTypeList[root]
     {
         $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("root")), rb_ary_new());
-    }   
-    |
-    ',' ELLIPSES ExceptionSpec NextAddAltType[list]
-    {
-        $$ = $list;
-        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
-        rb_hash_aset($$, ID2SYM(rb_intern("exceptionSpec")), $ExceptionSpec);
-        rb_hash_aset($$, ID2SYM(rb_intern("root")), rb_ary_new());
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
     }
     |
-    ',' NamedType[item] NextAltType[list]
+    RootAlternativeTypeList[root] ',' ELLIPSES ExceptionSpec ExtensionAdditionAlternatives[additional] OptionalExtensionMarker
     {
-        $$ = $list;
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("root"))), $item);
+        $$ = rb_hash_new();
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue); 
+        rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec);
+        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $additional);        
     }
     ;
 
-NextAddAltType:
-    '}'
+RootAlternativeTypeList:
+    AlternativeTypeList
+    ;
+
+ExtensionAdditionAlternatives:
+    ',' ExtensionAdditionAlternativesList
     {
-        $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("additional")), rb_ary_new());
+        $$ = $ExtensionAdditionAlternativesList;
     }
     |
-    ',' ELLIPSES '}'
+    empty
+    ;
+    
+ExtensionAdditionAlternativesList:
+    ExtensionAdditionAlternative
     {
-        $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("additional")), rb_ary_new());
+        $$ = rb_ary_new();
+        rb_ary_push($$, $ExtensionAdditionAlternative);
     }
     |
-    ',' AddAltType[item] NextAddAltType[list]
+    ExtensionAdditionAlternativesList ',' ExtensionAdditionAlternative
     {
-        $$ = $list;
-        rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("additional"))), $item);
+        rb_ary_push($$, $ExtensionAdditionAlternative);
     }
     ;
 
-AddAltType:
+ExtensionAdditionAlternative:
+    ExtensionAdditionAlternativesGroup
+    |
     NamedType
-    |
-    LVERSION VersionNumber[version] VersionedAltType[list] RVERSION
+    ;
+    
+ExtensionAdditionAlternativesGroup:
+    LVERSION VersionNumber AlternativeTypeList RVERSION
     {
         $$ = rb_hash_new();
-        rb_hash_aset($$, ID2SYM(rb_intern("version")), $version);
-        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $list);
+        rb_hash_aset($$, ID2SYM(rb_intern("version")), $VersionNumber);
+        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $AlternativeTypeList);
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, &@$));
     }
     ;
 
-VersionedAltType:
-    VersionedAltType[list] ',' NamedType[item]
+AlternativeTypeList:
+    NamedType
     {
-        rb_ary_push($$, $item);
+        $$ = rb_ary_new();
+        rb_ary_push($$, $NamedType);
     }
     |
-    NamedType[item]
+    AlternativeTypeList ',' NamedType
     {
-        $$ = rb_ary_new3(1, $item);        
+        rb_ary_push($$, $NamedType);
     }
     ;
+
 
 /**********************************************************************/
 
@@ -934,13 +990,21 @@ ClassNumber:
 /**********************************************************************/
 
 Constraint:
-    '(' ConstraintSpec ')'
-    {        
-        $$ = $ConstraintSpec;        
-    }    
+    '(' ConstraintSpec ExceptionSpec ')'
+    {
+        $$ = $ConstraintSpec;
+    }
     ;
 
 ConstraintSpec:
+    SubtypeConstraint
+    ;
+
+SubtypeConstraint:
+    ElementSetSpecs
+    ;
+
+ElementSetSpecs:
     ElementSetSpec[root]
     {
         $$ = rb_hash_new();
@@ -1158,56 +1222,49 @@ void Init_ext_parser(void)
 
 void yyerror(YYLTYPE *locp, yyscan_t scanner, VALUE filename, VALUE *tree, char const *msg, ... )
 {
-    int retval;
-    VALUE rbString;
-    char error[500];
-
-    int hdrLen;
-    
-    hdrLen = snprintf(error, sizeof(error), "%s:%i:%i: error: ", (const char *)RSTRING_PTR(filename), locp->first_line, locp->first_column);
-
-    if((hdrLen > 0) && (hdrLen <= sizeof(error))){
-
-        va_list argptr;
-        va_start(argptr, msg);
-        retval = vsnprintf(&error[hdrLen], sizeof(error) - hdrLen, msg, argptr);
-        va_end(argptr);
-
-        if((retval > 0) && ((hdrLen + retval) <= sizeof(error))){
-
-            rbString = rb_str_new((const char *)error, (hdrLen + retval));
-            rb_io_puts(1, &rbString, rb_stderr);            
-        }
-        else{
-
-            rb_bug("yyerror buffer is too short to contain error message");
-        }
-    }
-    else{
-
-        rb_bug("yyerror buffer is too short to contain error message");
-    }
+    VALUE message = newLocation(filename, locp);
+    rb_str_append(message, rb_str_new2(": error: "));
+    rb_str_append(message, rb_str_new2(msg));
+    rb_io_puts(1, &message, rb_stderr);            
 }
 
 /* static functions ***************************************************/
 
 static VALUE parseFileBuffer(VALUE self, VALUE attr)
 {
-    yyscan_t scanner;    
-
+    yyscan_t scanner;
     VALUE tree = Qnil;
+    int retval;    
 
     VALUE buffer = rb_hash_aref(attr, ID2SYM(rb_intern("buffer")));
     VALUE filename = rb_hash_aref(attr, ID2SYM(rb_intern("fileName")));
 
     if(yylex_init(&scanner) == 0){
 
-            if(yy_scan_bytes((const char *)RSTRING_PTR(buffer), RSTRING_LEN(buffer), scanner)){
+        if(yy_scan_bytes((const char *)RSTRING_PTR(buffer), RSTRING_LEN(buffer), scanner)){
 
-            yyparse(scanner, filename, &tree);
+            retval = yyparse(scanner, filename, &tree);
+
+            yylex_destroy(scanner);
+
+            switch(retval){
+            case 0:
+                break;
+            case 1:
+                rb_raise(cParseError, "parse error");
+                break;
+            case 2:
+                rb_bug("yyparse: bison parser reports memory exhaustion");
+                break;
+            default:
+                rb_bug("yyparse: unknown return code");
+                break;
+            }
         }
+        else{
 
-        yylex_destroy(scanner);
+            yylex_destroy(scanner);
+        }
     }
 
     return tree;

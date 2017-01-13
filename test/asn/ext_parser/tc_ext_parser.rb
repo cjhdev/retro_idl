@@ -34,6 +34,8 @@ testClass = Class.new(Test::Unit::TestCase) do
 
             define_method( test_name ) do
 
+                puts "running #{test_name}"
+
                 # run stage 1 and intercept stderr output
                 err = capture_stderr do
 
