@@ -3,6 +3,7 @@ notifications:
 language: Ruby
 rvm:
   - 2.0.0
+  - 2.3.4
 script:
     - rake compile
     - rake test_ext_parser    
