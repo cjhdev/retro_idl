@@ -1,0 +1,32 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+    Single ::= ENUMERATED { zero }
+
+    Couple ::= ENUMERATED { zero, one(1) }
+
+    Few ::= ENUMERATED { zero, one(1), three(-2), four, five(five) }
+
+    SingleExtensible ::= ENUMERATED { zero, ... }
+
+    FewExtensible ::= ENUMERATED { zero, one(1), three(-2), four, five(five), ... }
+
+    FewExtensibleException ::= ENUMERATED { zero, one(1), three(-2), four, five(five), ... ! 127 }
+
+    Additional ::= ENUMERATED { zero, one(1), three(-2), four, five(five), ... , six(six), seven, eight, nine(9) }
+
+    AdditionalException ::= ENUMERATED { zero, one(1), three(-2), four, five(five), ... ! 127 , six(six), seven, eight, nine(9) }
+
+    zero INTEGER ::= 9
+    one INTEGER ::= 9
+    three INTEGER ::= 9    
+    four INTEGER ::= 9    
+    five INTEGER ::= 5
+    six INTEGER ::= 6
+    seven INTEGER ::= 6
+    eight INTEGER ::= 6
+    nine INTEGER ::= 9
+
+    
+END

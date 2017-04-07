@@ -1,0 +1,14 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+    --Empty ::= [ 1 ] SEQUENCE {}
+
+    Double ::= SEQUENCE
+    {
+        one [0] NULL,
+        two [1] NULL
+    }
+
+END
+

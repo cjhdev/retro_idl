@@ -1,27 +1,20 @@
 require 'rake/testtask'
 require 'rake/extensiontask'
 
-DIR_SRC = "ext/retro_idl/asn/ext_parser"
-DIR_ETC = "etc/retro_idl/asn/ext_parser"
+DIR_SRC = "ext/retro_idl/ext_parser"
+DIR_ETC = "etc/retro_idl/ext_parser"
 
 Rake::ExtensionTask.new  do |ext|
     ext.name = "ext_parser"
     ext.ext_dir = DIR_SRC
-    ext.lib_dir = "lib/retro_idl/asn"
+    ext.lib_dir = "lib/retro_idl"
 end
 
-desc "ext_parser (only) tests"
+desc "tests"
 Rake::TestTask.new do |t|
-    t.name = :test_ext_parser
+    t.name = :test
     t.libs << "lib"
-    t.test_files = FileList["test/asn/ext_parser/tc_*.rb"]
-end
-
-desc "parser tests"
-Rake::TestTask.new do |t|
-    t.name = :test_parser
-    t.libs << "lib"
-    t.test_files = FileList["test/asn/parser/tc_*.rb"]
+    t.test_files = FileList["test/tc_*.rb"]
 end
 
 task :default => :test

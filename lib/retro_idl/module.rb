@@ -17,5 +17,44 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+module RetroIDL
+
+    # X.680 section 13
+    class MODULE
+
+        attr_reader :id
+
+        def assignments
+            @assignments.values
+        end
+
+        def initialize(mods, attr)
+
+            errors = false
+            @id = attr[:id]
+            @assignments = {}
+            @mods = mods
+            
+            attr[:assignments].each do |assignment|
+                if @assignments[assignment[:id]]
+                    ASN.putError(assignment[:location], "duplicate assignment")
+                    errors = true
+                    next
+                end
+
+                begin
+                    @assignments[assignment[:id]] = RetroIDL.const_get(assignment[:class]).new(self, assignment)                         
+                rescue ASNError
+                    errors = true        
+                end
+            end
+
+            if errors
+                raise ASNError.new
+            end
+
+        end
+
+    end
+
+end

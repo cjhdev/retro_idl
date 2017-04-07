@@ -17,5 +17,36 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+module RetroIDL
+
+    class SEQUENCEOF < BaseType
+
+        TAG_CLASS_NUMBER = 16
+        TAG_CLASS = :universal
+
+        def initialize(mod, opts)
+            super(mod, opts)
+            @type = RetroIDL.const_get(opts[:type][:class]).new( mod, opts[:type] )
+        end
+
+        def link(mod, stack)
+
+            if @mod.nil? or @mod != mod
+                @mod = nil
+                if @type.link(mod, stack)
+                    super(mod, stack)
+                end
+            else
+                @mod
+            end
+            
+        end
+
+        # @macro common_to_s
+        def to_s
+            "#{@tag} SEQUENCE #{@constraint} OF #{@type}"
+        end
+        
+    end
+
+end

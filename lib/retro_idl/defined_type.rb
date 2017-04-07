@@ -17,5 +17,49 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+module RetroIDL
+
+    class DefinedType < BaseType
+
+        def initialize(mod, opts)
+
+            super(mod, opts)
+
+            if RetroIDL::is_typereference?(@location, opts[:ref])                
+                @symbol = opts[:ref]
+            else
+                raise ASNError
+            end
+
+        end
+
+        # @macro common_link
+        def link(mod, stack)
+
+            if @mod.nil? or @mod != mod
+
+                @mod = nil
+
+                if mod.symbols(@symbol)
+
+                    if mod.symbols(@symbol).link(mod, stack)
+
+                        super(mod, stack)
+
+                    end
+                    
+                else
+
+                    ASN.putError(@location, "symbol is undefined")
+                    
+                end
+
+            end
+
+            @mod
+
+        end
+        
+    end
+
+end

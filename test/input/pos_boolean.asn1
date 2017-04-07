@@ -1,0 +1,7 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+Test ::= BOOLEAN
+
+END

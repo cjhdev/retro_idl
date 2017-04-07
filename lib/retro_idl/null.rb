@@ -17,5 +17,26 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+module RetroIDL
+
+    class NULL < BaseType
+
+        TAG_CLASS_NUMBER = 5
+        TAG_CLASS = :universal
+
+        # @macro common_to_s
+        def to_s
+            "#{@tag} NULL #{@constraint}"    
+        end
+
+        def evaluate(value)
+            value.nil?
+        end
+
+        def evaluateConstraint(value)
+            true
+        end
+
+    end
+
+end

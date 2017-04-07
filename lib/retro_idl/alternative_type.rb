@@ -17,5 +17,24 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+module RetroIDL
+
+    class AlternativeType
+
+        def initialize(mod, opts)
+            @mod = mod
+            @type = RetroIDL.const_get(opts[:class]).new(mod, opts)
+        end
+
+        def link(mod, stack)
+            @type.link(mod, stack)
+        end
+
+        # @macro common_to_s
+        def to_s
+            "#{@type.id} #{@type}"
+        end
+
+    end
+
+end

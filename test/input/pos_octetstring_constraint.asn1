@@ -1,0 +1,9 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+    Test ::= OCTET STRING (SIZE(0..5))
+
+
+
+END

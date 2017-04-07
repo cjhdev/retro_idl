@@ -1,0 +1,22 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+
+    Single ::= INTEGER (0)
+    Range ::= INTEGER (0..1)
+    SingleUnion ::= INTEGER (0 | 1)
+    SingleUnion2 ::= INTEGER (0 | 1 ^ 2 | 3)
+    Extended ::= INTEGER (0 | 1 ^ 2 | 3, ... , 1)
+    Extensible ::= INTEGER (0 | 1 ^ 2 | 3, ... )
+
+    SingleSingle ::= INTEGER (0) (1)
+
+    Nested ::= INTEGER (0 | ( 0 ))
+
+    AllExcept ::= INTEGER (ALL EXCEPT ( 0 | 1 | 2) )
+
+
+END
+
+

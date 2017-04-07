@@ -17,5 +17,29 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+
+module RetroIDL
+
+    # methods and attributes common to ASN.1 values
+    class BaseValue
+
+        attr_reader :governor, :id, :value, :location
+        
+        def initialize(mod, opts)
+            @value = opts[:value]
+            @location = opts[:location]
+            @id = opts[:id]
+            @mod = mod
+            @governor = nil
+            if opts[:governor]
+                @governor = RetroIDL.const_get(opts[:governor][:class]).new(**opts[:governor])
+            end            
+        end
+
+        def self.===(otherClass)
+            self == otherClass
+        end
+
+    end
+
+end

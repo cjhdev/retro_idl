@@ -17,5 +17,27 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+module RetroIDL
+
+    class OCTETSTRING <BaseType
+
+        TAG_CLASS_NUMBER = 4
+        TAG_CLASS = :universal
+
+        def evaluate(value)
+            value.kind_of?(String)
+        end
+
+        def evaluateConstraint(value)
+
+            if evaluate(value) and ( @constraint or @constraint.evaluate(value) )
+                true
+            else
+                false
+            end
+
+        end
+
+    end
+
+end

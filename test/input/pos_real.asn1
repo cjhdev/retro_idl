@@ -1,0 +1,8 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+    Test ::= REAL
+
+
+END

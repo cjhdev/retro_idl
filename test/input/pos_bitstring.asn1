@@ -1,0 +1,16 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+NoList ::= BIT STRING
+
+Single ::= BIT STRING { zero(0) }
+
+Couple ::= BIT STRING { zero(0), one(1) }
+
+Few ::= BIT STRING { zero(0), one(1), three(-2), four(-22), five(five) }
+
+five INTEGER ::= 5
+
+END
+    

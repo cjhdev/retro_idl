@@ -17,5 +17,44 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+
+module RetroIDL
+
+    # X.680 section 19
+    class INTEGER < BaseType
+
+        TAG_CLASS_NUMBER = 2
+        TAG_CLASS = :universal
+
+        attr_reader :numberList
+
+        # @see BaseType#initialize
+        #
+        # @param opts [Hash]
+        #
+        # @option opts [Array<Hash>] :numberList NamedNumberList
+        #
+        # @raise [ASNError]
+        #
+        def initialize(mod, opts)
+            super(mod, opts)
+            @numberList = nil
+            if opts[:numberList]
+                @numberList = ValueList.new(mod, opts[:numberList], NamedNumber)
+            end
+        end
+
+        # @macro common_evaluate
+        def evaluate(value)
+            value.kind_of?(Integer)
+        end
+
+        def evaluateConstraint(value)
+            if evaluate(value) and ( @constraint.nil? or @constraint.evaluate(value) )
+                true
+            end
+        end
+
+    end
+
+end

@@ -10,7 +10,5 @@ Google Protocol Buffers, Apache Thrift, Apache Avro, and the many others.
 
 ## License
 
-MIT
-
-Cameron Harper 2016
+RetroIDL has an MIT license.
 

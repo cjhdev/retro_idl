@@ -17,5 +17,36 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+module RetroIDL
+
+    class ValueList < TypeList
+
+        # @macro common_link
+        def link(mod, stack)
+
+            if @mod.nil? or @mod != mod
+
+                @mod = nil
+                ok = true
+
+                @list.values.each do |item|
+                    if item.link(mod, []).nil?
+                        ok = false                        
+                    end                    
+                end
+
+                if ok
+                    @mod = mod
+                else
+                    @mod
+                end
+
+            else
+                @mod
+            end                
+
+        end
+
+    end
+
+end

@@ -1,0 +1,16 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+
+    NoList ::= INTEGER
+
+    Single ::= INTEGER { zero(0) }
+
+    Couple ::= INTEGER { zero(0), one(1) }
+
+    Few ::= INTEGER { zero(0), one(1), three(-2), four(-22), five(five) }
+
+    five INTEGER ::= 5
+    
+END

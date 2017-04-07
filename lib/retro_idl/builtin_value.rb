@@ -17,5 +17,23 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'retro_idl/version'
-require 'retro_idl/asn'
+module RetroIDL
+
+    # BuiltinValue aggregation
+    #
+    # X.680 section 17.2
+    class BuiltinValue < BaseValue
+
+        attr_reader :id, :governor, :location
+
+        # @macro common_to_s
+        def to_s
+            "#{@value}"            
+        end
+
+        def link(mod, stack)
+            mod
+        end
+
+    end
+end

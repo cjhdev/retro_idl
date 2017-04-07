@@ -1,0 +1,24 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+    Empty ::= SEQUENCE {}
+
+    Four ::= SEQUENCE
+    {
+        one     NULL,
+        two     INTEGER,
+        three   REAL,
+        four    OCTET STRING    
+    }
+
+    FourExtensible ::= SEQUENCE
+    {
+        one     NULL,
+        two     INTEGER,
+        three   REAL,
+        four    OCTET STRING,
+        ...
+    }
+    
+END

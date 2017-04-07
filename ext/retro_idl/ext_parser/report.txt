@@ -1,0 +1,5826 @@
+Nonterminals useless in grammar
+
+   DefinitiveNumberForm
+   NameAndNumberForm
+
+
+Terminals unused in grammar
+
+   CARET
+   PIPE
+   UNKNOWN
+   ENDL
+   EXCLAIM
+   SET
+   COMPONENT
+   ABSENT
+   CONTAINING
+   INCLUDES
+   SETTINGS
+   PRESENT
+   PATTERN
+   WITH
+   CHAR
+   DATE
+   DATE_TIME
+   DURATION
+   EMBEDDED
+   PDV
+   EXTERNAL
+   RELATIVE_OID_IRI
+   RELATIVE_IRI
+   RELATIVE_OID
+   TIME
+   TIME_OF_DAY
+   "hexadecimal"
+   CONTAINS
+   "cstring"
+   IMPORTS
+
+
+Rules useless in grammar
+
+  236 DefinitiveNumberForm: number
+
+  237 NameAndNumberForm: identifier '(' DefinitiveNumberForm ')'
+
+
+State 43 conflicts: 1 shift/reduce
+State 165 conflicts: 1 shift/reduce
+State 172 conflicts: 1 shift/reduce
+State 209 conflicts: 1 shift/reduce
+State 221 conflicts: 1 shift/reduce
+State 237 conflicts: 1 shift/reduce
+State 273 conflicts: 1 shift/reduce
+State 281 conflicts: 1 reduce/reduce
+State 311 conflicts: 1 shift/reduce
+State 315 conflicts: 1 shift/reduce
+State 324 conflicts: 1 shift/reduce
+State 352 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: Top EOF
+
+    1 Top: ModuleList
+    2    | empty
+
+    3 empty: %empty
+
+    4 hstring: "hstring"
+
+    5 bstring: "bstring"
+
+    6 identifier: "identifier"
+
+    7 typereference: "typereference"
+
+    8 valuereference: identifier
+
+    9 number: "number"
+
+   10 realnumber: "realnumber"
+
+   11 encodingreference: identifier
+
+   12 modulereference: typereference
+
+   13 ModuleList: ModuleList Module
+   14           | Module
+
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN OptModuleBody END
+
+   16 optDefinitiveIdentification: DefinitiveOID
+   17                            | empty
+
+   18 DefinitiveOID: '{' DefinitiveOIDComponentList '}'
+
+   19 DefinitiveOIDComponentList: DefinitiveOIDComponent
+   20                           | DefinitiveOIDComponentList DefinitiveOIDComponent
+
+   21 DefinitiveOIDComponent: number
+   22                       | identifier
+   23                       | identifier '(' ')'
+
+   24 EncodingReferenceDefault: encodingreference INSTRUCTIONS
+   25                         | empty
+
+   26 TagDefault: EXPLICIT TAGS
+   27           | IMPLICIT TAGS
+   28           | AUTOMATIC TAGS
+   29           | empty
+
+   30 ExtensionDefault: EXTENSIBILITY IMPLIED
+   31                 | empty
+
+   32 OptModuleBody: empty
+   33              | ModuleBody
+
+   34 ModuleBody: OptExports OptImports AssignmentList
+
+   35 OptExports: empty
+   36           | Exports
+
+   37 Exports: EXPORTS SymbolsExported ';'
+   38        | EXPORTS ALL ';'
+
+   39 SymbolsExported: SymbolList
+   40                | empty
+
+   41 OptImports: empty
+   42           | Imports
+
+   43 Imports: EXPORTS SymbolsImported ';'
+
+   44 SymbolsImported: SymbolsFromModuleList
+   45                | empty
+
+   46 SymbolsFromModuleList: SymbolsFromModule
+   47                      | SymbolsFromModuleList SymbolsFromModule
+
+   48 SymbolsFromModule: SymbolList FROM GlobalModuleReference
+
+   49 GlobalModuleReference: modulereference
+
+   50 SymbolList: Symbol
+   51           | SymbolList ',' Symbol
+
+   52 Symbol: Reference
+
+   53 Reference: typereference
+   54          | valuereference
+
+   55 AssignmentList: AssignmentList Assignment
+   56               | Assignment
+
+   57 Assignment: TypeAssignment
+   58           | ValueAssignment
+
+   59 TypeAssignment: typereference "::=" optTypePrefix Type
+
+   60 ValueAssignment: valuereference Type "::=" Value
+
+   61 Value: TRUE
+   62      | FALSE
+   63      | NULL
+   64      | SignedNumber
+   65      | RealValue
+   66      | identifier
+   67      | identifier ':' Value
+   68      | bstring
+   69      | hstring
+   70      | '{' '}'
+   71      | '{' NamedValueList '}'
+   72      | '{' ValueList '}'
+
+   73 NamedValueList: NamedValue
+   74               | NamedValueList ',' NamedValue
+
+   75 ValueList: Value
+   76          | ValueList ',' Value
+
+   77 NamedValue: identifier Value
+
+   78 Type: BitStringType
+   79     | ObjectIdentifierType
+   80     | BooleanType
+   81     | CharacterStringType
+   82     | ChoiceType
+   83     | EnumeratedType
+   84     | IntegerType
+   85     | NullType
+   86     | OctetStringType
+   87     | RealType
+   88     | SequenceOfType
+   89     | SequenceType
+   90     | DefinedType
+   91     | ConstrainedType
+
+   92 ConstrainedType: Type Constraint
+
+   93 CharacterStringType: RestrictedCharacterStringType
+   94                    | UnrestrictedCharacterStringType
+
+   95 UnrestrictedCharacterStringType: CHARACTER STRING
+
+   96 RestrictedCharacterStringType: BMPString
+   97                              | GeneralString
+   98                              | GraphicString
+   99                              | IA5String
+  100                              | ISO646String
+  101                              | NumericString
+  102                              | PrintableString
+  103                              | TeletexString
+  104                              | T61String
+  105                              | UniversalString
+  106                              | UTF8String
+  107                              | VideotexString
+  108                              | VisibleString
+
+  109 DefinedType: typereference
+
+  110 ObjectIdentifierType: OBJECT IDENTIFIER
+
+  111 BooleanType: BOOLEAN
+
+  112 IntegerType: INTEGER
+  113            | INTEGER '{' NamedNumberList '}'
+
+  114 NamedNumberList: NamedNumber
+  115                | NamedNumberList ',' NamedNumber
+
+  116 NamedNumber: identifier '(' SignedNumber ')'
+  117            | identifier '(' identifier ')'
+
+  118 SignedNumber: number
+
+  119 EnumeratedType: ENUMERATED '{' Enumerations '}'
+
+  120 Enumerations: RootEnumeration
+  121             | RootEnumeration ',' "..." ExceptionSpec
+  122             | RootEnumeration ',' "..." ExceptionSpec ',' AdditionalEnumeration
+
+  123 RootEnumeration: Enumeration
+
+  124 AdditionalEnumeration: Enumeration
+
+  125 Enumeration: EnumerationItem
+  126            | Enumeration ',' EnumerationItem
+
+  127 EnumerationItem: identifier
+  128                | NamedNumber
+
+  129 RealType: REAL
+
+  130 RealValue: NumericRealValue
+  131          | SpecialRealValue
+
+  132 NumericRealValue: realnumber
+
+  133 SpecialRealValue: PLUS_INFINITY
+  134                 | MINUS_INFINITY
+  135                 | NOT_A_NUMBER
+
+  136 BitStringType: BIT STRING
+  137              | BIT STRING '{' NamedNumberList '}'
+
+  138 OctetStringType: OCTET STRING
+
+  139 NullType: NULL
+
+  140 SequenceType: SEQUENCE '{' '}'
+  141             | SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | SEQUENCE '{' ComponentTypeLists '}'
+
+  143 OptionalExtensionMarker: ',' "..."
+  144                        | empty
+
+  145 ComponentTypeLists: RootComponentTypeList
+  146                   | RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+  147                   | RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+  148                   | "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+  149                   | "..." ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+
+  150 RootComponentTypeList: ComponentTypeList
+
+  151 ExtensionEndMarker: ',' "..."
+
+  152 ExtensionAdditions: ',' ExtensionAdditionList
+  153                   | empty
+
+  154 ExtensionAdditionList: ExtensionAddition
+  155                      | ExtensionAdditionList ',' ExtensionAddition
+
+  156 ExtensionAddition: ComponentType
+  157                  | ExtensionAdditionGroup
+
+  158 ExtensionAdditionGroup: "[[" VersionNumber ComponentTypeList "]]"
+
+  159 VersionNumber: empty
+  160              | number ':'
+
+  161 ComponentTypeList: ComponentType
+  162                  | ComponentTypeList ',' ComponentType
+
+  163 ComponentType: NamedType
+  164              | NamedType OPTIONAL
+  165              | NamedType DEFAULT Value
+  166              | COMPONENTS OF Type
+
+  167 NamedType: identifier optTypePrefix Type
+
+  168 SequenceOfType: SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget
+
+  169 SequenceOfTypeVariant: OF
+  170                      | Constraint OF
+  171                      | SizeConstraint OF
+
+  172 SequenceOfTypeTarget: Type
+  173                     | NamedType
+
+  174 ChoiceType: CHOICE '{' AlternativeTypeLists '}'
+
+  175 AlternativeTypeLists: RootAlternativeTypeList
+  176                     | RootAlternativeTypeList ',' "..." ExceptionSpec ExtensionAdditionAlternatives OptionalExtensionMarker
+
+  177 RootAlternativeTypeList: AlternativeTypeList
+
+  178 ExtensionAdditionAlternatives: ',' ExtensionAdditionAlternativesList
+  179                              | empty
+
+  180 ExtensionAdditionAlternativesList: ExtensionAdditionAlternative
+  181                                  | ExtensionAdditionAlternativesList ',' ExtensionAdditionAlternative
+
+  182 ExtensionAdditionAlternative: ExtensionAdditionAlternativesGroup
+  183                             | NamedType
+
+  184 ExtensionAdditionAlternativesGroup: "[[" VersionNumber AlternativeTypeList "]]"
+
+  185 AlternativeTypeList: NamedType
+  186                    | AlternativeTypeList ',' NamedType
+
+  187 optTypePrefix: empty
+  188              | TypePrefix
+
+  189 TypePrefix: Tag
+  190           | Tag IMPLICIT
+  191           | Tag EXPLICIT
+
+  192 Tag: '[' encodingreference ':' Class ']'
+  193    | '[' Class ']'
+
+  194 Class: UNIVERSAL ClassNumber
+  195      | APPLICATION ClassNumber
+  196      | PRIVATE ClassNumber
+  197      | ClassNumber
+
+  198 ClassNumber: number
+  199            | identifier
+
+  200 Constraint: '(' ConstraintSpec ExceptionSpec ')'
+
+  201 ConstraintSpec: SubtypeConstraint
+
+  202 SubtypeConstraint: ElementSetSpecs
+
+  203 ElementSetSpecs: ElementSetSpec
+  204                | ElementSetSpec ',' "..."
+  205                | ElementSetSpec ',' "..." ',' ElementSetSpec
+
+  206 ElementSetSpec: ALL EXCEPT Elements
+  207               | Elements NextElements
+
+  208 NextElements: UnionMark Elements NextElements
+  209             | IntersectionMark Elements NextElements
+  210             | empty
+
+  211 IntersectionMark: INTERSECTION
+  212                 | '^'
+
+  213 UnionMark: UNION
+  214          | '|'
+
+  215 Elements: '(' ElementSetSpec ')'
+  216         | SubTypeElements
+
+  217 SubTypeElements: SingleValue
+  218                | ValueRange
+  219                | SizeConstraint
+
+  220 SingleValue: Value
+
+  221 ValueRange: LowerEndpoint ".." UpperEndpoint
+
+  222 LowerEndpoint: LowerEndValue
+  223              | LowerEndValue '<'
+
+  224 UpperEndpoint: UpperEndValue
+  225              | '<' UpperEndValue
+
+  226 LowerEndValue: Value
+  227              | MIN
+
+  228 UpperEndValue: Value
+  229              | MAX
+
+  230 SizeConstraint: SIZE Constraint
+
+  231 ExceptionSpec: '!' ExceptionIdentification
+  232              | empty
+
+  233 ExceptionIdentification: Type ':' Value
+  234                        | identifier
+  235                        | SignedNumber
+
+
+Terminals, with rules where they appear
+
+EOF (0) 0
+'!' (33) 231
+'(' (40) 23 116 117 200 215
+')' (41) 23 116 117 200 215
+',' (44) 51 74 76 115 121 122 126 143 146 147 148 151 152 155 162 176
+    178 181 186 204 205
+':' (58) 67 160 192 233
+';' (59) 37 38 43
+'<' (60) 223 225
+'[' (91) 192 193
+']' (93) 192 193
+'^' (94) 212
+'{' (123) 18 70 71 72 113 119 137 140 141 142 174
+'|' (124) 214
+'}' (125) 18 70 71 72 113 119 137 140 141 142 174
+error (256)
+EXCEPT (258) 206
+CARET (259)
+INTERSECTION (260) 211
+PIPE (261)
+UNION (262) 213
+UNKNOWN (263)
+ENDL (264)
+"[[" (265) 158 184
+"::=" (266) 15 59 60
+".." (267) 221
+"..." (268) 121 122 141 143 146 147 148 149 151 176 204 205
+EXCLAIM (269)
+OCTET (270) 138
+CHARACTER (271) 95
+BIT (272) 136 137
+STRING (273) 95 136 137 138
+SIZE (274) 230
+CHOICE (275) 174
+SEQUENCE (276) 140 141 142 168
+SET (277)
+OF (278) 166 169 170 171
+ALL (279) 38 206
+MIN (280) 227
+MAX (281) 229
+COMPONENTS (282) 166
+COMPONENT (283)
+ABSENT (284)
+CONTAINING (285)
+FROM (286) 48
+INCLUDES (287)
+SETTINGS (288)
+PRESENT (289)
+PATTERN (290)
+WITH (291)
+OPTIONAL (292) 164
+DEFAULT (293) 165
+IMPLICIT (294) 27 190
+EXPLICIT (295) 26 191
+APPLICATION (296) 195
+PRIVATE (297) 196
+UNIVERSAL (298) 194
+CHAR (299)
+BOOLEAN (300) 111
+INTEGER (301) 112 113
+ENUMERATED (302) 119
+BMPString (303) 96
+GeneralString (304) 97
+GraphicString (305) 98
+IA5String (306) 99
+ISO646String (307) 100
+NumericString (308) 101
+PrintableString (309) 102
+TeletexString (310) 103
+T61String (311) 104
+UniversalString (312) 105
+UTF8String (313) 106
+VideotexString (314) 107
+VisibleString (315) 108
+DATE (316)
+DATE_TIME (317)
+DURATION (318)
+EMBEDDED (319)
+PDV (320)
+EXTERNAL (321)
+RELATIVE_OID_IRI (322)
+OBJECT (323) 110
+IDENTIFIER (324) 110
+RELATIVE_IRI (325)
+RELATIVE_OID (326)
+TIME (327)
+TIME_OF_DAY (328)
+"number" (329) 9
+"hexadecimal" (330)
+"identifier" (331) 6
+"]]" (332) 158 184
+PLUS_INFINITY (333) 133
+MINUS_INFINITY (334) 134
+NOT_A_NUMBER (335) 135
+TRUE (336) 61
+FALSE (337) 62
+NULL (338) 63 139
+CONTAINS (339)
+"realnumber" (340) 10
+"hstring" (341) 4
+"bstring" (342) 5
+"cstring" (343)
+DEFINITIONS (344) 15
+BEGIN (345) 15
+END (346) 15
+TAGS (347) 26 27 28
+INSTRUCTIONS (348) 24
+EXPORTS (349) 37 38 43
+IMPORTS (350)
+EXTENSIBILITY (351) 30
+IMPLIED (352) 30
+AUTOMATIC (353) 28
+"typereference" (354) 7
+REAL (355) 129
+
+
+Nonterminals, with rules where they appear
+
+$accept (114)
+    on left: 0
+Top (115)
+    on left: 1 2, on right: 0
+empty (116)
+    on left: 3, on right: 2 17 25 29 31 32 35 40 41 45 144 153 159
+    179 187 210 232
+hstring (117)
+    on left: 4, on right: 69
+bstring (118)
+    on left: 5, on right: 68
+identifier (119)
+    on left: 6, on right: 8 11 22 23 66 67 77 116 117 127 167 199 234
+typereference (120)
+    on left: 7, on right: 12 53 59 109
+valuereference (121)
+    on left: 8, on right: 54 60
+number (122)
+    on left: 9, on right: 21 118 160 198
+realnumber (123)
+    on left: 10, on right: 132
+encodingreference (124)
+    on left: 11, on right: 24 192
+modulereference (125)
+    on left: 12, on right: 15 49
+ModuleList (126)
+    on left: 13 14, on right: 1 13
+Module (127)
+    on left: 15, on right: 13 14
+optDefinitiveIdentification (128)
+    on left: 16 17, on right: 15
+DefinitiveOID (129)
+    on left: 18, on right: 16
+DefinitiveOIDComponentList (130)
+    on left: 19 20, on right: 18 20
+DefinitiveOIDComponent (131)
+    on left: 21 22 23, on right: 19 20
+EncodingReferenceDefault (132)
+    on left: 24 25, on right: 15
+TagDefault (133)
+    on left: 26 27 28 29, on right: 15
+ExtensionDefault (134)
+    on left: 30 31, on right: 15
+OptModuleBody (135)
+    on left: 32 33, on right: 15
+ModuleBody (136)
+    on left: 34, on right: 33
+OptExports (137)
+    on left: 35 36, on right: 34
+Exports (138)
+    on left: 37 38, on right: 36
+SymbolsExported (139)
+    on left: 39 40, on right: 37
+OptImports (140)
+    on left: 41 42, on right: 34
+Imports (141)
+    on left: 43, on right: 42
+SymbolsImported (142)
+    on left: 44 45, on right: 43
+SymbolsFromModuleList (143)
+    on left: 46 47, on right: 44 47
+SymbolsFromModule (144)
+    on left: 48, on right: 46 47
+GlobalModuleReference (145)
+    on left: 49, on right: 48
+SymbolList (146)
+    on left: 50 51, on right: 39 48 51
+Symbol (147)
+    on left: 52, on right: 50 51
+Reference (148)
+    on left: 53 54, on right: 52
+AssignmentList (149)
+    on left: 55 56, on right: 34 55
+Assignment (150)
+    on left: 57 58, on right: 55 56
+TypeAssignment (151)
+    on left: 59, on right: 57
+ValueAssignment (152)
+    on left: 60, on right: 58
+Value (153)
+    on left: 61 62 63 64 65 66 67 68 69 70 71 72, on right: 60 67 75
+    76 77 165 220 226 228 233
+NamedValueList (154)
+    on left: 73 74, on right: 71 74
+ValueList (155)
+    on left: 75 76, on right: 72 76
+NamedValue (156)
+    on left: 77, on right: 73 74
+Type (157)
+    on left: 78 79 80 81 82 83 84 85 86 87 88 89 90 91, on right: 59
+    60 92 166 167 172 233
+ConstrainedType (158)
+    on left: 92, on right: 91
+CharacterStringType (159)
+    on left: 93 94, on right: 81
+UnrestrictedCharacterStringType (160)
+    on left: 95, on right: 94
+RestrictedCharacterStringType (161)
+    on left: 96 97 98 99 100 101 102 103 104 105 106 107 108, on right:
+    93
+DefinedType (162)
+    on left: 109, on right: 90
+ObjectIdentifierType (163)
+    on left: 110, on right: 79
+BooleanType (164)
+    on left: 111, on right: 80
+IntegerType (165)
+    on left: 112 113, on right: 84
+NamedNumberList (166)
+    on left: 114 115, on right: 113 115 137
+NamedNumber (167)
+    on left: 116 117, on right: 114 115 128
+SignedNumber (168)
+    on left: 118, on right: 64 116 235
+EnumeratedType (169)
+    on left: 119, on right: 83
+Enumerations (170)
+    on left: 120 121 122, on right: 119
+RootEnumeration (171)
+    on left: 123, on right: 120 121 122
+AdditionalEnumeration (172)
+    on left: 124, on right: 122
+Enumeration (173)
+    on left: 125 126, on right: 123 124 126
+EnumerationItem (174)
+    on left: 127 128, on right: 125 126
+RealType (175)
+    on left: 129, on right: 87
+RealValue (176)
+    on left: 130 131, on right: 65
+NumericRealValue (177)
+    on left: 132, on right: 130
+SpecialRealValue (178)
+    on left: 133 134 135, on right: 131
+BitStringType (179)
+    on left: 136 137, on right: 78
+OctetStringType (180)
+    on left: 138, on right: 86
+NullType (181)
+    on left: 139, on right: 85
+SequenceType (182)
+    on left: 140 141 142, on right: 89
+OptionalExtensionMarker (183)
+    on left: 143 144, on right: 141 146 149 176
+ComponentTypeLists (184)
+    on left: 145 146 147 148 149, on right: 142
+RootComponentTypeList (185)
+    on left: 150, on right: 145 146 147 148
+ExtensionEndMarker (186)
+    on left: 151, on right: 147 148
+ExtensionAdditions (187)
+    on left: 152 153, on right: 146 147 148 149
+ExtensionAdditionList (188)
+    on left: 154 155, on right: 152 155
+ExtensionAddition (189)
+    on left: 156 157, on right: 154 155
+ExtensionAdditionGroup (190)
+    on left: 158, on right: 157
+VersionNumber (191)
+    on left: 159 160, on right: 158 184
+ComponentTypeList (192)
+    on left: 161 162, on right: 150 158 162
+ComponentType (193)
+    on left: 163 164 165 166, on right: 156 161 162
+NamedType (194)
+    on left: 167, on right: 163 164 165 173 183 185 186
+SequenceOfType (195)
+    on left: 168, on right: 88
+SequenceOfTypeVariant (196)
+    on left: 169 170 171, on right: 168
+SequenceOfTypeTarget (197)
+    on left: 172 173, on right: 168
+ChoiceType (198)
+    on left: 174, on right: 82
+AlternativeTypeLists (199)
+    on left: 175 176, on right: 174
+RootAlternativeTypeList (200)
+    on left: 177, on right: 175 176
+ExtensionAdditionAlternatives (201)
+    on left: 178 179, on right: 176
+ExtensionAdditionAlternativesList (202)
+    on left: 180 181, on right: 178 181
+ExtensionAdditionAlternative (203)
+    on left: 182 183, on right: 180 181
+ExtensionAdditionAlternativesGroup (204)
+    on left: 184, on right: 182
+AlternativeTypeList (205)
+    on left: 185 186, on right: 177 184 186
+optTypePrefix (206)
+    on left: 187 188, on right: 59 167
+TypePrefix (207)
+    on left: 189 190 191, on right: 188
+Tag (208)
+    on left: 192 193, on right: 189 190 191
+Class (209)
+    on left: 194 195 196 197, on right: 192 193
+ClassNumber (210)
+    on left: 198 199, on right: 194 195 196 197
+Constraint (211)
+    on left: 200, on right: 92 170 230
+ConstraintSpec (212)
+    on left: 201, on right: 200
+SubtypeConstraint (213)
+    on left: 202, on right: 201
+ElementSetSpecs (214)
+    on left: 203 204 205, on right: 202
+ElementSetSpec (215)
+    on left: 206 207, on right: 203 204 205 215
+NextElements (216)
+    on left: 208 209 210, on right: 207 208 209
+IntersectionMark (217)
+    on left: 211 212, on right: 209
+UnionMark (218)
+    on left: 213 214, on right: 208
+Elements (219)
+    on left: 215 216, on right: 206 207 208 209
+SubTypeElements (220)
+    on left: 217 218 219, on right: 216
+SingleValue (221)
+    on left: 220, on right: 217
+ValueRange (222)
+    on left: 221, on right: 218
+LowerEndpoint (223)
+    on left: 222 223, on right: 221
+UpperEndpoint (224)
+    on left: 224 225, on right: 221
+LowerEndValue (225)
+    on left: 226 227, on right: 222 223
+UpperEndValue (226)
+    on left: 228 229, on right: 224 225
+SizeConstraint (227)
+    on left: 230, on right: 171 219
+ExceptionSpec (228)
+    on left: 231 232, on right: 121 122 141 146 147 148 149 176 200
+ExceptionIdentification (229)
+    on left: 233 234 235, on right: 231
+
+
+State 0
+
+    0 $accept: . Top EOF
+    1 Top: . ModuleList
+    2    | . empty
+    3 empty: . %empty  [EOF]
+    7 typereference: . "typereference"
+   12 modulereference: . typereference
+   13 ModuleList: . ModuleList Module
+   14           | . Module
+   15 Module: . modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN OptModuleBody END
+
+    "typereference"  shift, and go to state 1
+
+    $default  reduce using rule 3 (empty)
+
+    Top              go to state 2
+    empty            go to state 3
+    typereference    go to state 4
+    modulereference  go to state 5
+    ModuleList       go to state 6
+    Module           go to state 7
+
+
+State 1
+
+    7 typereference: "typereference" .
+
+    $default  reduce using rule 7 (typereference)
+
+
+State 2
+
+    0 $accept: Top . EOF
+
+    EOF  shift, and go to state 8
+
+
+State 3
+
+    2 Top: empty .
+
+    $default  reduce using rule 2 (Top)
+
+
+State 4
+
+   12 modulereference: typereference .
+
+    $default  reduce using rule 12 (modulereference)
+
+
+State 5
+
+    3 empty: . %empty  [DEFINITIONS]
+   15 Module: modulereference . optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN OptModuleBody END
+   16 optDefinitiveIdentification: . DefinitiveOID
+   17                            | . empty
+   18 DefinitiveOID: . '{' DefinitiveOIDComponentList '}'
+
+    '{'  shift, and go to state 9
+
+    $default  reduce using rule 3 (empty)
+
+    empty                        go to state 10
+    optDefinitiveIdentification  go to state 11
+    DefinitiveOID                go to state 12
+
+
+State 6
+
+    1 Top: ModuleList .  [EOF]
+    7 typereference: . "typereference"
+   12 modulereference: . typereference
+   13 ModuleList: ModuleList . Module
+   15 Module: . modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN OptModuleBody END
+
+    "typereference"  shift, and go to state 1
+
+    $default  reduce using rule 1 (Top)
+
+    typereference    go to state 4
+    modulereference  go to state 5
+    Module           go to state 13
+
+
+State 7
+
+   14 ModuleList: Module .
+
+    $default  reduce using rule 14 (ModuleList)
+
+
+State 8
+
+    0 $accept: Top EOF .
+
+    $default  accept
+
+
+State 9
+
+    6 identifier: . "identifier"
+    9 number: . "number"
+   18 DefinitiveOID: '{' . DefinitiveOIDComponentList '}'
+   19 DefinitiveOIDComponentList: . DefinitiveOIDComponent
+   20                           | . DefinitiveOIDComponentList DefinitiveOIDComponent
+   21 DefinitiveOIDComponent: . number
+   22                       | . identifier
+   23                       | . identifier '(' ')'
+
+    "number"      shift, and go to state 14
+    "identifier"  shift, and go to state 15
+
+    identifier                  go to state 16
+    number                      go to state 17
+    DefinitiveOIDComponentList  go to state 18
+    DefinitiveOIDComponent      go to state 19
+
+
+State 10
+
+   17 optDefinitiveIdentification: empty .
+
+    $default  reduce using rule 17 (optDefinitiveIdentification)
+
+
+State 11
+
+   15 Module: modulereference optDefinitiveIdentification . DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN OptModuleBody END
+
+    DEFINITIONS  shift, and go to state 20
+
+
+State 12
+
+   16 optDefinitiveIdentification: DefinitiveOID .
+
+    $default  reduce using rule 16 (optDefinitiveIdentification)
+
+
+State 13
+
+   13 ModuleList: ModuleList Module .
+
+    $default  reduce using rule 13 (ModuleList)
+
+
+State 14
+
+    9 number: "number" .
+
+    $default  reduce using rule 9 (number)
+
+
+State 15
+
+    6 identifier: "identifier" .
+
+    $default  reduce using rule 6 (identifier)
+
+
+State 16
+
+   22 DefinitiveOIDComponent: identifier .  ["number", "identifier", '}']
+   23                       | identifier . '(' ')'
+
+    '('  shift, and go to state 21
+
+    $default  reduce using rule 22 (DefinitiveOIDComponent)
+
+
+State 17
+
+   21 DefinitiveOIDComponent: number .
+
+    $default  reduce using rule 21 (DefinitiveOIDComponent)
+
+
+State 18
+
+    6 identifier: . "identifier"
+    9 number: . "number"
+   18 DefinitiveOID: '{' DefinitiveOIDComponentList . '}'
+   20 DefinitiveOIDComponentList: DefinitiveOIDComponentList . DefinitiveOIDComponent
+   21 DefinitiveOIDComponent: . number
+   22                       | . identifier
+   23                       | . identifier '(' ')'
+
+    "number"      shift, and go to state 14
+    "identifier"  shift, and go to state 15
+    '}'           shift, and go to state 22
+
+    identifier              go to state 16
+    number                  go to state 17
+    DefinitiveOIDComponent  go to state 23
+
+
+State 19
+
+   19 DefinitiveOIDComponentList: DefinitiveOIDComponent .
+
+    $default  reduce using rule 19 (DefinitiveOIDComponentList)
+
+
+State 20
+
+    3 empty: . %empty  ["::=", IMPLICIT, EXPLICIT, EXTENSIBILITY, AUTOMATIC]
+    6 identifier: . "identifier"
+   11 encodingreference: . identifier
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS . EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN OptModuleBody END
+   24 EncodingReferenceDefault: . encodingreference INSTRUCTIONS
+   25                         | . empty
+
+    "identifier"  shift, and go to state 15
+
+    $default  reduce using rule 3 (empty)
+
+    empty                     go to state 24
+    identifier                go to state 25
+    encodingreference         go to state 26
+    EncodingReferenceDefault  go to state 27
+
+
+State 21
+
+   23 DefinitiveOIDComponent: identifier '(' . ')'
+
+    ')'  shift, and go to state 28
+
+
+State 22
+
+   18 DefinitiveOID: '{' DefinitiveOIDComponentList '}' .
+
+    $default  reduce using rule 18 (DefinitiveOID)
+
+
+State 23
+
+   20 DefinitiveOIDComponentList: DefinitiveOIDComponentList DefinitiveOIDComponent .
+
+    $default  reduce using rule 20 (DefinitiveOIDComponentList)
+
+
+State 24
+
+   25 EncodingReferenceDefault: empty .
+
+    $default  reduce using rule 25 (EncodingReferenceDefault)
+
+
+State 25
+
+   11 encodingreference: identifier .
+
+    $default  reduce using rule 11 (encodingreference)
+
+
+State 26
+
+   24 EncodingReferenceDefault: encodingreference . INSTRUCTIONS
+
+    INSTRUCTIONS  shift, and go to state 29
+
+
+State 27
+
+    3 empty: . %empty  ["::=", EXTENSIBILITY]
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault . TagDefault ExtensionDefault "::=" BEGIN OptModuleBody END
+   26 TagDefault: . EXPLICIT TAGS
+   27           | . IMPLICIT TAGS
+   28           | . AUTOMATIC TAGS
+   29           | . empty
+
+    IMPLICIT   shift, and go to state 30
+    EXPLICIT   shift, and go to state 31
+    AUTOMATIC  shift, and go to state 32
+
+    $default  reduce using rule 3 (empty)
+
+    empty       go to state 33
+    TagDefault  go to state 34
+
+
+State 28
+
+   23 DefinitiveOIDComponent: identifier '(' ')' .
+
+    $default  reduce using rule 23 (DefinitiveOIDComponent)
+
+
+State 29
+
+   24 EncodingReferenceDefault: encodingreference INSTRUCTIONS .
+
+    $default  reduce using rule 24 (EncodingReferenceDefault)
+
+
+State 30
+
+   27 TagDefault: IMPLICIT . TAGS
+
+    TAGS  shift, and go to state 35
+
+
+State 31
+
+   26 TagDefault: EXPLICIT . TAGS
+
+    TAGS  shift, and go to state 36
+
+
+State 32
+
+   28 TagDefault: AUTOMATIC . TAGS
+
+    TAGS  shift, and go to state 37
+
+
+State 33
+
+   29 TagDefault: empty .
+
+    $default  reduce using rule 29 (TagDefault)
+
+
+State 34
+
+    3 empty: . %empty  ["::="]
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault . ExtensionDefault "::=" BEGIN OptModuleBody END
+   30 ExtensionDefault: . EXTENSIBILITY IMPLIED
+   31                 | . empty
+
+    EXTENSIBILITY  shift, and go to state 38
+
+    $default  reduce using rule 3 (empty)
+
+    empty             go to state 39
+    ExtensionDefault  go to state 40
+
+
+State 35
+
+   27 TagDefault: IMPLICIT TAGS .
+
+    $default  reduce using rule 27 (TagDefault)
+
+
+State 36
+
+   26 TagDefault: EXPLICIT TAGS .
+
+    $default  reduce using rule 26 (TagDefault)
+
+
+State 37
+
+   28 TagDefault: AUTOMATIC TAGS .
+
+    $default  reduce using rule 28 (TagDefault)
+
+
+State 38
+
+   30 ExtensionDefault: EXTENSIBILITY . IMPLIED
+
+    IMPLIED  shift, and go to state 41
+
+
+State 39
+
+   31 ExtensionDefault: empty .
+
+    $default  reduce using rule 31 (ExtensionDefault)
+
+
+State 40
+
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault . "::=" BEGIN OptModuleBody END
+
+    "::="  shift, and go to state 42
+
+
+State 41
+
+   30 ExtensionDefault: EXTENSIBILITY IMPLIED .
+
+    $default  reduce using rule 30 (ExtensionDefault)
+
+
+State 42
+
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" . BEGIN OptModuleBody END
+
+    BEGIN  shift, and go to state 43
+
+
+State 43
+
+    3 empty: . %empty  ["identifier", END, EXPORTS, "typereference"]
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN . OptModuleBody END
+   32 OptModuleBody: . empty
+   33              | . ModuleBody
+   34 ModuleBody: . OptExports OptImports AssignmentList
+   35 OptExports: . empty
+   36           | . Exports
+   37 Exports: . EXPORTS SymbolsExported ';'
+   38        | . EXPORTS ALL ';'
+
+    EXPORTS  shift, and go to state 44
+
+    EXPORTS   [reduce using rule 3 (empty)]
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 45
+    OptModuleBody  go to state 46
+    ModuleBody     go to state 47
+    OptExports     go to state 48
+    Exports        go to state 49
+
+
+State 44
+
+    3 empty: . %empty  [';']
+    6 identifier: . "identifier"
+    7 typereference: . "typereference"
+    8 valuereference: . identifier
+   37 Exports: EXPORTS . SymbolsExported ';'
+   38        | EXPORTS . ALL ';'
+   39 SymbolsExported: . SymbolList
+   40                | . empty
+   50 SymbolList: . Symbol
+   51           | . SymbolList ',' Symbol
+   52 Symbol: . Reference
+   53 Reference: . typereference
+   54          | . valuereference
+
+    ALL              shift, and go to state 50
+    "identifier"     shift, and go to state 15
+    "typereference"  shift, and go to state 1
+
+    $default  reduce using rule 3 (empty)
+
+    empty            go to state 51
+    identifier       go to state 52
+    typereference    go to state 53
+    valuereference   go to state 54
+    SymbolsExported  go to state 55
+    SymbolList       go to state 56
+    Symbol           go to state 57
+    Reference        go to state 58
+
+
+State 45
+
+   32 OptModuleBody: empty .  [END]
+   35 OptExports: empty .  ["identifier", EXPORTS, "typereference"]
+
+    END       reduce using rule 32 (OptModuleBody)
+    $default  reduce using rule 35 (OptExports)
+
+
+State 46
+
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN OptModuleBody . END
+
+    END  shift, and go to state 59
+
+
+State 47
+
+   33 OptModuleBody: ModuleBody .
+
+    $default  reduce using rule 33 (OptModuleBody)
+
+
+State 48
+
+    3 empty: . %empty  ["identifier", "typereference"]
+   34 ModuleBody: OptExports . OptImports AssignmentList
+   41 OptImports: . empty
+   42           | . Imports
+   43 Imports: . EXPORTS SymbolsImported ';'
+
+    EXPORTS  shift, and go to state 60
+
+    $default  reduce using rule 3 (empty)
+
+    empty       go to state 61
+    OptImports  go to state 62
+    Imports     go to state 63
+
+
+State 49
+
+   36 OptExports: Exports .
+
+    $default  reduce using rule 36 (OptExports)
+
+
+State 50
+
+   38 Exports: EXPORTS ALL . ';'
+
+    ';'  shift, and go to state 64
+
+
+State 51
+
+   40 SymbolsExported: empty .
+
+    $default  reduce using rule 40 (SymbolsExported)
+
+
+State 52
+
+    8 valuereference: identifier .
+
+    $default  reduce using rule 8 (valuereference)
+
+
+State 53
+
+   53 Reference: typereference .
+
+    $default  reduce using rule 53 (Reference)
+
+
+State 54
+
+   54 Reference: valuereference .
+
+    $default  reduce using rule 54 (Reference)
+
+
+State 55
+
+   37 Exports: EXPORTS SymbolsExported . ';'
+
+    ';'  shift, and go to state 65
+
+
+State 56
+
+   39 SymbolsExported: SymbolList .  [';']
+   51 SymbolList: SymbolList . ',' Symbol
+
+    ','  shift, and go to state 66
+
+    $default  reduce using rule 39 (SymbolsExported)
+
+
+State 57
+
+   50 SymbolList: Symbol .
+
+    $default  reduce using rule 50 (SymbolList)
+
+
+State 58
+
+   52 Symbol: Reference .
+
+    $default  reduce using rule 52 (Symbol)
+
+
+State 59
+
+   15 Module: modulereference optDefinitiveIdentification DEFINITIONS EncodingReferenceDefault TagDefault ExtensionDefault "::=" BEGIN OptModuleBody END .
+
+    $default  reduce using rule 15 (Module)
+
+
+State 60
+
+    3 empty: . %empty  [';']
+    6 identifier: . "identifier"
+    7 typereference: . "typereference"
+    8 valuereference: . identifier
+   43 Imports: EXPORTS . SymbolsImported ';'
+   44 SymbolsImported: . SymbolsFromModuleList
+   45                | . empty
+   46 SymbolsFromModuleList: . SymbolsFromModule
+   47                      | . SymbolsFromModuleList SymbolsFromModule
+   48 SymbolsFromModule: . SymbolList FROM GlobalModuleReference
+   50 SymbolList: . Symbol
+   51           | . SymbolList ',' Symbol
+   52 Symbol: . Reference
+   53 Reference: . typereference
+   54          | . valuereference
+
+    "identifier"     shift, and go to state 15
+    "typereference"  shift, and go to state 1
+
+    $default  reduce using rule 3 (empty)
+
+    empty                  go to state 67
+    identifier             go to state 52
+    typereference          go to state 53
+    valuereference         go to state 54
+    SymbolsImported        go to state 68
+    SymbolsFromModuleList  go to state 69
+    SymbolsFromModule      go to state 70
+    SymbolList             go to state 71
+    Symbol                 go to state 57
+    Reference              go to state 58
+
+
+State 61
+
+   41 OptImports: empty .
+
+    $default  reduce using rule 41 (OptImports)
+
+
+State 62
+
+    6 identifier: . "identifier"
+    7 typereference: . "typereference"
+    8 valuereference: . identifier
+   34 ModuleBody: OptExports OptImports . AssignmentList
+   55 AssignmentList: . AssignmentList Assignment
+   56               | . Assignment
+   57 Assignment: . TypeAssignment
+   58           | . ValueAssignment
+   59 TypeAssignment: . typereference "::=" optTypePrefix Type
+   60 ValueAssignment: . valuereference Type "::=" Value
+
+    "identifier"     shift, and go to state 15
+    "typereference"  shift, and go to state 1
+
+    identifier       go to state 52
+    typereference    go to state 72
+    valuereference   go to state 73
+    AssignmentList   go to state 74
+    Assignment       go to state 75
+    TypeAssignment   go to state 76
+    ValueAssignment  go to state 77
+
+
+State 63
+
+   42 OptImports: Imports .
+
+    $default  reduce using rule 42 (OptImports)
+
+
+State 64
+
+   38 Exports: EXPORTS ALL ';' .
+
+    $default  reduce using rule 38 (Exports)
+
+
+State 65
+
+   37 Exports: EXPORTS SymbolsExported ';' .
+
+    $default  reduce using rule 37 (Exports)
+
+
+State 66
+
+    6 identifier: . "identifier"
+    7 typereference: . "typereference"
+    8 valuereference: . identifier
+   51 SymbolList: SymbolList ',' . Symbol
+   52 Symbol: . Reference
+   53 Reference: . typereference
+   54          | . valuereference
+
+    "identifier"     shift, and go to state 15
+    "typereference"  shift, and go to state 1
+
+    identifier      go to state 52
+    typereference   go to state 53
+    valuereference  go to state 54
+    Symbol          go to state 78
+    Reference       go to state 58
+
+
+State 67
+
+   45 SymbolsImported: empty .
+
+    $default  reduce using rule 45 (SymbolsImported)
+
+
+State 68
+
+   43 Imports: EXPORTS SymbolsImported . ';'
+
+    ';'  shift, and go to state 79
+
+
+State 69
+
+    6 identifier: . "identifier"
+    7 typereference: . "typereference"
+    8 valuereference: . identifier
+   44 SymbolsImported: SymbolsFromModuleList .  [';']
+   47 SymbolsFromModuleList: SymbolsFromModuleList . SymbolsFromModule
+   48 SymbolsFromModule: . SymbolList FROM GlobalModuleReference
+   50 SymbolList: . Symbol
+   51           | . SymbolList ',' Symbol
+   52 Symbol: . Reference
+   53 Reference: . typereference
+   54          | . valuereference
+
+    "identifier"     shift, and go to state 15
+    "typereference"  shift, and go to state 1
+
+    $default  reduce using rule 44 (SymbolsImported)
+
+    identifier         go to state 52
+    typereference      go to state 53
+    valuereference     go to state 54
+    SymbolsFromModule  go to state 80
+    SymbolList         go to state 71
+    Symbol             go to state 57
+    Reference          go to state 58
+
+
+State 70
+
+   46 SymbolsFromModuleList: SymbolsFromModule .
+
+    $default  reduce using rule 46 (SymbolsFromModuleList)
+
+
+State 71
+
+   48 SymbolsFromModule: SymbolList . FROM GlobalModuleReference
+   51 SymbolList: SymbolList . ',' Symbol
+
+    FROM  shift, and go to state 81
+    ','   shift, and go to state 66
+
+
+State 72
+
+   59 TypeAssignment: typereference . "::=" optTypePrefix Type
+
+    "::="  shift, and go to state 82
+
+
+State 73
+
+    7 typereference: . "typereference"
+   60 ValueAssignment: valuereference . Type "::=" Value
+   78 Type: . BitStringType
+   79     | . ObjectIdentifierType
+   80     | . BooleanType
+   81     | . CharacterStringType
+   82     | . ChoiceType
+   83     | . EnumeratedType
+   84     | . IntegerType
+   85     | . NullType
+   86     | . OctetStringType
+   87     | . RealType
+   88     | . SequenceOfType
+   89     | . SequenceType
+   90     | . DefinedType
+   91     | . ConstrainedType
+   92 ConstrainedType: . Type Constraint
+   93 CharacterStringType: . RestrictedCharacterStringType
+   94                    | . UnrestrictedCharacterStringType
+   95 UnrestrictedCharacterStringType: . CHARACTER STRING
+   96 RestrictedCharacterStringType: . BMPString
+   97                              | . GeneralString
+   98                              | . GraphicString
+   99                              | . IA5String
+  100                              | . ISO646String
+  101                              | . NumericString
+  102                              | . PrintableString
+  103                              | . TeletexString
+  104                              | . T61String
+  105                              | . UniversalString
+  106                              | . UTF8String
+  107                              | . VideotexString
+  108                              | . VisibleString
+  109 DefinedType: . typereference
+  110 ObjectIdentifierType: . OBJECT IDENTIFIER
+  111 BooleanType: . BOOLEAN
+  112 IntegerType: . INTEGER
+  113            | . INTEGER '{' NamedNumberList '}'
+  119 EnumeratedType: . ENUMERATED '{' Enumerations '}'
+  129 RealType: . REAL
+  136 BitStringType: . BIT STRING
+  137              | . BIT STRING '{' NamedNumberList '}'
+  138 OctetStringType: . OCTET STRING
+  139 NullType: . NULL
+  140 SequenceType: . SEQUENCE '{' '}'
+  141             | . SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | . SEQUENCE '{' ComponentTypeLists '}'
+  168 SequenceOfType: . SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget
+  174 ChoiceType: . CHOICE '{' AlternativeTypeLists '}'
+
+    OCTET            shift, and go to state 83
+    CHARACTER        shift, and go to state 84
+    BIT              shift, and go to state 85
+    CHOICE           shift, and go to state 86
+    SEQUENCE         shift, and go to state 87
+    BOOLEAN          shift, and go to state 88
+    INTEGER          shift, and go to state 89
+    ENUMERATED       shift, and go to state 90
+    BMPString        shift, and go to state 91
+    GeneralString    shift, and go to state 92
+    GraphicString    shift, and go to state 93
+    IA5String        shift, and go to state 94
+    ISO646String     shift, and go to state 95
+    NumericString    shift, and go to state 96
+    PrintableString  shift, and go to state 97
+    TeletexString    shift, and go to state 98
+    T61String        shift, and go to state 99
+    UniversalString  shift, and go to state 100
+    UTF8String       shift, and go to state 101
+    VideotexString   shift, and go to state 102
+    VisibleString    shift, and go to state 103
+    OBJECT           shift, and go to state 104
+    NULL             shift, and go to state 105
+    "typereference"  shift, and go to state 1
+    REAL             shift, and go to state 106
+
+    typereference                    go to state 107
+    Type                             go to state 108
+    ConstrainedType                  go to state 109
+    CharacterStringType              go to state 110
+    UnrestrictedCharacterStringType  go to state 111
+    RestrictedCharacterStringType    go to state 112
+    DefinedType                      go to state 113
+    ObjectIdentifierType             go to state 114
+    BooleanType                      go to state 115
+    IntegerType                      go to state 116
+    EnumeratedType                   go to state 117
+    RealType                         go to state 118
+    BitStringType                    go to state 119
+    OctetStringType                  go to state 120
+    NullType                         go to state 121
+    SequenceType                     go to state 122
+    SequenceOfType                   go to state 123
+    ChoiceType                       go to state 124
+
+
+State 74
+
+    6 identifier: . "identifier"
+    7 typereference: . "typereference"
+    8 valuereference: . identifier
+   34 ModuleBody: OptExports OptImports AssignmentList .  [END]
+   55 AssignmentList: AssignmentList . Assignment
+   57 Assignment: . TypeAssignment
+   58           | . ValueAssignment
+   59 TypeAssignment: . typereference "::=" optTypePrefix Type
+   60 ValueAssignment: . valuereference Type "::=" Value
+
+    "identifier"     shift, and go to state 15
+    "typereference"  shift, and go to state 1
+
+    $default  reduce using rule 34 (ModuleBody)
+
+    identifier       go to state 52
+    typereference    go to state 72
+    valuereference   go to state 73
+    Assignment       go to state 125
+    TypeAssignment   go to state 76
+    ValueAssignment  go to state 77
+
+
+State 75
+
+   56 AssignmentList: Assignment .
+
+    $default  reduce using rule 56 (AssignmentList)
+
+
+State 76
+
+   57 Assignment: TypeAssignment .
+
+    $default  reduce using rule 57 (Assignment)
+
+
+State 77
+
+   58 Assignment: ValueAssignment .
+
+    $default  reduce using rule 58 (Assignment)
+
+
+State 78
+
+   51 SymbolList: SymbolList ',' Symbol .
+
+    $default  reduce using rule 51 (SymbolList)
+
+
+State 79
+
+   43 Imports: EXPORTS SymbolsImported ';' .
+
+    $default  reduce using rule 43 (Imports)
+
+
+State 80
+
+   47 SymbolsFromModuleList: SymbolsFromModuleList SymbolsFromModule .
+
+    $default  reduce using rule 47 (SymbolsFromModuleList)
+
+
+State 81
+
+    7 typereference: . "typereference"
+   12 modulereference: . typereference
+   48 SymbolsFromModule: SymbolList FROM . GlobalModuleReference
+   49 GlobalModuleReference: . modulereference
+
+    "typereference"  shift, and go to state 1
+
+    typereference          go to state 4
+    modulereference        go to state 126
+    GlobalModuleReference  go to state 127
+
+
+State 82
+
+    3 empty: . %empty  [OCTET, CHARACTER, BIT, CHOICE, SEQUENCE, BOOLEAN, INTEGER, ENUMERATED, BMPString, GeneralString, GraphicString, IA5String, ISO646String, NumericString, PrintableString, TeletexString, T61String, UniversalString, UTF8String, VideotexString, VisibleString, OBJECT, NULL, "typereference", REAL]
+   59 TypeAssignment: typereference "::=" . optTypePrefix Type
+  187 optTypePrefix: . empty
+  188              | . TypePrefix
+  189 TypePrefix: . Tag
+  190           | . Tag IMPLICIT
+  191           | . Tag EXPLICIT
+  192 Tag: . '[' encodingreference ':' Class ']'
+  193    | . '[' Class ']'
+
+    '['  shift, and go to state 128
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 129
+    optTypePrefix  go to state 130
+    TypePrefix     go to state 131
+    Tag            go to state 132
+
+
+State 83
+
+  138 OctetStringType: OCTET . STRING
+
+    STRING  shift, and go to state 133
+
+
+State 84
+
+   95 UnrestrictedCharacterStringType: CHARACTER . STRING
+
+    STRING  shift, and go to state 134
+
+
+State 85
+
+  136 BitStringType: BIT . STRING
+  137              | BIT . STRING '{' NamedNumberList '}'
+
+    STRING  shift, and go to state 135
+
+
+State 86
+
+  174 ChoiceType: CHOICE . '{' AlternativeTypeLists '}'
+
+    '{'  shift, and go to state 136
+
+
+State 87
+
+  140 SequenceType: SEQUENCE . '{' '}'
+  141             | SEQUENCE . '{' "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | SEQUENCE . '{' ComponentTypeLists '}'
+  168 SequenceOfType: SEQUENCE . SequenceOfTypeVariant SequenceOfTypeTarget
+  169 SequenceOfTypeVariant: . OF
+  170                      | . Constraint OF
+  171                      | . SizeConstraint OF
+  200 Constraint: . '(' ConstraintSpec ExceptionSpec ')'
+  230 SizeConstraint: . SIZE Constraint
+
+    SIZE  shift, and go to state 137
+    OF    shift, and go to state 138
+    '{'   shift, and go to state 139
+    '('   shift, and go to state 140
+
+    SequenceOfTypeVariant  go to state 141
+    Constraint             go to state 142
+    SizeConstraint         go to state 143
+
+
+State 88
+
+  111 BooleanType: BOOLEAN .
+
+    $default  reduce using rule 111 (BooleanType)
+
+
+State 89
+
+  112 IntegerType: INTEGER .  ["::=", OPTIONAL, DEFAULT, "identifier", "]]", END, "typereference", '}', '(', ',', ':']
+  113            | INTEGER . '{' NamedNumberList '}'
+
+    '{'  shift, and go to state 144
+
+    $default  reduce using rule 112 (IntegerType)
+
+
+State 90
+
+  119 EnumeratedType: ENUMERATED . '{' Enumerations '}'
+
+    '{'  shift, and go to state 145
+
+
+State 91
+
+   96 RestrictedCharacterStringType: BMPString .
+
+    $default  reduce using rule 96 (RestrictedCharacterStringType)
+
+
+State 92
+
+   97 RestrictedCharacterStringType: GeneralString .
+
+    $default  reduce using rule 97 (RestrictedCharacterStringType)
+
+
+State 93
+
+   98 RestrictedCharacterStringType: GraphicString .
+
+    $default  reduce using rule 98 (RestrictedCharacterStringType)
+
+
+State 94
+
+   99 RestrictedCharacterStringType: IA5String .
+
+    $default  reduce using rule 99 (RestrictedCharacterStringType)
+
+
+State 95
+
+  100 RestrictedCharacterStringType: ISO646String .
+
+    $default  reduce using rule 100 (RestrictedCharacterStringType)
+
+
+State 96
+
+  101 RestrictedCharacterStringType: NumericString .
+
+    $default  reduce using rule 101 (RestrictedCharacterStringType)
+
+
+State 97
+
+  102 RestrictedCharacterStringType: PrintableString .
+
+    $default  reduce using rule 102 (RestrictedCharacterStringType)
+
+
+State 98
+
+  103 RestrictedCharacterStringType: TeletexString .
+
+    $default  reduce using rule 103 (RestrictedCharacterStringType)
+
+
+State 99
+
+  104 RestrictedCharacterStringType: T61String .
+
+    $default  reduce using rule 104 (RestrictedCharacterStringType)
+
+
+State 100
+
+  105 RestrictedCharacterStringType: UniversalString .
+
+    $default  reduce using rule 105 (RestrictedCharacterStringType)
+
+
+State 101
+
+  106 RestrictedCharacterStringType: UTF8String .
+
+    $default  reduce using rule 106 (RestrictedCharacterStringType)
+
+
+State 102
+
+  107 RestrictedCharacterStringType: VideotexString .
+
+    $default  reduce using rule 107 (RestrictedCharacterStringType)
+
+
+State 103
+
+  108 RestrictedCharacterStringType: VisibleString .
+
+    $default  reduce using rule 108 (RestrictedCharacterStringType)
+
+
+State 104
+
+  110 ObjectIdentifierType: OBJECT . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 146
+
+
+State 105
+
+  139 NullType: NULL .
+
+    $default  reduce using rule 139 (NullType)
+
+
+State 106
+
+  129 RealType: REAL .
+
+    $default  reduce using rule 129 (RealType)
+
+
+State 107
+
+  109 DefinedType: typereference .
+
+    $default  reduce using rule 109 (DefinedType)
+
+
+State 108
+
+   60 ValueAssignment: valuereference Type . "::=" Value
+   92 ConstrainedType: Type . Constraint
+  200 Constraint: . '(' ConstraintSpec ExceptionSpec ')'
+
+    "::="  shift, and go to state 147
+    '('    shift, and go to state 140
+
+    Constraint  go to state 148
+
+
+State 109
+
+   91 Type: ConstrainedType .
+
+    $default  reduce using rule 91 (Type)
+
+
+State 110
+
+   81 Type: CharacterStringType .
+
+    $default  reduce using rule 81 (Type)
+
+
+State 111
+
+   94 CharacterStringType: UnrestrictedCharacterStringType .
+
+    $default  reduce using rule 94 (CharacterStringType)
+
+
+State 112
+
+   93 CharacterStringType: RestrictedCharacterStringType .
+
+    $default  reduce using rule 93 (CharacterStringType)
+
+
+State 113
+
+   90 Type: DefinedType .
+
+    $default  reduce using rule 90 (Type)
+
+
+State 114
+
+   79 Type: ObjectIdentifierType .
+
+    $default  reduce using rule 79 (Type)
+
+
+State 115
+
+   80 Type: BooleanType .
+
+    $default  reduce using rule 80 (Type)
+
+
+State 116
+
+   84 Type: IntegerType .
+
+    $default  reduce using rule 84 (Type)
+
+
+State 117
+
+   83 Type: EnumeratedType .
+
+    $default  reduce using rule 83 (Type)
+
+
+State 118
+
+   87 Type: RealType .
+
+    $default  reduce using rule 87 (Type)
+
+
+State 119
+
+   78 Type: BitStringType .
+
+    $default  reduce using rule 78 (Type)
+
+
+State 120
+
+   86 Type: OctetStringType .
+
+    $default  reduce using rule 86 (Type)
+
+
+State 121
+
+   85 Type: NullType .
+
+    $default  reduce using rule 85 (Type)
+
+
+State 122
+
+   89 Type: SequenceType .
+
+    $default  reduce using rule 89 (Type)
+
+
+State 123
+
+   88 Type: SequenceOfType .
+
+    $default  reduce using rule 88 (Type)
+
+
+State 124
+
+   82 Type: ChoiceType .
+
+    $default  reduce using rule 82 (Type)
+
+
+State 125
+
+   55 AssignmentList: AssignmentList Assignment .
+
+    $default  reduce using rule 55 (AssignmentList)
+
+
+State 126
+
+   49 GlobalModuleReference: modulereference .
+
+    $default  reduce using rule 49 (GlobalModuleReference)
+
+
+State 127
+
+   48 SymbolsFromModule: SymbolList FROM GlobalModuleReference .
+
+    $default  reduce using rule 48 (SymbolsFromModule)
+
+
+State 128
+
+    6 identifier: . "identifier"
+    9 number: . "number"
+   11 encodingreference: . identifier
+  192 Tag: '[' . encodingreference ':' Class ']'
+  193    | '[' . Class ']'
+  194 Class: . UNIVERSAL ClassNumber
+  195      | . APPLICATION ClassNumber
+  196      | . PRIVATE ClassNumber
+  197      | . ClassNumber
+  198 ClassNumber: . number
+  199            | . identifier
+
+    APPLICATION   shift, and go to state 149
+    PRIVATE       shift, and go to state 150
+    UNIVERSAL     shift, and go to state 151
+    "number"      shift, and go to state 14
+    "identifier"  shift, and go to state 15
+
+    identifier         go to state 152
+    number             go to state 153
+    encodingreference  go to state 154
+    Class              go to state 155
+    ClassNumber        go to state 156
+
+
+State 129
+
+  187 optTypePrefix: empty .
+
+    $default  reduce using rule 187 (optTypePrefix)
+
+
+State 130
+
+    7 typereference: . "typereference"
+   59 TypeAssignment: typereference "::=" optTypePrefix . Type
+   78 Type: . BitStringType
+   79     | . ObjectIdentifierType
+   80     | . BooleanType
+   81     | . CharacterStringType
+   82     | . ChoiceType
+   83     | . EnumeratedType
+   84     | . IntegerType
+   85     | . NullType
+   86     | . OctetStringType
+   87     | . RealType
+   88     | . SequenceOfType
+   89     | . SequenceType
+   90     | . DefinedType
+   91     | . ConstrainedType
+   92 ConstrainedType: . Type Constraint
+   93 CharacterStringType: . RestrictedCharacterStringType
+   94                    | . UnrestrictedCharacterStringType
+   95 UnrestrictedCharacterStringType: . CHARACTER STRING
+   96 RestrictedCharacterStringType: . BMPString
+   97                              | . GeneralString
+   98                              | . GraphicString
+   99                              | . IA5String
+  100                              | . ISO646String
+  101                              | . NumericString
+  102                              | . PrintableString
+  103                              | . TeletexString
+  104                              | . T61String
+  105                              | . UniversalString
+  106                              | . UTF8String
+  107                              | . VideotexString
+  108                              | . VisibleString
+  109 DefinedType: . typereference
+  110 ObjectIdentifierType: . OBJECT IDENTIFIER
+  111 BooleanType: . BOOLEAN
+  112 IntegerType: . INTEGER
+  113            | . INTEGER '{' NamedNumberList '}'
+  119 EnumeratedType: . ENUMERATED '{' Enumerations '}'
+  129 RealType: . REAL
+  136 BitStringType: . BIT STRING
+  137              | . BIT STRING '{' NamedNumberList '}'
+  138 OctetStringType: . OCTET STRING
+  139 NullType: . NULL
+  140 SequenceType: . SEQUENCE '{' '}'
+  141             | . SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | . SEQUENCE '{' ComponentTypeLists '}'
+  168 SequenceOfType: . SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget
+  174 ChoiceType: . CHOICE '{' AlternativeTypeLists '}'
+
+    OCTET            shift, and go to state 83
+    CHARACTER        shift, and go to state 84
+    BIT              shift, and go to state 85
+    CHOICE           shift, and go to state 86
+    SEQUENCE         shift, and go to state 87
+    BOOLEAN          shift, and go to state 88
+    INTEGER          shift, and go to state 89
+    ENUMERATED       shift, and go to state 90
+    BMPString        shift, and go to state 91
+    GeneralString    shift, and go to state 92
+    GraphicString    shift, and go to state 93
+    IA5String        shift, and go to state 94
+    ISO646String     shift, and go to state 95
+    NumericString    shift, and go to state 96
+    PrintableString  shift, and go to state 97
+    TeletexString    shift, and go to state 98
+    T61String        shift, and go to state 99
+    UniversalString  shift, and go to state 100
+    UTF8String       shift, and go to state 101
+    VideotexString   shift, and go to state 102
+    VisibleString    shift, and go to state 103
+    OBJECT           shift, and go to state 104
+    NULL             shift, and go to state 105
+    "typereference"  shift, and go to state 1
+    REAL             shift, and go to state 106
+
+    typereference                    go to state 107
+    Type                             go to state 157
+    ConstrainedType                  go to state 109
+    CharacterStringType              go to state 110
+    UnrestrictedCharacterStringType  go to state 111
+    RestrictedCharacterStringType    go to state 112
+    DefinedType                      go to state 113
+    ObjectIdentifierType             go to state 114
+    BooleanType                      go to state 115
+    IntegerType                      go to state 116
+    EnumeratedType                   go to state 117
+    RealType                         go to state 118
+    BitStringType                    go to state 119
+    OctetStringType                  go to state 120
+    NullType                         go to state 121
+    SequenceType                     go to state 122
+    SequenceOfType                   go to state 123
+    ChoiceType                       go to state 124
+
+
+State 131
+
+  188 optTypePrefix: TypePrefix .
+
+    $default  reduce using rule 188 (optTypePrefix)
+
+
+State 132
+
+  189 TypePrefix: Tag .  [OCTET, CHARACTER, BIT, CHOICE, SEQUENCE, BOOLEAN, INTEGER, ENUMERATED, BMPString, GeneralString, GraphicString, IA5String, ISO646String, NumericString, PrintableString, TeletexString, T61String, UniversalString, UTF8String, VideotexString, VisibleString, OBJECT, NULL, "typereference", REAL]
+  190           | Tag . IMPLICIT
+  191           | Tag . EXPLICIT
+
+    IMPLICIT  shift, and go to state 158
+    EXPLICIT  shift, and go to state 159
+
+    $default  reduce using rule 189 (TypePrefix)
+
+
+State 133
+
+  138 OctetStringType: OCTET STRING .
+
+    $default  reduce using rule 138 (OctetStringType)
+
+
+State 134
+
+   95 UnrestrictedCharacterStringType: CHARACTER STRING .
+
+    $default  reduce using rule 95 (UnrestrictedCharacterStringType)
+
+
+State 135
+
+  136 BitStringType: BIT STRING .  ["::=", OPTIONAL, DEFAULT, "identifier", "]]", END, "typereference", '}', '(', ',', ':']
+  137              | BIT STRING . '{' NamedNumberList '}'
+
+    '{'  shift, and go to state 160
+
+    $default  reduce using rule 136 (BitStringType)
+
+
+State 136
+
+    6 identifier: . "identifier"
+  167 NamedType: . identifier optTypePrefix Type
+  174 ChoiceType: CHOICE '{' . AlternativeTypeLists '}'
+  175 AlternativeTypeLists: . RootAlternativeTypeList
+  176                     | . RootAlternativeTypeList ',' "..." ExceptionSpec ExtensionAdditionAlternatives OptionalExtensionMarker
+  177 RootAlternativeTypeList: . AlternativeTypeList
+  185 AlternativeTypeList: . NamedType
+  186                    | . AlternativeTypeList ',' NamedType
+
+    "identifier"  shift, and go to state 15
+
+    identifier               go to state 161
+    NamedType                go to state 162
+    AlternativeTypeLists     go to state 163
+    RootAlternativeTypeList  go to state 164
+    AlternativeTypeList      go to state 165
+
+
+State 137
+
+  200 Constraint: . '(' ConstraintSpec ExceptionSpec ')'
+  230 SizeConstraint: SIZE . Constraint
+
+    '('  shift, and go to state 140
+
+    Constraint  go to state 166
+
+
+State 138
+
+  169 SequenceOfTypeVariant: OF .
+
+    $default  reduce using rule 169 (SequenceOfTypeVariant)
+
+
+State 139
+
+    6 identifier: . "identifier"
+  140 SequenceType: SEQUENCE '{' . '}'
+  141             | SEQUENCE '{' . "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | SEQUENCE '{' . ComponentTypeLists '}'
+  145 ComponentTypeLists: . RootComponentTypeList
+  146                   | . RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+  147                   | . RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+  148                   | . "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+  149                   | . "..." ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+  150 RootComponentTypeList: . ComponentTypeList
+  161 ComponentTypeList: . ComponentType
+  162                  | . ComponentTypeList ',' ComponentType
+  163 ComponentType: . NamedType
+  164              | . NamedType OPTIONAL
+  165              | . NamedType DEFAULT Value
+  166              | . COMPONENTS OF Type
+  167 NamedType: . identifier optTypePrefix Type
+
+    "..."         shift, and go to state 167
+    COMPONENTS    shift, and go to state 168
+    "identifier"  shift, and go to state 15
+    '}'           shift, and go to state 169
+
+    identifier             go to state 161
+    ComponentTypeLists     go to state 170
+    RootComponentTypeList  go to state 171
+    ComponentTypeList      go to state 172
+    ComponentType          go to state 173
+    NamedType              go to state 174
+
+
+State 140
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  200 Constraint: '(' . ConstraintSpec ExceptionSpec ')'
+  201 ConstraintSpec: . SubtypeConstraint
+  202 SubtypeConstraint: . ElementSetSpecs
+  203 ElementSetSpecs: . ElementSetSpec
+  204                | . ElementSetSpec ',' "..."
+  205                | . ElementSetSpec ',' "..." ',' ElementSetSpec
+  206 ElementSetSpec: . ALL EXCEPT Elements
+  207               | . Elements NextElements
+  215 Elements: . '(' ElementSetSpec ')'
+  216         | . SubTypeElements
+  217 SubTypeElements: . SingleValue
+  218                | . ValueRange
+  219                | . SizeConstraint
+  220 SingleValue: . Value
+  221 ValueRange: . LowerEndpoint ".." UpperEndpoint
+  222 LowerEndpoint: . LowerEndValue
+  223              | . LowerEndValue '<'
+  226 LowerEndValue: . Value
+  227              | . MIN
+  230 SizeConstraint: . SIZE Constraint
+
+    SIZE            shift, and go to state 137
+    ALL             shift, and go to state 175
+    MIN             shift, and go to state 176
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    '('             shift, and go to state 187
+
+    hstring            go to state 188
+    bstring            go to state 189
+    identifier         go to state 190
+    number             go to state 191
+    realnumber         go to state 192
+    Value              go to state 193
+    SignedNumber       go to state 194
+    RealValue          go to state 195
+    NumericRealValue   go to state 196
+    SpecialRealValue   go to state 197
+    ConstraintSpec     go to state 198
+    SubtypeConstraint  go to state 199
+    ElementSetSpecs    go to state 200
+    ElementSetSpec     go to state 201
+    Elements           go to state 202
+    SubTypeElements    go to state 203
+    SingleValue        go to state 204
+    ValueRange         go to state 205
+    LowerEndpoint      go to state 206
+    LowerEndValue      go to state 207
+    SizeConstraint     go to state 208
+
+
+State 141
+
+    6 identifier: . "identifier"
+    7 typereference: . "typereference"
+   78 Type: . BitStringType
+   79     | . ObjectIdentifierType
+   80     | . BooleanType
+   81     | . CharacterStringType
+   82     | . ChoiceType
+   83     | . EnumeratedType
+   84     | . IntegerType
+   85     | . NullType
+   86     | . OctetStringType
+   87     | . RealType
+   88     | . SequenceOfType
+   89     | . SequenceType
+   90     | . DefinedType
+   91     | . ConstrainedType
+   92 ConstrainedType: . Type Constraint
+   93 CharacterStringType: . RestrictedCharacterStringType
+   94                    | . UnrestrictedCharacterStringType
+   95 UnrestrictedCharacterStringType: . CHARACTER STRING
+   96 RestrictedCharacterStringType: . BMPString
+   97                              | . GeneralString
+   98                              | . GraphicString
+   99                              | . IA5String
+  100                              | . ISO646String
+  101                              | . NumericString
+  102                              | . PrintableString
+  103                              | . TeletexString
+  104                              | . T61String
+  105                              | . UniversalString
+  106                              | . UTF8String
+  107                              | . VideotexString
+  108                              | . VisibleString
+  109 DefinedType: . typereference
+  110 ObjectIdentifierType: . OBJECT IDENTIFIER
+  111 BooleanType: . BOOLEAN
+  112 IntegerType: . INTEGER
+  113            | . INTEGER '{' NamedNumberList '}'
+  119 EnumeratedType: . ENUMERATED '{' Enumerations '}'
+  129 RealType: . REAL
+  136 BitStringType: . BIT STRING
+  137              | . BIT STRING '{' NamedNumberList '}'
+  138 OctetStringType: . OCTET STRING
+  139 NullType: . NULL
+  140 SequenceType: . SEQUENCE '{' '}'
+  141             | . SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | . SEQUENCE '{' ComponentTypeLists '}'
+  167 NamedType: . identifier optTypePrefix Type
+  168 SequenceOfType: . SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget
+  168               | SEQUENCE SequenceOfTypeVariant . SequenceOfTypeTarget
+  172 SequenceOfTypeTarget: . Type
+  173                     | . NamedType
+  174 ChoiceType: . CHOICE '{' AlternativeTypeLists '}'
+
+    OCTET            shift, and go to state 83
+    CHARACTER        shift, and go to state 84
+    BIT              shift, and go to state 85
+    CHOICE           shift, and go to state 86
+    SEQUENCE         shift, and go to state 87
+    BOOLEAN          shift, and go to state 88
+    INTEGER          shift, and go to state 89
+    ENUMERATED       shift, and go to state 90
+    BMPString        shift, and go to state 91
+    GeneralString    shift, and go to state 92
+    GraphicString    shift, and go to state 93
+    IA5String        shift, and go to state 94
+    ISO646String     shift, and go to state 95
+    NumericString    shift, and go to state 96
+    PrintableString  shift, and go to state 97
+    TeletexString    shift, and go to state 98
+    T61String        shift, and go to state 99
+    UniversalString  shift, and go to state 100
+    UTF8String       shift, and go to state 101
+    VideotexString   shift, and go to state 102
+    VisibleString    shift, and go to state 103
+    OBJECT           shift, and go to state 104
+    "identifier"     shift, and go to state 15
+    NULL             shift, and go to state 105
+    "typereference"  shift, and go to state 1
+    REAL             shift, and go to state 106
+
+    identifier                       go to state 161
+    typereference                    go to state 107
+    Type                             go to state 209
+    ConstrainedType                  go to state 109
+    CharacterStringType              go to state 110
+    UnrestrictedCharacterStringType  go to state 111
+    RestrictedCharacterStringType    go to state 112
+    DefinedType                      go to state 113
+    ObjectIdentifierType             go to state 114
+    BooleanType                      go to state 115
+    IntegerType                      go to state 116
+    EnumeratedType                   go to state 117
+    RealType                         go to state 118
+    BitStringType                    go to state 119
+    OctetStringType                  go to state 120
+    NullType                         go to state 121
+    SequenceType                     go to state 122
+    NamedType                        go to state 210
+    SequenceOfType                   go to state 123
+    SequenceOfTypeTarget             go to state 211
+    ChoiceType                       go to state 124
+
+
+State 142
+
+  170 SequenceOfTypeVariant: Constraint . OF
+
+    OF  shift, and go to state 212
+
+
+State 143
+
+  171 SequenceOfTypeVariant: SizeConstraint . OF
+
+    OF  shift, and go to state 213
+
+
+State 144
+
+    6 identifier: . "identifier"
+  113 IntegerType: INTEGER '{' . NamedNumberList '}'
+  114 NamedNumberList: . NamedNumber
+  115                | . NamedNumberList ',' NamedNumber
+  116 NamedNumber: . identifier '(' SignedNumber ')'
+  117            | . identifier '(' identifier ')'
+
+    "identifier"  shift, and go to state 15
+
+    identifier       go to state 214
+    NamedNumberList  go to state 215
+    NamedNumber      go to state 216
+
+
+State 145
+
+    6 identifier: . "identifier"
+  116 NamedNumber: . identifier '(' SignedNumber ')'
+  117            | . identifier '(' identifier ')'
+  119 EnumeratedType: ENUMERATED '{' . Enumerations '}'
+  120 Enumerations: . RootEnumeration
+  121             | . RootEnumeration ',' "..." ExceptionSpec
+  122             | . RootEnumeration ',' "..." ExceptionSpec ',' AdditionalEnumeration
+  123 RootEnumeration: . Enumeration
+  125 Enumeration: . EnumerationItem
+  126            | . Enumeration ',' EnumerationItem
+  127 EnumerationItem: . identifier
+  128                | . NamedNumber
+
+    "identifier"  shift, and go to state 15
+
+    identifier       go to state 217
+    NamedNumber      go to state 218
+    Enumerations     go to state 219
+    RootEnumeration  go to state 220
+    Enumeration      go to state 221
+    EnumerationItem  go to state 222
+
+
+State 146
+
+  110 ObjectIdentifierType: OBJECT IDENTIFIER .
+
+    $default  reduce using rule 110 (ObjectIdentifierType)
+
+
+State 147
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   60 ValueAssignment: valuereference Type "::=" . Value
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 223
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+
+
+State 148
+
+   92 ConstrainedType: Type Constraint .
+
+    $default  reduce using rule 92 (ConstrainedType)
+
+
+State 149
+
+    6 identifier: . "identifier"
+    9 number: . "number"
+  195 Class: APPLICATION . ClassNumber
+  198 ClassNumber: . number
+  199            | . identifier
+
+    "number"      shift, and go to state 14
+    "identifier"  shift, and go to state 15
+
+    identifier   go to state 224
+    number       go to state 153
+    ClassNumber  go to state 225
+
+
+State 150
+
+    6 identifier: . "identifier"
+    9 number: . "number"
+  196 Class: PRIVATE . ClassNumber
+  198 ClassNumber: . number
+  199            | . identifier
+
+    "number"      shift, and go to state 14
+    "identifier"  shift, and go to state 15
+
+    identifier   go to state 224
+    number       go to state 153
+    ClassNumber  go to state 226
+
+
+State 151
+
+    6 identifier: . "identifier"
+    9 number: . "number"
+  194 Class: UNIVERSAL . ClassNumber
+  198 ClassNumber: . number
+  199            | . identifier
+
+    "number"      shift, and go to state 14
+    "identifier"  shift, and go to state 15
+
+    identifier   go to state 224
+    number       go to state 153
+    ClassNumber  go to state 227
+
+
+State 152
+
+   11 encodingreference: identifier .  [':']
+  199 ClassNumber: identifier .  [']']
+
+    ']'       reduce using rule 199 (ClassNumber)
+    $default  reduce using rule 11 (encodingreference)
+
+
+State 153
+
+  198 ClassNumber: number .
+
+    $default  reduce using rule 198 (ClassNumber)
+
+
+State 154
+
+  192 Tag: '[' encodingreference . ':' Class ']'
+
+    ':'  shift, and go to state 228
+
+
+State 155
+
+  193 Tag: '[' Class . ']'
+
+    ']'  shift, and go to state 229
+
+
+State 156
+
+  197 Class: ClassNumber .
+
+    $default  reduce using rule 197 (Class)
+
+
+State 157
+
+   59 TypeAssignment: typereference "::=" optTypePrefix Type .  ["identifier", END, "typereference"]
+   92 ConstrainedType: Type . Constraint
+  200 Constraint: . '(' ConstraintSpec ExceptionSpec ')'
+
+    '('  shift, and go to state 140
+
+    $default  reduce using rule 59 (TypeAssignment)
+
+    Constraint  go to state 148
+
+
+State 158
+
+  190 TypePrefix: Tag IMPLICIT .
+
+    $default  reduce using rule 190 (TypePrefix)
+
+
+State 159
+
+  191 TypePrefix: Tag EXPLICIT .
+
+    $default  reduce using rule 191 (TypePrefix)
+
+
+State 160
+
+    6 identifier: . "identifier"
+  114 NamedNumberList: . NamedNumber
+  115                | . NamedNumberList ',' NamedNumber
+  116 NamedNumber: . identifier '(' SignedNumber ')'
+  117            | . identifier '(' identifier ')'
+  137 BitStringType: BIT STRING '{' . NamedNumberList '}'
+
+    "identifier"  shift, and go to state 15
+
+    identifier       go to state 214
+    NamedNumberList  go to state 230
+    NamedNumber      go to state 216
+
+
+State 161
+
+    3 empty: . %empty  [OCTET, CHARACTER, BIT, CHOICE, SEQUENCE, BOOLEAN, INTEGER, ENUMERATED, BMPString, GeneralString, GraphicString, IA5String, ISO646String, NumericString, PrintableString, TeletexString, T61String, UniversalString, UTF8String, VideotexString, VisibleString, OBJECT, NULL, "typereference", REAL]
+  167 NamedType: identifier . optTypePrefix Type
+  187 optTypePrefix: . empty
+  188              | . TypePrefix
+  189 TypePrefix: . Tag
+  190           | . Tag IMPLICIT
+  191           | . Tag EXPLICIT
+  192 Tag: . '[' encodingreference ':' Class ']'
+  193    | . '[' Class ']'
+
+    '['  shift, and go to state 128
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 129
+    optTypePrefix  go to state 231
+    TypePrefix     go to state 131
+    Tag            go to state 132
+
+
+State 162
+
+  185 AlternativeTypeList: NamedType .
+
+    $default  reduce using rule 185 (AlternativeTypeList)
+
+
+State 163
+
+  174 ChoiceType: CHOICE '{' AlternativeTypeLists . '}'
+
+    '}'  shift, and go to state 232
+
+
+State 164
+
+  175 AlternativeTypeLists: RootAlternativeTypeList .  ['}']
+  176                     | RootAlternativeTypeList . ',' "..." ExceptionSpec ExtensionAdditionAlternatives OptionalExtensionMarker
+
+    ','  shift, and go to state 233
+
+    $default  reduce using rule 175 (AlternativeTypeLists)
+
+
+State 165
+
+  177 RootAlternativeTypeList: AlternativeTypeList .  ['}', ',']
+  186 AlternativeTypeList: AlternativeTypeList . ',' NamedType
+
+    ','  shift, and go to state 234
+
+    ','       [reduce using rule 177 (RootAlternativeTypeList)]
+    $default  reduce using rule 177 (RootAlternativeTypeList)
+
+
+State 166
+
+  230 SizeConstraint: SIZE Constraint .
+
+    $default  reduce using rule 230 (SizeConstraint)
+
+
+State 167
+
+    3 empty: . %empty  ['}', ',']
+  141 SequenceType: SEQUENCE '{' "..." . ExceptionSpec OptionalExtensionMarker '}'
+  148 ComponentTypeLists: "..." . ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+  149                   | "..." . ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+  231 ExceptionSpec: . '!' ExceptionIdentification
+  232              | . empty
+
+    '!'  shift, and go to state 235
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 236
+    ExceptionSpec  go to state 237
+
+
+State 168
+
+  166 ComponentType: COMPONENTS . OF Type
+
+    OF  shift, and go to state 238
+
+
+State 169
+
+  140 SequenceType: SEQUENCE '{' '}' .
+
+    $default  reduce using rule 140 (SequenceType)
+
+
+State 170
+
+  142 SequenceType: SEQUENCE '{' ComponentTypeLists . '}'
+
+    '}'  shift, and go to state 239
+
+
+State 171
+
+  145 ComponentTypeLists: RootComponentTypeList .  ['}']
+  146                   | RootComponentTypeList . ',' "..." ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+  147                   | RootComponentTypeList . ',' "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+
+    ','  shift, and go to state 240
+
+    $default  reduce using rule 145 (ComponentTypeLists)
+
+
+State 172
+
+  150 RootComponentTypeList: ComponentTypeList .  ['}', ',']
+  162 ComponentTypeList: ComponentTypeList . ',' ComponentType
+
+    ','  shift, and go to state 241
+
+    ','       [reduce using rule 150 (RootComponentTypeList)]
+    $default  reduce using rule 150 (RootComponentTypeList)
+
+
+State 173
+
+  161 ComponentTypeList: ComponentType .
+
+    $default  reduce using rule 161 (ComponentTypeList)
+
+
+State 174
+
+  163 ComponentType: NamedType .  ["]]", '}', ',']
+  164              | NamedType . OPTIONAL
+  165              | NamedType . DEFAULT Value
+
+    OPTIONAL  shift, and go to state 242
+    DEFAULT   shift, and go to state 243
+
+    $default  reduce using rule 163 (ComponentType)
+
+
+State 175
+
+  206 ElementSetSpec: ALL . EXCEPT Elements
+
+    EXCEPT  shift, and go to state 244
+
+
+State 176
+
+  227 LowerEndValue: MIN .
+
+    $default  reduce using rule 227 (LowerEndValue)
+
+
+State 177
+
+  133 SpecialRealValue: PLUS_INFINITY .
+
+    $default  reduce using rule 133 (SpecialRealValue)
+
+
+State 178
+
+  134 SpecialRealValue: MINUS_INFINITY .
+
+    $default  reduce using rule 134 (SpecialRealValue)
+
+
+State 179
+
+  135 SpecialRealValue: NOT_A_NUMBER .
+
+    $default  reduce using rule 135 (SpecialRealValue)
+
+
+State 180
+
+   61 Value: TRUE .
+
+    $default  reduce using rule 61 (Value)
+
+
+State 181
+
+   62 Value: FALSE .
+
+    $default  reduce using rule 62 (Value)
+
+
+State 182
+
+   63 Value: NULL .
+
+    $default  reduce using rule 63 (Value)
+
+
+State 183
+
+   10 realnumber: "realnumber" .
+
+    $default  reduce using rule 10 (realnumber)
+
+
+State 184
+
+    4 hstring: "hstring" .
+
+    $default  reduce using rule 4 (hstring)
+
+
+State 185
+
+    5 bstring: "bstring" .
+
+    $default  reduce using rule 5 (bstring)
+
+
+State 186
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   70      | '{' . '}'
+   71      | . '{' NamedValueList '}'
+   71      | '{' . NamedValueList '}'
+   72      | . '{' ValueList '}'
+   72      | '{' . ValueList '}'
+   73 NamedValueList: . NamedValue
+   74               | . NamedValueList ',' NamedValue
+   75 ValueList: . Value
+   76          | . ValueList ',' Value
+   77 NamedValue: . identifier Value
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    '}'             shift, and go to state 245
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 246
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 247
+    NamedValueList    go to state 248
+    ValueList         go to state 249
+    NamedValue        go to state 250
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+
+
+State 187
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  206 ElementSetSpec: . ALL EXCEPT Elements
+  207               | . Elements NextElements
+  215 Elements: . '(' ElementSetSpec ')'
+  215         | '(' . ElementSetSpec ')'
+  216         | . SubTypeElements
+  217 SubTypeElements: . SingleValue
+  218                | . ValueRange
+  219                | . SizeConstraint
+  220 SingleValue: . Value
+  221 ValueRange: . LowerEndpoint ".." UpperEndpoint
+  222 LowerEndpoint: . LowerEndValue
+  223              | . LowerEndValue '<'
+  226 LowerEndValue: . Value
+  227              | . MIN
+  230 SizeConstraint: . SIZE Constraint
+
+    SIZE            shift, and go to state 137
+    ALL             shift, and go to state 175
+    MIN             shift, and go to state 176
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    '('             shift, and go to state 187
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 193
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+    ElementSetSpec    go to state 251
+    Elements          go to state 202
+    SubTypeElements   go to state 203
+    SingleValue       go to state 204
+    ValueRange        go to state 205
+    LowerEndpoint     go to state 206
+    LowerEndValue     go to state 207
+    SizeConstraint    go to state 208
+
+
+State 188
+
+   69 Value: hstring .
+
+    $default  reduce using rule 69 (Value)
+
+
+State 189
+
+   68 Value: bstring .
+
+    $default  reduce using rule 68 (Value)
+
+
+State 190
+
+   66 Value: identifier .  [INTERSECTION, UNION, "..", "identifier", "]]", END, "typereference", '}', ')', ',', '^', '|', '<', '!']
+   67      | identifier . ':' Value
+
+    ':'  shift, and go to state 252
+
+    $default  reduce using rule 66 (Value)
+
+
+State 191
+
+  118 SignedNumber: number .
+
+    $default  reduce using rule 118 (SignedNumber)
+
+
+State 192
+
+  132 NumericRealValue: realnumber .
+
+    $default  reduce using rule 132 (NumericRealValue)
+
+
+State 193
+
+  220 SingleValue: Value .  [INTERSECTION, UNION, ')', ',', '^', '|', '!']
+  226 LowerEndValue: Value .  ["..", '<']
+
+    ".."      reduce using rule 226 (LowerEndValue)
+    '<'       reduce using rule 226 (LowerEndValue)
+    $default  reduce using rule 220 (SingleValue)
+
+
+State 194
+
+   64 Value: SignedNumber .
+
+    $default  reduce using rule 64 (Value)
+
+
+State 195
+
+   65 Value: RealValue .
+
+    $default  reduce using rule 65 (Value)
+
+
+State 196
+
+  130 RealValue: NumericRealValue .
+
+    $default  reduce using rule 130 (RealValue)
+
+
+State 197
+
+  131 RealValue: SpecialRealValue .
+
+    $default  reduce using rule 131 (RealValue)
+
+
+State 198
+
+    3 empty: . %empty  [')']
+  200 Constraint: '(' ConstraintSpec . ExceptionSpec ')'
+  231 ExceptionSpec: . '!' ExceptionIdentification
+  232              | . empty
+
+    '!'  shift, and go to state 235
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 236
+    ExceptionSpec  go to state 253
+
+
+State 199
+
+  201 ConstraintSpec: SubtypeConstraint .
+
+    $default  reduce using rule 201 (ConstraintSpec)
+
+
+State 200
+
+  202 SubtypeConstraint: ElementSetSpecs .
+
+    $default  reduce using rule 202 (SubtypeConstraint)
+
+
+State 201
+
+  203 ElementSetSpecs: ElementSetSpec .  [')', '!']
+  204                | ElementSetSpec . ',' "..."
+  205                | ElementSetSpec . ',' "..." ',' ElementSetSpec
+
+    ','  shift, and go to state 254
+
+    $default  reduce using rule 203 (ElementSetSpecs)
+
+
+State 202
+
+    3 empty: . %empty  [')', ',', '!']
+  207 ElementSetSpec: Elements . NextElements
+  208 NextElements: . UnionMark Elements NextElements
+  209             | . IntersectionMark Elements NextElements
+  210             | . empty
+  211 IntersectionMark: . INTERSECTION
+  212                 | . '^'
+  213 UnionMark: . UNION
+  214          | . '|'
+
+    INTERSECTION  shift, and go to state 255
+    UNION         shift, and go to state 256
+    '^'           shift, and go to state 257
+    '|'           shift, and go to state 258
+
+    $default  reduce using rule 3 (empty)
+
+    empty             go to state 259
+    NextElements      go to state 260
+    IntersectionMark  go to state 261
+    UnionMark         go to state 262
+
+
+State 203
+
+  216 Elements: SubTypeElements .
+
+    $default  reduce using rule 216 (Elements)
+
+
+State 204
+
+  217 SubTypeElements: SingleValue .
+
+    $default  reduce using rule 217 (SubTypeElements)
+
+
+State 205
+
+  218 SubTypeElements: ValueRange .
+
+    $default  reduce using rule 218 (SubTypeElements)
+
+
+State 206
+
+  221 ValueRange: LowerEndpoint . ".." UpperEndpoint
+
+    ".."  shift, and go to state 263
+
+
+State 207
+
+  222 LowerEndpoint: LowerEndValue .  [".."]
+  223              | LowerEndValue . '<'
+
+    '<'  shift, and go to state 264
+
+    $default  reduce using rule 222 (LowerEndpoint)
+
+
+State 208
+
+  219 SubTypeElements: SizeConstraint .
+
+    $default  reduce using rule 219 (SubTypeElements)
+
+
+State 209
+
+   92 ConstrainedType: Type . Constraint
+  172 SequenceOfTypeTarget: Type .  ["::=", OPTIONAL, DEFAULT, "identifier", "]]", END, "typereference", '}', '(', ',', ':']
+  200 Constraint: . '(' ConstraintSpec ExceptionSpec ')'
+
+    '('  shift, and go to state 140
+
+    '('       [reduce using rule 172 (SequenceOfTypeTarget)]
+    $default  reduce using rule 172 (SequenceOfTypeTarget)
+
+    Constraint  go to state 148
+
+
+State 210
+
+  173 SequenceOfTypeTarget: NamedType .
+
+    $default  reduce using rule 173 (SequenceOfTypeTarget)
+
+
+State 211
+
+  168 SequenceOfType: SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget .
+
+    $default  reduce using rule 168 (SequenceOfType)
+
+
+State 212
+
+  170 SequenceOfTypeVariant: Constraint OF .
+
+    $default  reduce using rule 170 (SequenceOfTypeVariant)
+
+
+State 213
+
+  171 SequenceOfTypeVariant: SizeConstraint OF .
+
+    $default  reduce using rule 171 (SequenceOfTypeVariant)
+
+
+State 214
+
+  116 NamedNumber: identifier . '(' SignedNumber ')'
+  117            | identifier . '(' identifier ')'
+
+    '('  shift, and go to state 265
+
+
+State 215
+
+  113 IntegerType: INTEGER '{' NamedNumberList . '}'
+  115 NamedNumberList: NamedNumberList . ',' NamedNumber
+
+    '}'  shift, and go to state 266
+    ','  shift, and go to state 267
+
+
+State 216
+
+  114 NamedNumberList: NamedNumber .
+
+    $default  reduce using rule 114 (NamedNumberList)
+
+
+State 217
+
+  116 NamedNumber: identifier . '(' SignedNumber ')'
+  117            | identifier . '(' identifier ')'
+  127 EnumerationItem: identifier .  ['}', ',']
+
+    '('  shift, and go to state 265
+
+    $default  reduce using rule 127 (EnumerationItem)
+
+
+State 218
+
+  128 EnumerationItem: NamedNumber .
+
+    $default  reduce using rule 128 (EnumerationItem)
+
+
+State 219
+
+  119 EnumeratedType: ENUMERATED '{' Enumerations . '}'
+
+    '}'  shift, and go to state 268
+
+
+State 220
+
+  120 Enumerations: RootEnumeration .  ['}']
+  121             | RootEnumeration . ',' "..." ExceptionSpec
+  122             | RootEnumeration . ',' "..." ExceptionSpec ',' AdditionalEnumeration
+
+    ','  shift, and go to state 269
+
+    $default  reduce using rule 120 (Enumerations)
+
+
+State 221
+
+  123 RootEnumeration: Enumeration .  ['}', ',']
+  126 Enumeration: Enumeration . ',' EnumerationItem
+
+    ','  shift, and go to state 270
+
+    ','       [reduce using rule 123 (RootEnumeration)]
+    $default  reduce using rule 123 (RootEnumeration)
+
+
+State 222
+
+  125 Enumeration: EnumerationItem .
+
+    $default  reduce using rule 125 (Enumeration)
+
+
+State 223
+
+   60 ValueAssignment: valuereference Type "::=" Value .
+
+    $default  reduce using rule 60 (ValueAssignment)
+
+
+State 224
+
+  199 ClassNumber: identifier .
+
+    $default  reduce using rule 199 (ClassNumber)
+
+
+State 225
+
+  195 Class: APPLICATION ClassNumber .
+
+    $default  reduce using rule 195 (Class)
+
+
+State 226
+
+  196 Class: PRIVATE ClassNumber .
+
+    $default  reduce using rule 196 (Class)
+
+
+State 227
+
+  194 Class: UNIVERSAL ClassNumber .
+
+    $default  reduce using rule 194 (Class)
+
+
+State 228
+
+    6 identifier: . "identifier"
+    9 number: . "number"
+  192 Tag: '[' encodingreference ':' . Class ']'
+  194 Class: . UNIVERSAL ClassNumber
+  195      | . APPLICATION ClassNumber
+  196      | . PRIVATE ClassNumber
+  197      | . ClassNumber
+  198 ClassNumber: . number
+  199            | . identifier
+
+    APPLICATION   shift, and go to state 149
+    PRIVATE       shift, and go to state 150
+    UNIVERSAL     shift, and go to state 151
+    "number"      shift, and go to state 14
+    "identifier"  shift, and go to state 15
+
+    identifier   go to state 224
+    number       go to state 153
+    Class        go to state 271
+    ClassNumber  go to state 156
+
+
+State 229
+
+  193 Tag: '[' Class ']' .
+
+    $default  reduce using rule 193 (Tag)
+
+
+State 230
+
+  115 NamedNumberList: NamedNumberList . ',' NamedNumber
+  137 BitStringType: BIT STRING '{' NamedNumberList . '}'
+
+    '}'  shift, and go to state 272
+    ','  shift, and go to state 267
+
+
+State 231
+
+    7 typereference: . "typereference"
+   78 Type: . BitStringType
+   79     | . ObjectIdentifierType
+   80     | . BooleanType
+   81     | . CharacterStringType
+   82     | . ChoiceType
+   83     | . EnumeratedType
+   84     | . IntegerType
+   85     | . NullType
+   86     | . OctetStringType
+   87     | . RealType
+   88     | . SequenceOfType
+   89     | . SequenceType
+   90     | . DefinedType
+   91     | . ConstrainedType
+   92 ConstrainedType: . Type Constraint
+   93 CharacterStringType: . RestrictedCharacterStringType
+   94                    | . UnrestrictedCharacterStringType
+   95 UnrestrictedCharacterStringType: . CHARACTER STRING
+   96 RestrictedCharacterStringType: . BMPString
+   97                              | . GeneralString
+   98                              | . GraphicString
+   99                              | . IA5String
+  100                              | . ISO646String
+  101                              | . NumericString
+  102                              | . PrintableString
+  103                              | . TeletexString
+  104                              | . T61String
+  105                              | . UniversalString
+  106                              | . UTF8String
+  107                              | . VideotexString
+  108                              | . VisibleString
+  109 DefinedType: . typereference
+  110 ObjectIdentifierType: . OBJECT IDENTIFIER
+  111 BooleanType: . BOOLEAN
+  112 IntegerType: . INTEGER
+  113            | . INTEGER '{' NamedNumberList '}'
+  119 EnumeratedType: . ENUMERATED '{' Enumerations '}'
+  129 RealType: . REAL
+  136 BitStringType: . BIT STRING
+  137              | . BIT STRING '{' NamedNumberList '}'
+  138 OctetStringType: . OCTET STRING
+  139 NullType: . NULL
+  140 SequenceType: . SEQUENCE '{' '}'
+  141             | . SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | . SEQUENCE '{' ComponentTypeLists '}'
+  167 NamedType: identifier optTypePrefix . Type
+  168 SequenceOfType: . SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget
+  174 ChoiceType: . CHOICE '{' AlternativeTypeLists '}'
+
+    OCTET            shift, and go to state 83
+    CHARACTER        shift, and go to state 84
+    BIT              shift, and go to state 85
+    CHOICE           shift, and go to state 86
+    SEQUENCE         shift, and go to state 87
+    BOOLEAN          shift, and go to state 88
+    INTEGER          shift, and go to state 89
+    ENUMERATED       shift, and go to state 90
+    BMPString        shift, and go to state 91
+    GeneralString    shift, and go to state 92
+    GraphicString    shift, and go to state 93
+    IA5String        shift, and go to state 94
+    ISO646String     shift, and go to state 95
+    NumericString    shift, and go to state 96
+    PrintableString  shift, and go to state 97
+    TeletexString    shift, and go to state 98
+    T61String        shift, and go to state 99
+    UniversalString  shift, and go to state 100
+    UTF8String       shift, and go to state 101
+    VideotexString   shift, and go to state 102
+    VisibleString    shift, and go to state 103
+    OBJECT           shift, and go to state 104
+    NULL             shift, and go to state 105
+    "typereference"  shift, and go to state 1
+    REAL             shift, and go to state 106
+
+    typereference                    go to state 107
+    Type                             go to state 273
+    ConstrainedType                  go to state 109
+    CharacterStringType              go to state 110
+    UnrestrictedCharacterStringType  go to state 111
+    RestrictedCharacterStringType    go to state 112
+    DefinedType                      go to state 113
+    ObjectIdentifierType             go to state 114
+    BooleanType                      go to state 115
+    IntegerType                      go to state 116
+    EnumeratedType                   go to state 117
+    RealType                         go to state 118
+    BitStringType                    go to state 119
+    OctetStringType                  go to state 120
+    NullType                         go to state 121
+    SequenceType                     go to state 122
+    SequenceOfType                   go to state 123
+    ChoiceType                       go to state 124
+
+
+State 232
+
+  174 ChoiceType: CHOICE '{' AlternativeTypeLists '}' .
+
+    $default  reduce using rule 174 (ChoiceType)
+
+
+State 233
+
+  176 AlternativeTypeLists: RootAlternativeTypeList ',' . "..." ExceptionSpec ExtensionAdditionAlternatives OptionalExtensionMarker
+
+    "..."  shift, and go to state 274
+
+
+State 234
+
+    6 identifier: . "identifier"
+  167 NamedType: . identifier optTypePrefix Type
+  186 AlternativeTypeList: AlternativeTypeList ',' . NamedType
+
+    "identifier"  shift, and go to state 15
+
+    identifier  go to state 161
+    NamedType   go to state 275
+
+
+State 235
+
+    6 identifier: . "identifier"
+    7 typereference: . "typereference"
+    9 number: . "number"
+   78 Type: . BitStringType
+   79     | . ObjectIdentifierType
+   80     | . BooleanType
+   81     | . CharacterStringType
+   82     | . ChoiceType
+   83     | . EnumeratedType
+   84     | . IntegerType
+   85     | . NullType
+   86     | . OctetStringType
+   87     | . RealType
+   88     | . SequenceOfType
+   89     | . SequenceType
+   90     | . DefinedType
+   91     | . ConstrainedType
+   92 ConstrainedType: . Type Constraint
+   93 CharacterStringType: . RestrictedCharacterStringType
+   94                    | . UnrestrictedCharacterStringType
+   95 UnrestrictedCharacterStringType: . CHARACTER STRING
+   96 RestrictedCharacterStringType: . BMPString
+   97                              | . GeneralString
+   98                              | . GraphicString
+   99                              | . IA5String
+  100                              | . ISO646String
+  101                              | . NumericString
+  102                              | . PrintableString
+  103                              | . TeletexString
+  104                              | . T61String
+  105                              | . UniversalString
+  106                              | . UTF8String
+  107                              | . VideotexString
+  108                              | . VisibleString
+  109 DefinedType: . typereference
+  110 ObjectIdentifierType: . OBJECT IDENTIFIER
+  111 BooleanType: . BOOLEAN
+  112 IntegerType: . INTEGER
+  113            | . INTEGER '{' NamedNumberList '}'
+  118 SignedNumber: . number
+  119 EnumeratedType: . ENUMERATED '{' Enumerations '}'
+  129 RealType: . REAL
+  136 BitStringType: . BIT STRING
+  137              | . BIT STRING '{' NamedNumberList '}'
+  138 OctetStringType: . OCTET STRING
+  139 NullType: . NULL
+  140 SequenceType: . SEQUENCE '{' '}'
+  141             | . SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | . SEQUENCE '{' ComponentTypeLists '}'
+  168 SequenceOfType: . SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget
+  174 ChoiceType: . CHOICE '{' AlternativeTypeLists '}'
+  231 ExceptionSpec: '!' . ExceptionIdentification
+  233 ExceptionIdentification: . Type ':' Value
+  234                        | . identifier
+  235                        | . SignedNumber
+
+    OCTET            shift, and go to state 83
+    CHARACTER        shift, and go to state 84
+    BIT              shift, and go to state 85
+    CHOICE           shift, and go to state 86
+    SEQUENCE         shift, and go to state 87
+    BOOLEAN          shift, and go to state 88
+    INTEGER          shift, and go to state 89
+    ENUMERATED       shift, and go to state 90
+    BMPString        shift, and go to state 91
+    GeneralString    shift, and go to state 92
+    GraphicString    shift, and go to state 93
+    IA5String        shift, and go to state 94
+    ISO646String     shift, and go to state 95
+    NumericString    shift, and go to state 96
+    PrintableString  shift, and go to state 97
+    TeletexString    shift, and go to state 98
+    T61String        shift, and go to state 99
+    UniversalString  shift, and go to state 100
+    UTF8String       shift, and go to state 101
+    VideotexString   shift, and go to state 102
+    VisibleString    shift, and go to state 103
+    OBJECT           shift, and go to state 104
+    "number"         shift, and go to state 14
+    "identifier"     shift, and go to state 15
+    NULL             shift, and go to state 105
+    "typereference"  shift, and go to state 1
+    REAL             shift, and go to state 106
+
+    identifier                       go to state 276
+    typereference                    go to state 107
+    number                           go to state 191
+    Type                             go to state 277
+    ConstrainedType                  go to state 109
+    CharacterStringType              go to state 110
+    UnrestrictedCharacterStringType  go to state 111
+    RestrictedCharacterStringType    go to state 112
+    DefinedType                      go to state 113
+    ObjectIdentifierType             go to state 114
+    BooleanType                      go to state 115
+    IntegerType                      go to state 116
+    SignedNumber                     go to state 278
+    EnumeratedType                   go to state 117
+    RealType                         go to state 118
+    BitStringType                    go to state 119
+    OctetStringType                  go to state 120
+    NullType                         go to state 121
+    SequenceType                     go to state 122
+    SequenceOfType                   go to state 123
+    ChoiceType                       go to state 124
+    ExceptionIdentification          go to state 279
+
+
+State 236
+
+  232 ExceptionSpec: empty .
+
+    $default  reduce using rule 232 (ExceptionSpec)
+
+
+State 237
+
+    3 empty: . %empty  ['}', ',']
+  141 SequenceType: SEQUENCE '{' "..." ExceptionSpec . OptionalExtensionMarker '}'
+  143 OptionalExtensionMarker: . ',' "..."
+  144                        | . empty
+  148 ComponentTypeLists: "..." ExceptionSpec . ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+  149                   | "..." ExceptionSpec . ExtensionAdditions OptionalExtensionMarker
+  152 ExtensionAdditions: . ',' ExtensionAdditionList
+  153                   | . empty
+
+    ','  shift, and go to state 280
+
+    ','       [reduce using rule 3 (empty)]
+    $default  reduce using rule 3 (empty)
+
+    empty                    go to state 281
+    OptionalExtensionMarker  go to state 282
+    ExtensionAdditions       go to state 283
+
+
+State 238
+
+    7 typereference: . "typereference"
+   78 Type: . BitStringType
+   79     | . ObjectIdentifierType
+   80     | . BooleanType
+   81     | . CharacterStringType
+   82     | . ChoiceType
+   83     | . EnumeratedType
+   84     | . IntegerType
+   85     | . NullType
+   86     | . OctetStringType
+   87     | . RealType
+   88     | . SequenceOfType
+   89     | . SequenceType
+   90     | . DefinedType
+   91     | . ConstrainedType
+   92 ConstrainedType: . Type Constraint
+   93 CharacterStringType: . RestrictedCharacterStringType
+   94                    | . UnrestrictedCharacterStringType
+   95 UnrestrictedCharacterStringType: . CHARACTER STRING
+   96 RestrictedCharacterStringType: . BMPString
+   97                              | . GeneralString
+   98                              | . GraphicString
+   99                              | . IA5String
+  100                              | . ISO646String
+  101                              | . NumericString
+  102                              | . PrintableString
+  103                              | . TeletexString
+  104                              | . T61String
+  105                              | . UniversalString
+  106                              | . UTF8String
+  107                              | . VideotexString
+  108                              | . VisibleString
+  109 DefinedType: . typereference
+  110 ObjectIdentifierType: . OBJECT IDENTIFIER
+  111 BooleanType: . BOOLEAN
+  112 IntegerType: . INTEGER
+  113            | . INTEGER '{' NamedNumberList '}'
+  119 EnumeratedType: . ENUMERATED '{' Enumerations '}'
+  129 RealType: . REAL
+  136 BitStringType: . BIT STRING
+  137              | . BIT STRING '{' NamedNumberList '}'
+  138 OctetStringType: . OCTET STRING
+  139 NullType: . NULL
+  140 SequenceType: . SEQUENCE '{' '}'
+  141             | . SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker '}'
+  142             | . SEQUENCE '{' ComponentTypeLists '}'
+  166 ComponentType: COMPONENTS OF . Type
+  168 SequenceOfType: . SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget
+  174 ChoiceType: . CHOICE '{' AlternativeTypeLists '}'
+
+    OCTET            shift, and go to state 83
+    CHARACTER        shift, and go to state 84
+    BIT              shift, and go to state 85
+    CHOICE           shift, and go to state 86
+    SEQUENCE         shift, and go to state 87
+    BOOLEAN          shift, and go to state 88
+    INTEGER          shift, and go to state 89
+    ENUMERATED       shift, and go to state 90
+    BMPString        shift, and go to state 91
+    GeneralString    shift, and go to state 92
+    GraphicString    shift, and go to state 93
+    IA5String        shift, and go to state 94
+    ISO646String     shift, and go to state 95
+    NumericString    shift, and go to state 96
+    PrintableString  shift, and go to state 97
+    TeletexString    shift, and go to state 98
+    T61String        shift, and go to state 99
+    UniversalString  shift, and go to state 100
+    UTF8String       shift, and go to state 101
+    VideotexString   shift, and go to state 102
+    VisibleString    shift, and go to state 103
+    OBJECT           shift, and go to state 104
+    NULL             shift, and go to state 105
+    "typereference"  shift, and go to state 1
+    REAL             shift, and go to state 106
+
+    typereference                    go to state 107
+    Type                             go to state 284
+    ConstrainedType                  go to state 109
+    CharacterStringType              go to state 110
+    UnrestrictedCharacterStringType  go to state 111
+    RestrictedCharacterStringType    go to state 112
+    DefinedType                      go to state 113
+    ObjectIdentifierType             go to state 114
+    BooleanType                      go to state 115
+    IntegerType                      go to state 116
+    EnumeratedType                   go to state 117
+    RealType                         go to state 118
+    BitStringType                    go to state 119
+    OctetStringType                  go to state 120
+    NullType                         go to state 121
+    SequenceType                     go to state 122
+    SequenceOfType                   go to state 123
+    ChoiceType                       go to state 124
+
+
+State 239
+
+  142 SequenceType: SEQUENCE '{' ComponentTypeLists '}' .
+
+    $default  reduce using rule 142 (SequenceType)
+
+
+State 240
+
+  146 ComponentTypeLists: RootComponentTypeList ',' . "..." ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+  147                   | RootComponentTypeList ',' . "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+
+    "..."  shift, and go to state 285
+
+
+State 241
+
+    6 identifier: . "identifier"
+  162 ComponentTypeList: ComponentTypeList ',' . ComponentType
+  163 ComponentType: . NamedType
+  164              | . NamedType OPTIONAL
+  165              | . NamedType DEFAULT Value
+  166              | . COMPONENTS OF Type
+  167 NamedType: . identifier optTypePrefix Type
+
+    COMPONENTS    shift, and go to state 168
+    "identifier"  shift, and go to state 15
+
+    identifier     go to state 161
+    ComponentType  go to state 286
+    NamedType      go to state 174
+
+
+State 242
+
+  164 ComponentType: NamedType OPTIONAL .
+
+    $default  reduce using rule 164 (ComponentType)
+
+
+State 243
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  165 ComponentType: NamedType DEFAULT . Value
+
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 287
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+
+
+State 244
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  206 ElementSetSpec: ALL EXCEPT . Elements
+  215 Elements: . '(' ElementSetSpec ')'
+  216         | . SubTypeElements
+  217 SubTypeElements: . SingleValue
+  218                | . ValueRange
+  219                | . SizeConstraint
+  220 SingleValue: . Value
+  221 ValueRange: . LowerEndpoint ".." UpperEndpoint
+  222 LowerEndpoint: . LowerEndValue
+  223              | . LowerEndValue '<'
+  226 LowerEndValue: . Value
+  227              | . MIN
+  230 SizeConstraint: . SIZE Constraint
+
+    SIZE            shift, and go to state 137
+    MIN             shift, and go to state 176
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    '('             shift, and go to state 187
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 193
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+    Elements          go to state 288
+    SubTypeElements   go to state 203
+    SingleValue       go to state 204
+    ValueRange        go to state 205
+    LowerEndpoint     go to state 206
+    LowerEndValue     go to state 207
+    SizeConstraint    go to state 208
+
+
+State 245
+
+   70 Value: '{' '}' .
+
+    $default  reduce using rule 70 (Value)
+
+
+State 246
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   66      | identifier .  ['}', ',']
+   67      | . identifier ':' Value
+   67      | identifier . ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+   77 NamedValue: identifier . Value
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    ':'             shift, and go to state 252
+
+    $default  reduce using rule 66 (Value)
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 289
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+
+
+State 247
+
+   75 ValueList: Value .
+
+    $default  reduce using rule 75 (ValueList)
+
+
+State 248
+
+   71 Value: '{' NamedValueList . '}'
+   74 NamedValueList: NamedValueList . ',' NamedValue
+
+    '}'  shift, and go to state 290
+    ','  shift, and go to state 291
+
+
+State 249
+
+   72 Value: '{' ValueList . '}'
+   76 ValueList: ValueList . ',' Value
+
+    '}'  shift, and go to state 292
+    ','  shift, and go to state 293
+
+
+State 250
+
+   73 NamedValueList: NamedValue .
+
+    $default  reduce using rule 73 (NamedValueList)
+
+
+State 251
+
+  215 Elements: '(' ElementSetSpec . ')'
+
+    ')'  shift, and go to state 294
+
+
+State 252
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   67      | identifier ':' . Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 295
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+
+
+State 253
+
+  200 Constraint: '(' ConstraintSpec ExceptionSpec . ')'
+
+    ')'  shift, and go to state 296
+
+
+State 254
+
+  204 ElementSetSpecs: ElementSetSpec ',' . "..."
+  205                | ElementSetSpec ',' . "..." ',' ElementSetSpec
+
+    "..."  shift, and go to state 297
+
+
+State 255
+
+  211 IntersectionMark: INTERSECTION .
+
+    $default  reduce using rule 211 (IntersectionMark)
+
+
+State 256
+
+  213 UnionMark: UNION .
+
+    $default  reduce using rule 213 (UnionMark)
+
+
+State 257
+
+  212 IntersectionMark: '^' .
+
+    $default  reduce using rule 212 (IntersectionMark)
+
+
+State 258
+
+  214 UnionMark: '|' .
+
+    $default  reduce using rule 214 (UnionMark)
+
+
+State 259
+
+  210 NextElements: empty .
+
+    $default  reduce using rule 210 (NextElements)
+
+
+State 260
+
+  207 ElementSetSpec: Elements NextElements .
+
+    $default  reduce using rule 207 (ElementSetSpec)
+
+
+State 261
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  209 NextElements: IntersectionMark . Elements NextElements
+  215 Elements: . '(' ElementSetSpec ')'
+  216         | . SubTypeElements
+  217 SubTypeElements: . SingleValue
+  218                | . ValueRange
+  219                | . SizeConstraint
+  220 SingleValue: . Value
+  221 ValueRange: . LowerEndpoint ".." UpperEndpoint
+  222 LowerEndpoint: . LowerEndValue
+  223              | . LowerEndValue '<'
+  226 LowerEndValue: . Value
+  227              | . MIN
+  230 SizeConstraint: . SIZE Constraint
+
+    SIZE            shift, and go to state 137
+    MIN             shift, and go to state 176
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    '('             shift, and go to state 187
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 193
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+    Elements          go to state 298
+    SubTypeElements   go to state 203
+    SingleValue       go to state 204
+    ValueRange        go to state 205
+    LowerEndpoint     go to state 206
+    LowerEndValue     go to state 207
+    SizeConstraint    go to state 208
+
+
+State 262
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  208 NextElements: UnionMark . Elements NextElements
+  215 Elements: . '(' ElementSetSpec ')'
+  216         | . SubTypeElements
+  217 SubTypeElements: . SingleValue
+  218                | . ValueRange
+  219                | . SizeConstraint
+  220 SingleValue: . Value
+  221 ValueRange: . LowerEndpoint ".." UpperEndpoint
+  222 LowerEndpoint: . LowerEndValue
+  223              | . LowerEndValue '<'
+  226 LowerEndValue: . Value
+  227              | . MIN
+  230 SizeConstraint: . SIZE Constraint
+
+    SIZE            shift, and go to state 137
+    MIN             shift, and go to state 176
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    '('             shift, and go to state 187
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 193
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+    Elements          go to state 299
+    SubTypeElements   go to state 203
+    SingleValue       go to state 204
+    ValueRange        go to state 205
+    LowerEndpoint     go to state 206
+    LowerEndValue     go to state 207
+    SizeConstraint    go to state 208
+
+
+State 263
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  221 ValueRange: LowerEndpoint ".." . UpperEndpoint
+  224 UpperEndpoint: . UpperEndValue
+  225              | . '<' UpperEndValue
+  228 UpperEndValue: . Value
+  229              | . MAX
+
+    MAX             shift, and go to state 300
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    '<'             shift, and go to state 301
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 302
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+    UpperEndpoint     go to state 303
+    UpperEndValue     go to state 304
+
+
+State 264
+
+  223 LowerEndpoint: LowerEndValue '<' .
+
+    $default  reduce using rule 223 (LowerEndpoint)
+
+
+State 265
+
+    6 identifier: . "identifier"
+    9 number: . "number"
+  116 NamedNumber: identifier '(' . SignedNumber ')'
+  117            | identifier '(' . identifier ')'
+  118 SignedNumber: . number
+
+    "number"      shift, and go to state 14
+    "identifier"  shift, and go to state 15
+
+    identifier    go to state 305
+    number        go to state 191
+    SignedNumber  go to state 306
+
+
+State 266
+
+  113 IntegerType: INTEGER '{' NamedNumberList '}' .
+
+    $default  reduce using rule 113 (IntegerType)
+
+
+State 267
+
+    6 identifier: . "identifier"
+  115 NamedNumberList: NamedNumberList ',' . NamedNumber
+  116 NamedNumber: . identifier '(' SignedNumber ')'
+  117            | . identifier '(' identifier ')'
+
+    "identifier"  shift, and go to state 15
+
+    identifier   go to state 214
+    NamedNumber  go to state 307
+
+
+State 268
+
+  119 EnumeratedType: ENUMERATED '{' Enumerations '}' .
+
+    $default  reduce using rule 119 (EnumeratedType)
+
+
+State 269
+
+  121 Enumerations: RootEnumeration ',' . "..." ExceptionSpec
+  122             | RootEnumeration ',' . "..." ExceptionSpec ',' AdditionalEnumeration
+
+    "..."  shift, and go to state 308
+
+
+State 270
+
+    6 identifier: . "identifier"
+  116 NamedNumber: . identifier '(' SignedNumber ')'
+  117            | . identifier '(' identifier ')'
+  126 Enumeration: Enumeration ',' . EnumerationItem
+  127 EnumerationItem: . identifier
+  128                | . NamedNumber
+
+    "identifier"  shift, and go to state 15
+
+    identifier       go to state 217
+    NamedNumber      go to state 218
+    EnumerationItem  go to state 309
+
+
+State 271
+
+  192 Tag: '[' encodingreference ':' Class . ']'
+
+    ']'  shift, and go to state 310
+
+
+State 272
+
+  137 BitStringType: BIT STRING '{' NamedNumberList '}' .
+
+    $default  reduce using rule 137 (BitStringType)
+
+
+State 273
+
+   92 ConstrainedType: Type . Constraint
+  167 NamedType: identifier optTypePrefix Type .  ["::=", OPTIONAL, DEFAULT, "identifier", "]]", END, "typereference", '}', '(', ',', ':']
+  200 Constraint: . '(' ConstraintSpec ExceptionSpec ')'
+
+    '('  shift, and go to state 140
+
+    '('       [reduce using rule 167 (NamedType)]
+    $default  reduce using rule 167 (NamedType)
+
+    Constraint  go to state 148
+
+
+State 274
+
+    3 empty: . %empty  ['}', ',']
+  176 AlternativeTypeLists: RootAlternativeTypeList ',' "..." . ExceptionSpec ExtensionAdditionAlternatives OptionalExtensionMarker
+  231 ExceptionSpec: . '!' ExceptionIdentification
+  232              | . empty
+
+    '!'  shift, and go to state 235
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 236
+    ExceptionSpec  go to state 311
+
+
+State 275
+
+  186 AlternativeTypeList: AlternativeTypeList ',' NamedType .
+
+    $default  reduce using rule 186 (AlternativeTypeList)
+
+
+State 276
+
+  234 ExceptionIdentification: identifier .
+
+    $default  reduce using rule 234 (ExceptionIdentification)
+
+
+State 277
+
+   92 ConstrainedType: Type . Constraint
+  200 Constraint: . '(' ConstraintSpec ExceptionSpec ')'
+  233 ExceptionIdentification: Type . ':' Value
+
+    '('  shift, and go to state 140
+    ':'  shift, and go to state 312
+
+    Constraint  go to state 148
+
+
+State 278
+
+  235 ExceptionIdentification: SignedNumber .
+
+    $default  reduce using rule 235 (ExceptionIdentification)
+
+
+State 279
+
+  231 ExceptionSpec: '!' ExceptionIdentification .
+
+    $default  reduce using rule 231 (ExceptionSpec)
+
+
+State 280
+
+    6 identifier: . "identifier"
+  143 OptionalExtensionMarker: ',' . "..."
+  152 ExtensionAdditions: ',' . ExtensionAdditionList
+  154 ExtensionAdditionList: . ExtensionAddition
+  155                      | . ExtensionAdditionList ',' ExtensionAddition
+  156 ExtensionAddition: . ComponentType
+  157                  | . ExtensionAdditionGroup
+  158 ExtensionAdditionGroup: . "[[" VersionNumber ComponentTypeList "]]"
+  163 ComponentType: . NamedType
+  164              | . NamedType OPTIONAL
+  165              | . NamedType DEFAULT Value
+  166              | . COMPONENTS OF Type
+  167 NamedType: . identifier optTypePrefix Type
+
+    "[["          shift, and go to state 313
+    "..."         shift, and go to state 314
+    COMPONENTS    shift, and go to state 168
+    "identifier"  shift, and go to state 15
+
+    identifier              go to state 161
+    ExtensionAdditionList   go to state 315
+    ExtensionAddition       go to state 316
+    ExtensionAdditionGroup  go to state 317
+    ComponentType           go to state 318
+    NamedType               go to state 174
+
+
+State 281
+
+  144 OptionalExtensionMarker: empty .  ['}']
+  153 ExtensionAdditions: empty .  ['}', ',']
+
+    '}'       reduce using rule 144 (OptionalExtensionMarker)
+    '}'       [reduce using rule 153 (ExtensionAdditions)]
+    ','       reduce using rule 153 (ExtensionAdditions)
+    $default  reduce using rule 144 (OptionalExtensionMarker)
+
+
+State 282
+
+  141 SequenceType: SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker . '}'
+
+    '}'  shift, and go to state 319
+
+
+State 283
+
+    3 empty: . %empty  ['}']
+  143 OptionalExtensionMarker: . ',' "..."
+  144                        | . empty
+  148 ComponentTypeLists: "..." ExceptionSpec ExtensionAdditions . ExtensionEndMarker ',' RootComponentTypeList
+  149                   | "..." ExceptionSpec ExtensionAdditions . OptionalExtensionMarker
+  151 ExtensionEndMarker: . ',' "..."
+
+    ','  shift, and go to state 320
+
+    $default  reduce using rule 3 (empty)
+
+    empty                    go to state 321
+    OptionalExtensionMarker  go to state 322
+    ExtensionEndMarker       go to state 323
+
+
+State 284
+
+   92 ConstrainedType: Type . Constraint
+  166 ComponentType: COMPONENTS OF Type .  ["]]", '}', ',']
+  200 Constraint: . '(' ConstraintSpec ExceptionSpec ')'
+
+    '('  shift, and go to state 140
+
+    $default  reduce using rule 166 (ComponentType)
+
+    Constraint  go to state 148
+
+
+State 285
+
+    3 empty: . %empty  ['}', ',']
+  146 ComponentTypeLists: RootComponentTypeList ',' "..." . ExceptionSpec ExtensionAdditions OptionalExtensionMarker
+  147                   | RootComponentTypeList ',' "..." . ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+  231 ExceptionSpec: . '!' ExceptionIdentification
+  232              | . empty
+
+    '!'  shift, and go to state 235
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 236
+    ExceptionSpec  go to state 324
+
+
+State 286
+
+  162 ComponentTypeList: ComponentTypeList ',' ComponentType .
+
+    $default  reduce using rule 162 (ComponentTypeList)
+
+
+State 287
+
+  165 ComponentType: NamedType DEFAULT Value .
+
+    $default  reduce using rule 165 (ComponentType)
+
+
+State 288
+
+  206 ElementSetSpec: ALL EXCEPT Elements .
+
+    $default  reduce using rule 206 (ElementSetSpec)
+
+
+State 289
+
+   77 NamedValue: identifier Value .
+
+    $default  reduce using rule 77 (NamedValue)
+
+
+State 290
+
+   71 Value: '{' NamedValueList '}' .
+
+    $default  reduce using rule 71 (Value)
+
+
+State 291
+
+    6 identifier: . "identifier"
+   74 NamedValueList: NamedValueList ',' . NamedValue
+   77 NamedValue: . identifier Value
+
+    "identifier"  shift, and go to state 15
+
+    identifier  go to state 325
+    NamedValue  go to state 326
+
+
+State 292
+
+   72 Value: '{' ValueList '}' .
+
+    $default  reduce using rule 72 (Value)
+
+
+State 293
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+   76 ValueList: ValueList ',' . Value
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 327
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+
+
+State 294
+
+  215 Elements: '(' ElementSetSpec ')' .
+
+    $default  reduce using rule 215 (Elements)
+
+
+State 295
+
+   67 Value: identifier ':' Value .
+
+    $default  reduce using rule 67 (Value)
+
+
+State 296
+
+  200 Constraint: '(' ConstraintSpec ExceptionSpec ')' .
+
+    $default  reduce using rule 200 (Constraint)
+
+
+State 297
+
+  204 ElementSetSpecs: ElementSetSpec ',' "..." .  [')', '!']
+  205                | ElementSetSpec ',' "..." . ',' ElementSetSpec
+
+    ','  shift, and go to state 328
+
+    $default  reduce using rule 204 (ElementSetSpecs)
+
+
+State 298
+
+    3 empty: . %empty  [')', ',', '!']
+  208 NextElements: . UnionMark Elements NextElements
+  209             | . IntersectionMark Elements NextElements
+  209             | IntersectionMark Elements . NextElements
+  210             | . empty
+  211 IntersectionMark: . INTERSECTION
+  212                 | . '^'
+  213 UnionMark: . UNION
+  214          | . '|'
+
+    INTERSECTION  shift, and go to state 255
+    UNION         shift, and go to state 256
+    '^'           shift, and go to state 257
+    '|'           shift, and go to state 258
+
+    $default  reduce using rule 3 (empty)
+
+    empty             go to state 259
+    NextElements      go to state 329
+    IntersectionMark  go to state 261
+    UnionMark         go to state 262
+
+
+State 299
+
+    3 empty: . %empty  [')', ',', '!']
+  208 NextElements: . UnionMark Elements NextElements
+  208             | UnionMark Elements . NextElements
+  209             | . IntersectionMark Elements NextElements
+  210             | . empty
+  211 IntersectionMark: . INTERSECTION
+  212                 | . '^'
+  213 UnionMark: . UNION
+  214          | . '|'
+
+    INTERSECTION  shift, and go to state 255
+    UNION         shift, and go to state 256
+    '^'           shift, and go to state 257
+    '|'           shift, and go to state 258
+
+    $default  reduce using rule 3 (empty)
+
+    empty             go to state 259
+    NextElements      go to state 330
+    IntersectionMark  go to state 261
+    UnionMark         go to state 262
+
+
+State 300
+
+  229 UpperEndValue: MAX .
+
+    $default  reduce using rule 229 (UpperEndValue)
+
+
+State 301
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  225 UpperEndpoint: '<' . UpperEndValue
+  228 UpperEndValue: . Value
+  229              | . MAX
+
+    MAX             shift, and go to state 300
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 302
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+    UpperEndValue     go to state 331
+
+
+State 302
+
+  228 UpperEndValue: Value .
+
+    $default  reduce using rule 228 (UpperEndValue)
+
+
+State 303
+
+  221 ValueRange: LowerEndpoint ".." UpperEndpoint .
+
+    $default  reduce using rule 221 (ValueRange)
+
+
+State 304
+
+  224 UpperEndpoint: UpperEndValue .
+
+    $default  reduce using rule 224 (UpperEndpoint)
+
+
+State 305
+
+  117 NamedNumber: identifier '(' identifier . ')'
+
+    ')'  shift, and go to state 332
+
+
+State 306
+
+  116 NamedNumber: identifier '(' SignedNumber . ')'
+
+    ')'  shift, and go to state 333
+
+
+State 307
+
+  115 NamedNumberList: NamedNumberList ',' NamedNumber .
+
+    $default  reduce using rule 115 (NamedNumberList)
+
+
+State 308
+
+    3 empty: . %empty  ['}', ',']
+  121 Enumerations: RootEnumeration ',' "..." . ExceptionSpec
+  122             | RootEnumeration ',' "..." . ExceptionSpec ',' AdditionalEnumeration
+  231 ExceptionSpec: . '!' ExceptionIdentification
+  232              | . empty
+
+    '!'  shift, and go to state 235
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 236
+    ExceptionSpec  go to state 334
+
+
+State 309
+
+  126 Enumeration: Enumeration ',' EnumerationItem .
+
+    $default  reduce using rule 126 (Enumeration)
+
+
+State 310
+
+  192 Tag: '[' encodingreference ':' Class ']' .
+
+    $default  reduce using rule 192 (Tag)
+
+
+State 311
+
+    3 empty: . %empty  ['}', ',']
+  176 AlternativeTypeLists: RootAlternativeTypeList ',' "..." ExceptionSpec . ExtensionAdditionAlternatives OptionalExtensionMarker
+  178 ExtensionAdditionAlternatives: . ',' ExtensionAdditionAlternativesList
+  179                              | . empty
+
+    ','  shift, and go to state 335
+
+    ','       [reduce using rule 3 (empty)]
+    $default  reduce using rule 3 (empty)
+
+    empty                          go to state 336
+    ExtensionAdditionAlternatives  go to state 337
+
+
+State 312
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  233 ExceptionIdentification: Type ':' . Value
+
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 338
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+
+
+State 313
+
+    3 empty: . %empty  [COMPONENTS, "identifier"]
+    9 number: . "number"
+  158 ExtensionAdditionGroup: "[[" . VersionNumber ComponentTypeList "]]"
+  159 VersionNumber: . empty
+  160              | . number ':'
+
+    "number"  shift, and go to state 14
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 339
+    number         go to state 340
+    VersionNumber  go to state 341
+
+
+State 314
+
+  143 OptionalExtensionMarker: ',' "..." .
+
+    $default  reduce using rule 143 (OptionalExtensionMarker)
+
+
+State 315
+
+  152 ExtensionAdditions: ',' ExtensionAdditionList .  ['}', ',']
+  155 ExtensionAdditionList: ExtensionAdditionList . ',' ExtensionAddition
+
+    ','  shift, and go to state 342
+
+    ','       [reduce using rule 152 (ExtensionAdditions)]
+    $default  reduce using rule 152 (ExtensionAdditions)
+
+
+State 316
+
+  154 ExtensionAdditionList: ExtensionAddition .
+
+    $default  reduce using rule 154 (ExtensionAdditionList)
+
+
+State 317
+
+  157 ExtensionAddition: ExtensionAdditionGroup .
+
+    $default  reduce using rule 157 (ExtensionAddition)
+
+
+State 318
+
+  156 ExtensionAddition: ComponentType .
+
+    $default  reduce using rule 156 (ExtensionAddition)
+
+
+State 319
+
+  141 SequenceType: SEQUENCE '{' "..." ExceptionSpec OptionalExtensionMarker '}' .
+
+    $default  reduce using rule 141 (SequenceType)
+
+
+State 320
+
+  143 OptionalExtensionMarker: ',' . "..."
+  151 ExtensionEndMarker: ',' . "..."
+
+    "..."  shift, and go to state 343
+
+
+State 321
+
+  144 OptionalExtensionMarker: empty .
+
+    $default  reduce using rule 144 (OptionalExtensionMarker)
+
+
+State 322
+
+  149 ComponentTypeLists: "..." ExceptionSpec ExtensionAdditions OptionalExtensionMarker .
+
+    $default  reduce using rule 149 (ComponentTypeLists)
+
+
+State 323
+
+  148 ComponentTypeLists: "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker . ',' RootComponentTypeList
+
+    ','  shift, and go to state 344
+
+
+State 324
+
+    3 empty: . %empty  ['}', ',']
+  146 ComponentTypeLists: RootComponentTypeList ',' "..." ExceptionSpec . ExtensionAdditions OptionalExtensionMarker
+  147                   | RootComponentTypeList ',' "..." ExceptionSpec . ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList
+  152 ExtensionAdditions: . ',' ExtensionAdditionList
+  153                   | . empty
+
+    ','  shift, and go to state 345
+
+    ','       [reduce using rule 3 (empty)]
+    $default  reduce using rule 3 (empty)
+
+    empty               go to state 346
+    ExtensionAdditions  go to state 347
+
+
+State 325
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+   77 NamedValue: identifier . Value
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 289
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+
+
+State 326
+
+   74 NamedValueList: NamedValueList ',' NamedValue .
+
+    $default  reduce using rule 74 (NamedValueList)
+
+
+State 327
+
+   76 ValueList: ValueList ',' Value .
+
+    $default  reduce using rule 76 (ValueList)
+
+
+State 328
+
+    4 hstring: . "hstring"
+    5 bstring: . "bstring"
+    6 identifier: . "identifier"
+    9 number: . "number"
+   10 realnumber: . "realnumber"
+   61 Value: . TRUE
+   62      | . FALSE
+   63      | . NULL
+   64      | . SignedNumber
+   65      | . RealValue
+   66      | . identifier
+   67      | . identifier ':' Value
+   68      | . bstring
+   69      | . hstring
+   70      | . '{' '}'
+   71      | . '{' NamedValueList '}'
+   72      | . '{' ValueList '}'
+  118 SignedNumber: . number
+  130 RealValue: . NumericRealValue
+  131          | . SpecialRealValue
+  132 NumericRealValue: . realnumber
+  133 SpecialRealValue: . PLUS_INFINITY
+  134                 | . MINUS_INFINITY
+  135                 | . NOT_A_NUMBER
+  205 ElementSetSpecs: ElementSetSpec ',' "..." ',' . ElementSetSpec
+  206 ElementSetSpec: . ALL EXCEPT Elements
+  207               | . Elements NextElements
+  215 Elements: . '(' ElementSetSpec ')'
+  216         | . SubTypeElements
+  217 SubTypeElements: . SingleValue
+  218                | . ValueRange
+  219                | . SizeConstraint
+  220 SingleValue: . Value
+  221 ValueRange: . LowerEndpoint ".." UpperEndpoint
+  222 LowerEndpoint: . LowerEndValue
+  223              | . LowerEndValue '<'
+  226 LowerEndValue: . Value
+  227              | . MIN
+  230 SizeConstraint: . SIZE Constraint
+
+    SIZE            shift, and go to state 137
+    ALL             shift, and go to state 175
+    MIN             shift, and go to state 176
+    "number"        shift, and go to state 14
+    "identifier"    shift, and go to state 15
+    PLUS_INFINITY   shift, and go to state 177
+    MINUS_INFINITY  shift, and go to state 178
+    NOT_A_NUMBER    shift, and go to state 179
+    TRUE            shift, and go to state 180
+    FALSE           shift, and go to state 181
+    NULL            shift, and go to state 182
+    "realnumber"    shift, and go to state 183
+    "hstring"       shift, and go to state 184
+    "bstring"       shift, and go to state 185
+    '{'             shift, and go to state 186
+    '('             shift, and go to state 187
+
+    hstring           go to state 188
+    bstring           go to state 189
+    identifier        go to state 190
+    number            go to state 191
+    realnumber        go to state 192
+    Value             go to state 193
+    SignedNumber      go to state 194
+    RealValue         go to state 195
+    NumericRealValue  go to state 196
+    SpecialRealValue  go to state 197
+    ElementSetSpec    go to state 348
+    Elements          go to state 202
+    SubTypeElements   go to state 203
+    SingleValue       go to state 204
+    ValueRange        go to state 205
+    LowerEndpoint     go to state 206
+    LowerEndValue     go to state 207
+    SizeConstraint    go to state 208
+
+
+State 329
+
+  209 NextElements: IntersectionMark Elements NextElements .
+
+    $default  reduce using rule 209 (NextElements)
+
+
+State 330
+
+  208 NextElements: UnionMark Elements NextElements .
+
+    $default  reduce using rule 208 (NextElements)
+
+
+State 331
+
+  225 UpperEndpoint: '<' UpperEndValue .
+
+    $default  reduce using rule 225 (UpperEndpoint)
+
+
+State 332
+
+  117 NamedNumber: identifier '(' identifier ')' .
+
+    $default  reduce using rule 117 (NamedNumber)
+
+
+State 333
+
+  116 NamedNumber: identifier '(' SignedNumber ')' .
+
+    $default  reduce using rule 116 (NamedNumber)
+
+
+State 334
+
+  121 Enumerations: RootEnumeration ',' "..." ExceptionSpec .  ['}']
+  122             | RootEnumeration ',' "..." ExceptionSpec . ',' AdditionalEnumeration
+
+    ','  shift, and go to state 349
+
+    $default  reduce using rule 121 (Enumerations)
+
+
+State 335
+
+    6 identifier: . "identifier"
+  167 NamedType: . identifier optTypePrefix Type
+  178 ExtensionAdditionAlternatives: ',' . ExtensionAdditionAlternativesList
+  180 ExtensionAdditionAlternativesList: . ExtensionAdditionAlternative
+  181                                  | . ExtensionAdditionAlternativesList ',' ExtensionAdditionAlternative
+  182 ExtensionAdditionAlternative: . ExtensionAdditionAlternativesGroup
+  183                             | . NamedType
+  184 ExtensionAdditionAlternativesGroup: . "[[" VersionNumber AlternativeTypeList "]]"
+
+    "[["          shift, and go to state 350
+    "identifier"  shift, and go to state 15
+
+    identifier                          go to state 161
+    NamedType                           go to state 351
+    ExtensionAdditionAlternativesList   go to state 352
+    ExtensionAdditionAlternative        go to state 353
+    ExtensionAdditionAlternativesGroup  go to state 354
+
+
+State 336
+
+  179 ExtensionAdditionAlternatives: empty .
+
+    $default  reduce using rule 179 (ExtensionAdditionAlternatives)
+
+
+State 337
+
+    3 empty: . %empty  ['}']
+  143 OptionalExtensionMarker: . ',' "..."
+  144                        | . empty
+  176 AlternativeTypeLists: RootAlternativeTypeList ',' "..." ExceptionSpec ExtensionAdditionAlternatives . OptionalExtensionMarker
+
+    ','  shift, and go to state 355
+
+    $default  reduce using rule 3 (empty)
+
+    empty                    go to state 321
+    OptionalExtensionMarker  go to state 356
+
+
+State 338
+
+  233 ExceptionIdentification: Type ':' Value .
+
+    $default  reduce using rule 233 (ExceptionIdentification)
+
+
+State 339
+
+  159 VersionNumber: empty .
+
+    $default  reduce using rule 159 (VersionNumber)
+
+
+State 340
+
+  160 VersionNumber: number . ':'
+
+    ':'  shift, and go to state 357
+
+
+State 341
+
+    6 identifier: . "identifier"
+  158 ExtensionAdditionGroup: "[[" VersionNumber . ComponentTypeList "]]"
+  161 ComponentTypeList: . ComponentType
+  162                  | . ComponentTypeList ',' ComponentType
+  163 ComponentType: . NamedType
+  164              | . NamedType OPTIONAL
+  165              | . NamedType DEFAULT Value
+  166              | . COMPONENTS OF Type
+  167 NamedType: . identifier optTypePrefix Type
+
+    COMPONENTS    shift, and go to state 168
+    "identifier"  shift, and go to state 15
+
+    identifier         go to state 161
+    ComponentTypeList  go to state 358
+    ComponentType      go to state 173
+    NamedType          go to state 174
+
+
+State 342
+
+    6 identifier: . "identifier"
+  155 ExtensionAdditionList: ExtensionAdditionList ',' . ExtensionAddition
+  156 ExtensionAddition: . ComponentType
+  157                  | . ExtensionAdditionGroup
+  158 ExtensionAdditionGroup: . "[[" VersionNumber ComponentTypeList "]]"
+  163 ComponentType: . NamedType
+  164              | . NamedType OPTIONAL
+  165              | . NamedType DEFAULT Value
+  166              | . COMPONENTS OF Type
+  167 NamedType: . identifier optTypePrefix Type
+
+    "[["          shift, and go to state 313
+    COMPONENTS    shift, and go to state 168
+    "identifier"  shift, and go to state 15
+
+    identifier              go to state 161
+    ExtensionAddition       go to state 359
+    ExtensionAdditionGroup  go to state 317
+    ComponentType           go to state 318
+    NamedType               go to state 174
+
+
+State 343
+
+  143 OptionalExtensionMarker: ',' "..." .  ['}']
+  151 ExtensionEndMarker: ',' "..." .  [',']
+
+    ','       reduce using rule 151 (ExtensionEndMarker)
+    $default  reduce using rule 143 (OptionalExtensionMarker)
+
+
+State 344
+
+    6 identifier: . "identifier"
+  148 ComponentTypeLists: "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' . RootComponentTypeList
+  150 RootComponentTypeList: . ComponentTypeList
+  161 ComponentTypeList: . ComponentType
+  162                  | . ComponentTypeList ',' ComponentType
+  163 ComponentType: . NamedType
+  164              | . NamedType OPTIONAL
+  165              | . NamedType DEFAULT Value
+  166              | . COMPONENTS OF Type
+  167 NamedType: . identifier optTypePrefix Type
+
+    COMPONENTS    shift, and go to state 168
+    "identifier"  shift, and go to state 15
+
+    identifier             go to state 161
+    RootComponentTypeList  go to state 360
+    ComponentTypeList      go to state 172
+    ComponentType          go to state 173
+    NamedType              go to state 174
+
+
+State 345
+
+    6 identifier: . "identifier"
+  152 ExtensionAdditions: ',' . ExtensionAdditionList
+  154 ExtensionAdditionList: . ExtensionAddition
+  155                      | . ExtensionAdditionList ',' ExtensionAddition
+  156 ExtensionAddition: . ComponentType
+  157                  | . ExtensionAdditionGroup
+  158 ExtensionAdditionGroup: . "[[" VersionNumber ComponentTypeList "]]"
+  163 ComponentType: . NamedType
+  164              | . NamedType OPTIONAL
+  165              | . NamedType DEFAULT Value
+  166              | . COMPONENTS OF Type
+  167 NamedType: . identifier optTypePrefix Type
+
+    "[["          shift, and go to state 313
+    COMPONENTS    shift, and go to state 168
+    "identifier"  shift, and go to state 15
+
+    identifier              go to state 161
+    ExtensionAdditionList   go to state 315
+    ExtensionAddition       go to state 316
+    ExtensionAdditionGroup  go to state 317
+    ComponentType           go to state 318
+    NamedType               go to state 174
+
+
+State 346
+
+  153 ExtensionAdditions: empty .
+
+    $default  reduce using rule 153 (ExtensionAdditions)
+
+
+State 347
+
+    3 empty: . %empty  ['}']
+  143 OptionalExtensionMarker: . ',' "..."
+  144                        | . empty
+  146 ComponentTypeLists: RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions . OptionalExtensionMarker
+  147                   | RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions . ExtensionEndMarker ',' RootComponentTypeList
+  151 ExtensionEndMarker: . ',' "..."
+
+    ','  shift, and go to state 320
+
+    $default  reduce using rule 3 (empty)
+
+    empty                    go to state 321
+    OptionalExtensionMarker  go to state 361
+    ExtensionEndMarker       go to state 362
+
+
+State 348
+
+  205 ElementSetSpecs: ElementSetSpec ',' "..." ',' ElementSetSpec .
+
+    $default  reduce using rule 205 (ElementSetSpecs)
+
+
+State 349
+
+    6 identifier: . "identifier"
+  116 NamedNumber: . identifier '(' SignedNumber ')'
+  117            | . identifier '(' identifier ')'
+  122 Enumerations: RootEnumeration ',' "..." ExceptionSpec ',' . AdditionalEnumeration
+  124 AdditionalEnumeration: . Enumeration
+  125 Enumeration: . EnumerationItem
+  126            | . Enumeration ',' EnumerationItem
+  127 EnumerationItem: . identifier
+  128                | . NamedNumber
+
+    "identifier"  shift, and go to state 15
+
+    identifier             go to state 217
+    NamedNumber            go to state 218
+    AdditionalEnumeration  go to state 363
+    Enumeration            go to state 364
+    EnumerationItem        go to state 222
+
+
+State 350
+
+    3 empty: . %empty  ["identifier"]
+    9 number: . "number"
+  159 VersionNumber: . empty
+  160              | . number ':'
+  184 ExtensionAdditionAlternativesGroup: "[[" . VersionNumber AlternativeTypeList "]]"
+
+    "number"  shift, and go to state 14
+
+    $default  reduce using rule 3 (empty)
+
+    empty          go to state 339
+    number         go to state 340
+    VersionNumber  go to state 365
+
+
+State 351
+
+  183 ExtensionAdditionAlternative: NamedType .
+
+    $default  reduce using rule 183 (ExtensionAdditionAlternative)
+
+
+State 352
+
+  178 ExtensionAdditionAlternatives: ',' ExtensionAdditionAlternativesList .  ['}', ',']
+  181 ExtensionAdditionAlternativesList: ExtensionAdditionAlternativesList . ',' ExtensionAdditionAlternative
+
+    ','  shift, and go to state 366
+
+    ','       [reduce using rule 178 (ExtensionAdditionAlternatives)]
+    $default  reduce using rule 178 (ExtensionAdditionAlternatives)
+
+
+State 353
+
+  180 ExtensionAdditionAlternativesList: ExtensionAdditionAlternative .
+
+    $default  reduce using rule 180 (ExtensionAdditionAlternativesList)
+
+
+State 354
+
+  182 ExtensionAdditionAlternative: ExtensionAdditionAlternativesGroup .
+
+    $default  reduce using rule 182 (ExtensionAdditionAlternative)
+
+
+State 355
+
+  143 OptionalExtensionMarker: ',' . "..."
+
+    "..."  shift, and go to state 314
+
+
+State 356
+
+  176 AlternativeTypeLists: RootAlternativeTypeList ',' "..." ExceptionSpec ExtensionAdditionAlternatives OptionalExtensionMarker .
+
+    $default  reduce using rule 176 (AlternativeTypeLists)
+
+
+State 357
+
+  160 VersionNumber: number ':' .
+
+    $default  reduce using rule 160 (VersionNumber)
+
+
+State 358
+
+  158 ExtensionAdditionGroup: "[[" VersionNumber ComponentTypeList . "]]"
+  162 ComponentTypeList: ComponentTypeList . ',' ComponentType
+
+    "]]"  shift, and go to state 367
+    ','   shift, and go to state 241
+
+
+State 359
+
+  155 ExtensionAdditionList: ExtensionAdditionList ',' ExtensionAddition .
+
+    $default  reduce using rule 155 (ExtensionAdditionList)
+
+
+State 360
+
+  148 ComponentTypeLists: "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList .
+
+    $default  reduce using rule 148 (ComponentTypeLists)
+
+
+State 361
+
+  146 ComponentTypeLists: RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions OptionalExtensionMarker .
+
+    $default  reduce using rule 146 (ComponentTypeLists)
+
+
+State 362
+
+  147 ComponentTypeLists: RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker . ',' RootComponentTypeList
+
+    ','  shift, and go to state 368
+
+
+State 363
+
+  122 Enumerations: RootEnumeration ',' "..." ExceptionSpec ',' AdditionalEnumeration .
+
+    $default  reduce using rule 122 (Enumerations)
+
+
+State 364
+
+  124 AdditionalEnumeration: Enumeration .  ['}']
+  126 Enumeration: Enumeration . ',' EnumerationItem
+
+    ','  shift, and go to state 270
+
+    $default  reduce using rule 124 (AdditionalEnumeration)
+
+
+State 365
+
+    6 identifier: . "identifier"
+  167 NamedType: . identifier optTypePrefix Type
+  184 ExtensionAdditionAlternativesGroup: "[[" VersionNumber . AlternativeTypeList "]]"
+  185 AlternativeTypeList: . NamedType
+  186                    | . AlternativeTypeList ',' NamedType
+
+    "identifier"  shift, and go to state 15
+
+    identifier           go to state 161
+    NamedType            go to state 162
+    AlternativeTypeList  go to state 369
+
+
+State 366
+
+    6 identifier: . "identifier"
+  167 NamedType: . identifier optTypePrefix Type
+  181 ExtensionAdditionAlternativesList: ExtensionAdditionAlternativesList ',' . ExtensionAdditionAlternative
+  182 ExtensionAdditionAlternative: . ExtensionAdditionAlternativesGroup
+  183                             | . NamedType
+  184 ExtensionAdditionAlternativesGroup: . "[[" VersionNumber AlternativeTypeList "]]"
+
+    "[["          shift, and go to state 350
+    "identifier"  shift, and go to state 15
+
+    identifier                          go to state 161
+    NamedType                           go to state 351
+    ExtensionAdditionAlternative        go to state 370
+    ExtensionAdditionAlternativesGroup  go to state 354
+
+
+State 367
+
+  158 ExtensionAdditionGroup: "[[" VersionNumber ComponentTypeList "]]" .
+
+    $default  reduce using rule 158 (ExtensionAdditionGroup)
+
+
+State 368
+
+    6 identifier: . "identifier"
+  147 ComponentTypeLists: RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' . RootComponentTypeList
+  150 RootComponentTypeList: . ComponentTypeList
+  161 ComponentTypeList: . ComponentType
+  162                  | . ComponentTypeList ',' ComponentType
+  163 ComponentType: . NamedType
+  164              | . NamedType OPTIONAL
+  165              | . NamedType DEFAULT Value
+  166              | . COMPONENTS OF Type
+  167 NamedType: . identifier optTypePrefix Type
+
+    COMPONENTS    shift, and go to state 168
+    "identifier"  shift, and go to state 15
+
+    identifier             go to state 161
+    RootComponentTypeList  go to state 371
+    ComponentTypeList      go to state 172
+    ComponentType          go to state 173
+    NamedType              go to state 174
+
+
+State 369
+
+  184 ExtensionAdditionAlternativesGroup: "[[" VersionNumber AlternativeTypeList . "]]"
+  186 AlternativeTypeList: AlternativeTypeList . ',' NamedType
+
+    "]]"  shift, and go to state 372
+    ','   shift, and go to state 234
+
+
+State 370
+
+  181 ExtensionAdditionAlternativesList: ExtensionAdditionAlternativesList ',' ExtensionAdditionAlternative .
+
+    $default  reduce using rule 181 (ExtensionAdditionAlternativesList)
+
+
+State 371
+
+  147 ComponentTypeLists: RootComponentTypeList ',' "..." ExceptionSpec ExtensionAdditions ExtensionEndMarker ',' RootComponentTypeList .
+
+    $default  reduce using rule 147 (ComponentTypeLists)
+
+
+State 372
+
+  184 ExtensionAdditionAlternativesGroup: "[[" VersionNumber AlternativeTypeList "]]" .
+
+    $default  reduce using rule 184 (ExtensionAdditionAlternativesGroup)

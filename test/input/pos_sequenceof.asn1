@@ -1,0 +1,7 @@
+Test
+DEFINITIONS ::=
+BEGIN
+
+    SequenceOfNULL ::= SEQUENCE OF NULL
+
+END
