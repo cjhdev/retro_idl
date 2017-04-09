@@ -49,6 +49,10 @@ module RetroIDL
 
                 end
 
+            else
+
+                @head = TypeList.new(mod, [], ComponentType)
+    
             end
 
             if opts[:additional]
@@ -63,6 +67,10 @@ module RetroIDL
 
                 end                    
 
+            else
+
+                @additional = TypeList.new(mod, [], ComponentType)
+                
             end
 
             if opts[:tail]
@@ -76,43 +84,14 @@ module RetroIDL
                 errors = true
 
                 end
-            
-            end
 
-            if errors
-
-                raise ASNError
-
-            end
-            
-        end
-
-        # @macro common_link
-        def link(mod, stack)
-            if @mod.nil? or @mod != mod
-                @mod = nil
-                if @head.nil? or @head.link(mod, stack)
-                    if @tail.nil? or @tail.link(mod, stack)
-                        if @additional.nil? or @additional.link(mod, stack)
-                            super(mod, [])
-                        end
-                    end
-                end
             else
-                @mod
-            end                
-        end
 
-        # @macro common_to_s
-        def to_s
-
-            result = "#{@tag} SEQUENCE { #{@head} "
-
-            if @extensible
-                result << ", ... "
+                @tail = TypeList.new(mod, [], ComponentType)
+            
             end
 
-            result << "} #{@constraint}"
+            raise ASNError if errors
 
         end
 

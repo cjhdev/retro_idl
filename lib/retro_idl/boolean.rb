@@ -24,19 +24,6 @@ module RetroIDL
         TAG_CLASS_NUMBER = 1
         TAG_CLASS = :universal
 
-        # @macro common_to_s
-        def to_s
-            "#{@tag} BOOLEAN #{@constraint}"
-        end
-
-        def evaluate(value)
-            value.class == TrueClass or value.class == FalseClass
-        end
-
-        def evaluateConstraint(value)
-            @constraint.nil? or @constraint.evaluate(value)            
-        end
-
     end
 
 end

@@ -44,17 +44,6 @@ module RetroIDL
             end
         end
 
-        # @macro common_evaluate
-        def evaluate(value)
-            value.kind_of?(Integer)
-        end
-
-        def evaluateConstraint(value)
-            if evaluate(value) and ( @constraint.nil? or @constraint.evaluate(value) )
-                true
-            end
-        end
-
     end
 
 end

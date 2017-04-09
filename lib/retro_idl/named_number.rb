@@ -23,8 +23,8 @@ module RetroIDL
 
         def initialize(mod, opts)
 
-            @id = opts[:id].to_s
-            @location = opts[:location]
+            @id = opts[:id].freeze
+            @location = opts[:location].freeze
             @mod = mod
             @number = nil
             @symbol = nil
@@ -37,46 +37,6 @@ module RetroIDL
                 end
             else
                 raise ASNError
-            end
-
-        end
-
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-
-                @mod = nil
-
-                if @symbol
-
-                    if mod.symbols(@symbol)
-
-                        @mod = mod
-
-                    end
-
-                else
-
-                    @mod = mod
-
-                end
-
-            else
-
-                @mod
-
-            end
-
-        end
-
-
-        # @macro common_to_s
-        def to_s
-
-            if @symbol        
-                "#{@id} (#{@symbol})"
-            else
-                "#{@id} (#{@number})"
             end
 
         end

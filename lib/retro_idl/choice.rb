@@ -53,36 +53,6 @@ module RetroIDL
 
         end
 
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-                @mod = nil
-                if @root.nil? or @root.link(mod, stack)
-                    if @additional.nil? or @additional.link(mod, stack)
-                        super(mod, [])
-                    end
-                end
-            end
-
-            @mod
-            
-        end
-
-        # @macro common_to_s
-        def to_s
-
-            result = "#{@tag} CHOICE { #{@root} "
-            if @extensible
-                result << ", ... "
-            end
-            if @additional
-                result << ", #{@additional} "
-            end
-            result << "} #{@constraint}"       
-
-        end
-
     end
 
 end

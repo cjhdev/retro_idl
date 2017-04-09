@@ -29,23 +29,21 @@ testClass = Class.new(Test::Unit::TestCase) do
                 output = nil
 
                 # run stage 1 and intercept stderr output
-                err = capture_stderr do
+                #err = capture_stderr do
 
                     output = RetroIDL::ASN.new(inputs[__method__])
                 
-                end
+                #end
 
                 # there should have been no messages to stderr
-                assert_equal("", err.string, "unexpected error messages")
+                #assert_equal("", err.string, "unexpected error messages")
 
                 # if there were messages, forward them to stderr
-                if err.string != ""
+                #if err.string != ""
 
-                    STDERR.puts err.string
+                    #STDERR.puts err.string
 
-                end
-
-                
+                #end
 
             end
 

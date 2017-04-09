@@ -59,57 +59,12 @@ module RetroIDL
 
             end
 
-            if errors
-
-                raise ASNError
-
-            end
+            raise ASNError if errors
 
         end
 
         # return [Hash] type list
         attr_reader :list
-
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-
-                @mod = nil
-
-                @list.values.each do |item|
-
-                    if item.link(mod, stack.dup).nil?
-
-                        return @mod
-                    
-                    end
-
-                end
-
-                @mod = mod
-
-            else
-
-                @mod
-
-            end
-            
-        end
-
-        # @macro common_to_s
-        def to_s
-
-            result = ""
-            @list.values.each do |item|            
-                result << "#{item}"
-                if item != @list.values.last
-                    result << ", "
-                end
-            end
-            result
-
-        end
 
     end
 

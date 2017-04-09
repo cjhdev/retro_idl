@@ -21,18 +21,11 @@ module RetroIDL
 
     class AlternativeType
 
+        attr_reader :type
+
         def initialize(mod, opts)
             @mod = mod
             @type = RetroIDL.const_get(opts[:class]).new(mod, opts)
-        end
-
-        def link(mod, stack)
-            @type.link(mod, stack)
-        end
-
-        # @macro common_to_s
-        def to_s
-            "#{@type.id} #{@type}"
         end
 
     end

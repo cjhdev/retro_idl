@@ -21,31 +21,13 @@ module RetroIDL
 
     class ComponentType
 
+        attr_reader :type
+        attr_reader :optional
+
         def initialize(mod, opts)
             @mod = mod
-            @optional = opts[:optional]
+            @optional = (opts[:optional] ? true : false)
             @type = RetroIDL.const_get(opts[:class]).new(mod, opts)
-        end
-
-        def link(mod, stack)
-            @type.link(mod, stack.push(self))
-        end
-
-        # @macro common_to_s
-        def to_s
-            "#{@type.id} #{@type}"
-        end
-
-        # @return [true] this component is optional
-        # @return [false] this component is not optional
-        def optional?
-
-            if @optional
-                true
-            else
-                false
-            end
-
         end
         
     end

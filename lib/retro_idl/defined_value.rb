@@ -23,9 +23,9 @@ module RetroIDL
     # X.680 section 17.3
     class DefinedValue < BaseValue
 
-        def initialize(**opts)
+        def initialize(mod, opts)
 
-            super(**opts)
+            super(mod, opts)
 
             if RetroIDL.is_identifier?(@location, opts[:value])                
                 @symbol = opts[:value].to_s
@@ -35,33 +35,6 @@ module RetroIDL
             
         end
 
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-
-                @mod = nil
-
-                if mod.symbol(@symbol)
-
-                    if mod.symbol(@symbol).link(mod, [])
-
-                        super(mod, stack)
-
-                    end
-                    
-                else
-
-                    ASN.putError(@location, "DefinedValue governing type is not defined")
-
-                end
-
-            end
-
-            @mod
-
-        end
-
         # return the Ruby native representation of this DefinedType
         #
         # @return [Array, Hash, Numeric, String] native value
@@ -69,11 +42,6 @@ module RetroIDL
         # @raise [ASNError] value cannot be returned if object is not linked
         def value
             @mod.symbol(@symbol).value
-        end
-
-        # @macro common_to_s
-        def to_s
-            "#{@symbol}"            
         end
 
     end

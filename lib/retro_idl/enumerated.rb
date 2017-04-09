@@ -25,6 +25,30 @@ module RetroIDL
         TAG_CLASS_NUMBER = 10
         TAG_CLASS = :universal
 
+        attr_reader :exception
+
+        def symbolToValue(symbol)
+            if !(result = @root.list[symbol])
+                if !(result = @additional.list[symbol])
+                    raise RangeError.new "symbol 'symbol' is not in root or additional definitions"
+                end
+            end
+            result                
+        end
+
+        def valueToSymbol(value)
+            if !(result = @root.list.key(value))
+                if !(result = @additional.list.key(value))
+                    raise RangeError.new "value is not in root or additional"
+                end
+            end
+            result
+        end
+
+        def symbols
+            [@root.list.keys, @additional.list.keys].flatten
+        end
+
         def initialize(mod, opts)
 
             super(mod, opts)
@@ -72,61 +96,16 @@ module RetroIDL
 
                 end
 
-            end
+            else
 
-            if errors
-
-                raise ASNError.new
-
-            end
-            
-        end
-
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-
-                @mod = nil
-
-                if @root.link(mod, stack)
-
-                    if @additional.nil? or @additional.link(mod, stack)
-                    
-                        super(mod, stack)
-
-                    end
-                    
-                end
+                @additional = ValueList.new(mod, [], EnumerationItem)
 
             end
 
-            @mod
-            
-        end
-
-        # @macro common_to_s
-        def to_s
-
-            result = "#{@tag} ENUMERATED { #{@root} "
-
-            if @extensible
-                result << ", ... "
-            end
-            if @additional
-                result << ", #{@additional} "
-            end
-
-            result << "} #{@constraint}"
+            raise ASNError.new if errors
 
         end
 
-        def evaluate(value)
-
-            false
-
-        end
-        
     end
 
 end

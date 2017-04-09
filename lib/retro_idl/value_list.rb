@@ -20,33 +20,6 @@
 module RetroIDL
 
     class ValueList < TypeList
-
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-
-                @mod = nil
-                ok = true
-
-                @list.values.each do |item|
-                    if item.link(mod, []).nil?
-                        ok = false                        
-                    end                    
-                end
-
-                if ok
-                    @mod = mod
-                else
-                    @mod
-                end
-
-            else
-                @mod
-            end                
-
-        end
-
     end
 
 end

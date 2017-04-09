@@ -2,25 +2,27 @@ module RetroIDL::AXDR
 
     class BOOLEAN
 
-        def self.from_axdr(input)
-            case input.read(1)
-            when nil
-                raise
-            when "\x00"
-                new(false)
-            when "\x01"
-                new(true)
+        attr_reader :value
+        def self.decode(input)
+            case input.read(1).unpack("C")
+            when 0
+                self.new(false)
+            when 0xff
+                self.new(true)
             else
-                raise "invalid value for a BOOLEAN"
+                raise "invalid boolean value"
+            end                   
+        end
+        def initialize(value)
+            case value
+            when 0, nil, false
+                @value = false
+            else
+                @value = true
             end
         end
-
-        def initialize(value)
-            @value = value
-        end
-
-        def to_axdr(output)
-            output.write([(@value ? 1 : 0)].pack("C"))
+        def encode
+            [(@value ? 0xff : 0)].pack("C")
         end
 
     end

@@ -28,6 +28,20 @@ module RetroIDL
             @assignments.values
         end
 
+        def types
+            @assignments.values.select{|a|a.kind_of? BaseType}
+        end
+
+        def values
+            @assignments.values.select{|a|a.kind_of? BaseValue}
+        end
+
+        def resolve(id)
+            result = @assignments[id]
+            raise RangeError.new("id '#{id}' does not resolve") if result.nil?
+            result
+        end
+
         def initialize(mods, attr)
 
             errors = false

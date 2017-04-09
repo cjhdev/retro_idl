@@ -21,7 +21,7 @@ module RetroIDL
 
     class BaseType
 
-        attr_reader :id, :tag, :location
+        attr_reader :id, :tags, :constraints, :location
 
         # Common type object initialisation
         #
@@ -37,11 +37,15 @@ module RetroIDL
         def initialize(mod, opts)
 
             @mod = mod
-            @tag = ( opts[:tag] ? Tag.new(mod, opts[:tag]) : nil )
             @id = opts[:id].freeze
             @location = opts[:location].freeze
-            @constraint = nil
+            @tags = opts[:tags].map{|t|Tag.new(mod, t)}
+            @constraints = Constraints.new(mod, self, opts[:constraints])
             
+        end
+
+        def type
+            self.class.to_s.split("::").last
         end
         
         def self.===(otherClass)

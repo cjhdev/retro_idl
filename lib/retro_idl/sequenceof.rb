@@ -29,24 +29,6 @@ module RetroIDL
             @type = RetroIDL.const_get(opts[:type][:class]).new( mod, opts[:type] )
         end
 
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-                @mod = nil
-                if @type.link(mod, stack)
-                    super(mod, stack)
-                end
-            else
-                @mod
-            end
-            
-        end
-
-        # @macro common_to_s
-        def to_s
-            "#{@tag} SEQUENCE #{@constraint} OF #{@type}"
-        end
-        
     end
 
 end

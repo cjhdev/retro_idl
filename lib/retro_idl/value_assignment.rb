@@ -13,50 +13,10 @@ module RetroIDL
             @governor = RetroIDL.const_get(opts[:governor][:class]).new(mod, opts[:governor])            
         end
 
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-
-                @mod = nil
-
-                if @governor.link(mod, stack.push(self))
-
-                    if @governor.evaluate(@value)
-
-                        @mod = mod
-
-                    else
-
-                        ASN.putError(@location, "evaluate didn't work")
-                        
-                    end
-
-                end
-
-            else
-
-                @mod
-
-            end
-            
-        end
-
         def self.===(otherClass)
-
-            if self == otherClass
-
-                true
-
-            else
-
-                false
-
-            end
-
+            self == otherClass
         end
-
-        
+           
     end
 
 end

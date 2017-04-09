@@ -33,26 +33,6 @@ module RetroIDL
     #   @raise [ASNError] cannot evaluate against unresolved references
     #
 
-    # @!macro [new] common_link
-    #
-    #   resolve symbols to definitions in module
-    #
-    #   @param mod [MODULE] module this type belongs to
-    #   @param stack [Array] objects called before this object for depth first search of recursion
-    #
-    #   @return [MODULE] object has been linked
-    #   @return [nil] object has not been linked
-    #
-
-    # @!macro [new] common_to_s
-    #
-    #   Convert object to ASN.1 syntax representation
-    #
-    #   @return [String] ASN.1 syntax representation
-    #
-    #   @raise [ASNError]
-    #
-
     LINK_ERROR = "object must be linked"
     SYMBOL_UNDEFINED_ERROR = "symbol is undefined"
 
@@ -126,12 +106,15 @@ module RetroIDL
             end
         end
 
+        def mods
+            @mods.values
+        end
+
         def initialize(*buffer)
 
             errors = false
 
             @crefs = []            
-            @modules = {}
             tree = []
 
             if buffer.size > 0
@@ -169,11 +152,8 @@ module RetroIDL
 
             # maybe exercise links here
             
+            raise ASNError if errors
             
-            if errors
-                raise ASNError
-            end
-
         end
 
     end

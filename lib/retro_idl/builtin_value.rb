@@ -24,16 +24,5 @@ module RetroIDL
     # X.680 section 17.2
     class BuiltinValue < BaseValue
 
-        attr_reader :id, :governor, :location
-
-        # @macro common_to_s
-        def to_s
-            "#{@value}"            
-        end
-
-        def link(mod, stack)
-            mod
-        end
-
     end
 end

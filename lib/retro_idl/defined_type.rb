@@ -33,33 +33,10 @@ module RetroIDL
 
         end
 
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-
-                @mod = nil
-
-                if mod.symbols(@symbol)
-
-                    if mod.symbols(@symbol).link(mod, stack)
-
-                        super(mod, stack)
-
-                    end
-                    
-                else
-
-                    ASN.putError(@location, "symbol is undefined")
-                    
-                end
-
-            end
-
-            @mod
-
+        def type
+            @mod.resolve(@symbol).type            
         end
-        
+
     end
 
 end

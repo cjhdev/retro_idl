@@ -14,7 +14,7 @@ desc "tests"
 Rake::TestTask.new do |t|
     t.name = :test
     t.libs << "lib"
-    t.test_files = FileList["test/tc_*.rb"]
+    t.test_files = FileList["test/**/tc_*.rb"]
 end
 
 task :default => :test

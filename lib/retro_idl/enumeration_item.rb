@@ -24,10 +24,12 @@ module RetroIDL
     # X.680 section 20
     class EnumerationItem
 
+        attr_reader :location, :id
+        
         def initialize(mod, opts)
 
-            @id = opts[:id].to_s
-            @location = opts[:location]                
+            @id = opts[:id].freeze
+            @location = opts[:location].freeze
             @mod = mod
             @symbol = nil
             @number = nil
@@ -35,7 +37,7 @@ module RetroIDL
             if RetroIDL.is_identifier?(@location, @id)
                 if opts[:number]
                     if opts[:number].is_a? String
-                        @symbol = opts[:number].to_s            
+                        @symbol = opts[:number].freeze
                     else
                         @number = opts[:number].to_i
                     end
@@ -46,59 +48,18 @@ module RetroIDL
 
         end
 
-        # @return [Hash] location record
-        attr_reader :location
-        
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-
-                @mod = nil
-
-                if @symbol
-
-                    if mod.symbols(@symbol)
-
-                        @mod = mod
-
-                    else
-
-                        ASN.putError(@location, SYMBOL_UNDEFINED_ERROR)
-
-                    end
-
-                else
-
-                    @mod = mod
-
-                end
-
-            end
-
-            @mod
-
-        end
-
-        # @macro common_to_s
-        def to_s
-
+        def number
             if @symbol
-
-                "#{@id} (#{@symbol})"
-
-            elsif @number
-
-                "#{@id} (#{@number})"
-
+                value = mod.resolve(@symbol)
+                if !value.kind_of? BaseValue or value.governor.type != 'INTEGER'
+                    raise ASNError.new "EnumerationItem#number must return an INTEGER value"
+                end
+                value.value
             else
-
-                "#{@id}"
-
-            end
-
+                @number
+            end                
         end
-        
+
     end
 
 end

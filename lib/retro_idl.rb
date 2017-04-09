@@ -19,3 +19,4 @@
 
 require 'retro_idl/version'
 require 'retro_idl/asn'
+require 'retro_idl/axdr/model'

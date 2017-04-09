@@ -24,20 +24,6 @@ module RetroIDL
         TAG_CLASS_NUMBER = 4
         TAG_CLASS = :universal
 
-        def evaluate(value)
-            value.kind_of?(String)
-        end
-
-        def evaluateConstraint(value)
-
-            if evaluate(value) and ( @constraint or @constraint.evaluate(value) )
-                true
-            else
-                false
-            end
-
-        end
-
     end
 
 end

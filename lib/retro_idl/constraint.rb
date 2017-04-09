@@ -21,115 +21,42 @@ module RetroIDL
 
     class Constraints
         
-        def initialize(type, constraints)
-
-            @constraints = []
+        def initialize(mod, type, constraints)
+            @constraints = constraints.inject([]){|out,c|out << Constraint.new(mod, type, c)}            
             @type = type
-            constraints.each do |c|
-                @constraints << Constraint.new(type, **c)
-            end            
+            @mod = mod
         end
 
-        # @macro common_to_s
-        def to_s
-            @constraints.inject("") do |acc, c|
-                acc << c.to_s
-            end
-        end
-
-        def evaluate(value)
-            @constraint.each do |c|
-                if !c.evaluate(value)
-                    return false
-                end                    
-            end
-        end
-
-        def link(mod, stack)
-            @constraint.each do |c|
-                @mod = c.link(mod, stack)
-                if @mod.nil?
-                    return nil
-                end
-            end                
-        end
-        
     end
 
     class Constraint
 
-        def initialize(type, **opts)
+        def initialize(mod, type, opts)
 
             @root = nil
             @additional = nil
-            @mod = nil
+            @mod = mod
             @type = type
+            @mod = mod
 
-            @root = ElementSetSpec.new(type, **opts[:root])
+            @root = ElementSetSpec.new(mod, type, opts[:root])
             @extensible = opts[:extensible]
             if opts[:additional]
-                @additional = ElementSetSpec.new(type, **opts[:additional])
+                @additional = ElementSetSpec.new(mod, type, opts[:additional])
             end
             
-        end
-
-        def evaluate(value)
-            @root.evaluate(value) or ( @additional and @additional.evaluate )
-        end
-
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-                @mod = nil
-                @root.each do |element|
-                    elem.link(@mod, [])
-                end
-                if @additional
-                    @additional.each do |element|
-                        elem.link(@mod, [])
-                    end
-                end
-            else
-                @mod
-            end
-
-        end
-
-        # @macro common_to_s
-        def to_s
-            if @extensible
-                if @additional
-                    "( #{@root}, ... , #{@additional} )"
-                else
-                    "( #{@root}, ... )"
-                end
-            else
-                "( #{@root} )"
-            end
         end
 
     end
 
     class ElementSetSpec
 
-        def initialize(type, **opts)
-            @set = []
+        def initialize(mod, type, opts)
+            @mod = mod
             @top = opts[:top]
             @location = opts[:location]
             @type = type
-            opts[:set].each do |element|
-                @set << RetroIDL.const_get(element[:class]).new(type, **element)
-            end            
-        end
-
-        # @macro common_to_s
-        def to_s
-            if @top
-                @set.inject(""){|acc,e|acc<<e.to_s}
-            else
-                "(#{@set.inject(""){|acc,e|acc<<e.to_s}})"
-            end
+            @set = opts[:set].inject([]){|out,e|out << RetroIDL.const_get(e[:class]).new(mod, type, e)}
         end
 
         def evaluate(value)
@@ -155,47 +82,23 @@ module RetroIDL
             left
 
         end
-
-        def link(mod, stack)
-            @set.each do |s|
-                @mod = s.link(mod, [])
-            end
-            @mod
-        end
         
     end
 
     class Element
-        def initialize(type, **opts)
-            @mod = nil
-        end
-        def link(mod, stack)
+        def initialize(mod, type, opts)
             @mod = mod
         end
     end
 
     class SingleValue < Element
 
-        def initialize(type, **opts)
+        def initialize(mod, type, opts)
+            @mod = mod
             @location = opts[:location]
             @type = opts[:type]
-            @value = RetroIDL.const_get(opts[:value][:class]).new(**opts[:value])                        
-        end
-
-        def link(mod, stack)
-            if @mod.nil? or @mod != mod
-                @mod = nil
-                if @value.link(mod, stack) == mod
-                    if @parent.evaluate(@value)
-                        @mod = mod
-                    end
-                end
-            end
-        end
-
-        # @macro common_to_s
-        def to_s
-            "#{@value}"            
+            #@value = RetroIDL.const_get(opts[:value][:class]).new(mod, opts[:value])                        
+            @value = opts[:value]                        
         end
 
         def evaluate(value)
@@ -206,31 +109,14 @@ module RetroIDL
 
     class ValueRange < Element
 
-        def initialize(type, **opts)
+        def initialize(mod, type, opts)
             @location = opts[:location]
             @type = type
-            @upper = RetroIDL.const_get(opts[:upper][:class]).new(**opts[:upper])
-            @lower = RetroIDL.const_get(opts[:lower][:class]).new(**opts[:lower])
-            @mod = nil
-        end
-
-        def link(mod, stack)
-            
-            if @mod.nil? or @mod != mod
-                @mod = nil
-                if @upper.link(mod, stack) == mod
-                    if @lower.link(mod, stack) == mod
-                        @mod = mod
-                    end
-                end
-            end
-            @mod
-            
-        end
-
-        # @macro common_to_s
-        def to_s
-            "#{@lower} .. #{@upper}"
+            #@upper = RetroIDL.const_get(opts[:upper][:class]).new(mod, opts[:upper])
+            #@lower = RetroIDL.const_get(opts[:lower][:class]).new(mod, opts[:lower])
+            @upper = opts[:upper]
+            @lower = opts[:lower]
+            @mod = mod
         end
 
         def evaluate(value)
@@ -241,31 +127,16 @@ module RetroIDL
 
     class SizeConstraint < Element
 
-        def initialize(type, **opts)
+        def initialize(mod, type, opts)
             @location = opts[:location]
             @type = opts[:type]
-            opts[:constraint][:type] = @type
-            @constraint = Constraint.new(@type, **opts[:constraint])
-            @mod = nil
-        end
-
-        def link(mod, stack)
-            @mod = @constraint.link(mod, stack)
-        end
-
-        # @macro common_to_s
-        def to_s
-            "SIZE #{@constraint}"                
+            @constraint = Constraint.new(mod, @type, opts[:constraint])
+            @mod = mod
         end
 
     end
 
     class UNION < Element
-
-        # @macro common_to_s
-        def to_s
-            " | "
-        end
     end
 
     class ALL < Element
@@ -280,17 +151,9 @@ module RetroIDL
     end
 
     class INTERSECTION < Element
-
-        # @macro common_to_s
-        def to_s
-            " ^ "
-        end
     end
 
     class EXCEPT < Element
-        def to_s
-            " EXCEPT "
-        end
     end
 
 end

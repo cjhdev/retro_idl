@@ -29,14 +29,6 @@ module RetroIDL
             "#{@tag} NULL #{@constraint}"    
         end
 
-        def evaluate(value)
-            value.nil?
-        end
-
-        def evaluateConstraint(value)
-            true
-        end
-
     end
 
 end

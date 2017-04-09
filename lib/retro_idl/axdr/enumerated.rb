@@ -2,28 +2,19 @@ module RetroIDL::AXDR
 
     class ENUMERATED < INTEGER
 
-        def self.from_axdr(input)
-            
-
-        
-            case input.read(1)
-            when nil
-                raise
-            when "\x00"
-                new(false)
-            when "\x01"
-                new(true)
-            else
-                raise "invalid value for a BOOLEAN"
-            end
+        def self.type
+            @type
+        end        
+        attr_reader :value
+        def self.decode(input)
+            self.new(@type.valueToSymbol(input.read(1).unpack("C")))
         end
-
         def initialize(value)
+            raise ArgumentError if self.class.type.symbols.include? value
             @value = value
         end
-
-        def to_axdr(output)
-            output.write([(@value ? 1 : 0)].pack("C"))
+        def encode
+            [self.class.type.symbolToValue(value)].pack("C")
         end
 
     end

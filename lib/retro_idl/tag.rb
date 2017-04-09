@@ -26,10 +26,12 @@ module RetroIDL
 
         def initialize(mod, opts)
 
+            
+
             @mod = mod
             @symbol = nil
             @tagClass = opts[:class]
-            @location = opts[:location]
+            @location = opts[:location].freeze
             @tagType = opts[:type]
             
             if opts[:classNumber].is_a? String            
@@ -60,44 +62,6 @@ module RetroIDL
                 @tagClassNumber
             end
         end
-
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-                @mod = nil
-                if @symbol
-                    if mod.symbols(@symbol).nil?
-                        ASN.putError(@location, SYMBOL_UNDEFINED_ERROR)
-                    else
-                        @mod = mod.symbols(@symbol).link(mod, stack)
-                    end
-                end
-            else
-                @mod
-            end
-
-        end
-
-        # @macro common_to_s
-        def to_s
-
-            result = "["
-
-            if @tagClass
-                result << " #{tagClass}"
-            end
-
-            if @symbol
-                result << " #{@symbol}"
-            else
-                result << " #{tagClassNumber}"
-            end
-
-            result << " ] #{tagType}"
-
-        end
-
     end
 
 end

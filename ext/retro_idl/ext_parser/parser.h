@@ -43,10 +43,11 @@ extern int yydebug;
 #line 7 "etc/retro_idl/ext_parser/ext_parser.y" /* glr.c:197  */
 
 
+#define YYDEBUG 1
 #define YY_DECL int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, yyscan_t yyscanner, VALUE crefs)
 
 
-#line 50 "ext/retro_idl/ext_parser/parser.h" /* glr.c:197  */
+#line 51 "ext/retro_idl/ext_parser/parser.h" /* glr.c:197  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE

@@ -17,32 +17,7 @@ module  RetroIDL
             end
 
         end
-
-        # @macro common_link
-        def link(mod, stack)
-
-            if @mod.nil? or @mod != mod
-                @mod = nil
-                if @bitList.nil? or @bitList.link(mod, [])
-                    super(mod, stack)
-                end
-            else
-                @mod
-            end
-            
-        end
-
-        # @macro common_to_s
-        def to_s
-
-            result = "#{@tag} BIT STRING"
-            if @bitList
-                result << "{ #{@bitList} }"
-            end
-            result << " #{@constraint}"
-            
-        end
-            
+    
     end
 
 end

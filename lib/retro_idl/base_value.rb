@@ -27,12 +27,12 @@ module RetroIDL
         
         def initialize(mod, opts)
             @value = opts[:value]
-            @location = opts[:location]
+            @location = opts[:location].freeze
             @id = opts[:id]
             @mod = mod
             @governor = nil
             if opts[:governor]
-                @governor = RetroIDL.const_get(opts[:governor][:class]).new(**opts[:governor])
+                @governor = RetroIDL.const_get(opts[:governor][:class]).new(mod, opts[:governor])
             end            
         end
 

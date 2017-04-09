@@ -6,6 +6,7 @@
 
 %code requires {
 
+#define YYDEBUG 1
 #define YY_DECL int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, yyscan_t yyscanner, VALUE crefs)
 
 }
@@ -16,6 +17,7 @@ typedef void * yyscan_t;
 #define YY_TYPEDEF_YY_SCANNER_T
 
 #include <ruby.h>
+#include <stdio.h>
 
 #include "parser.h"
 #include "lexer.h"
@@ -479,13 +481,11 @@ Assignment:
     ;
 
 TypeAssignment:
-     typereference[ref] ASSIGN optTypePrefix[tag] Type
+     typereference[ref] ASSIGN Type
     {
         $$ = $Type;
-        rb_hash_aset($$, ID2SYM(rb_intern("id")), $ref);
-        rb_hash_aset($$, ID2SYM(rb_intern("tag")), $tag);
+        rb_hash_aset($$, ID2SYM(rb_intern("id")), $ref);        
         rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
-        
     }
     ;
 
@@ -505,9 +505,7 @@ ValueAssignment:
 /**********************************************************************/
 
 Value:
-    TRUE
-    |
-    FALSE
+    BooleanValue
     |
     NULL
     |
@@ -543,6 +541,12 @@ Value:
     {
         $$ = $ValueList;
     }
+    ;
+
+BooleanValue:
+    TRUE
+    |
+    FALSE
     ;
 
 NamedValueList:
@@ -588,9 +592,34 @@ NamedValue:
 /**********************************************************************/
 
 Type:
-    BitStringType
+    optTags OfType
+    {
+        $$ = $OfType;
+        rb_hash_aset($$, ID2SYM(rb_intern("tags")), $optTags);
+    }
     |
-    ObjectIdentifierType
+    optTags _Type optConstraints
+    {
+        $$ = $_Type;
+        rb_hash_aset($$, ID2SYM(rb_intern("tags")), $optTags);
+        rb_hash_aset($$, ID2SYM(rb_intern("constraints")), $optConstraints);
+    }
+    ;
+
+OfType:
+    SetOfType
+    |
+    SequenceOfType
+    ;
+
+_Type:
+    BuiltinType
+    |
+    ReferencedType
+    ;
+
+BuiltinType:
+    BitStringType
     |
     BooleanType
     |
@@ -604,27 +633,19 @@ Type:
     |
     NullType
     |
+    ObjectIdentifierType
+    |
     OctetStringType
     |
     RealType
     |
-    SequenceOfType
-    |
     SequenceType    
     |
-    DefinedType
-    |
-    ConstrainedType
+    SetType
     ;
 
-ConstrainedType:
-    Type Constraint
-    {
-        if(rb_hash_aref($$, ID2SYM(rb_intern("constraints"))) == Qnil){
-            rb_hash_aset($$, ID2SYM(rb_intern("constraints")), rb_ary_new());
-        }
-        rb_ary_push(rb_hash_aref($$, ID2SYM(rb_intern("constraints"))), $Constraint);
-    }
+ReferencedType:
+    DefinedType
     ;
     
 /**********************************************************************/
@@ -806,7 +827,7 @@ NamedNumberList:
     ;
     
 NamedNumber:
-    identifier[id] '(' SignedNumber[value] ')'
+    identifier[id] '(' NumberOrIdentifier[value] ')'
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
@@ -814,15 +835,12 @@ NamedNumber:
         rb_hash_aset($$, ID2SYM(rb_intern("number")), $value);
         rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
     }
+    ;
+
+NumberOrIdentifier:
+    SignedNumber
     |
-    identifier[id] '(' identifier[value] ')'
-    {
-        $$ = rb_hash_new();
-        rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("id")), $id);
-        rb_hash_aset($$, ID2SYM(rb_intern("number")), $value);
-        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
-    }
+    identifier
     ;
     
 SignedNumber:
@@ -1120,7 +1138,7 @@ ComponentTypeList:
     }
     ;
 
-ComponentType:
+ComponentType:    
     NamedType
     |
     NamedType OPTIONAL
@@ -1140,26 +1158,49 @@ ComponentType:
     ;
     
 NamedType:
-    identifier optTypePrefix[tag] Type
+    identifier Type
     {
         $$ = $Type;
         rb_hash_aset($$, ID2SYM(rb_intern("id")), $identifier); 
-        rb_hash_aset($$, ID2SYM(rb_intern("tag")), $tag);
         rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));        
     }
     ;
     
 /**********************************************************************/
     
-SequenceOfType:
-    SEQUENCE SequenceOfTypeVariant SequenceOfTypeTarget
+SetType:
+    SET '{' '}'
     {
-        $$ = $SequenceOfTypeVariant;
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCEOF")));
-        rb_hash_aset($$, ID2SYM(rb_intern("type")), $SequenceOfTypeTarget);
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SET"))); 
     }
+    |
+    SET '{' ELLIPSES ExceptionSpec OptionalExtensionMarker '}'
+    {
+        
+    }
+    |
+    SET '{' ComponentTypeLists '}'
+    {
+        $$ = $ComponentTypeLists;
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SET")));        
+    }
+    ;
 
-SequenceOfTypeVariant:
+/**********************************************************************/
+    
+SequenceOfType:
+    SEQUENCE OfTypeVariant TypeOrNamedType
+    {
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCEOF")));
+        rb_hash_aset($$, ID2SYM(rb_intern("type")), $TypeOrNamedType);
+        rb_hash_aset($$, ID2SYM(rb_intern("constraints")), $OfTypeVariant);
+}
+
+OfTypeVariant:
     OF
     {
         $$ = rb_hash_new();
@@ -1170,25 +1211,35 @@ SequenceOfTypeVariant:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("constraint")), $Constraint);
+        rb_push_ary($$, $Constraint);
     }    
     |
     SizeConstraint OF
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("constraint")), $SizeConstraint);
+        rb_push_ary($$, $SizeConstraint);
     }
     ;
 
-SequenceOfTypeTarget:
+TypeOrNamedType:
     Type
     |
-    NamedType    
+    NamedType
     ;
 
+/**********************************************************************/
 
-    
+SetOfType:
+    SET OfTypeVariant TypeOrNamedType
+    {
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SETOF")));
+        rb_hash_aset($$, ID2SYM(rb_intern("type")), $TypeOrNamedType);
+        rb_hash_aset($$, ID2SYM(rb_intern("constraints")), $OfTypeVariant);
+    }    
+
 /**********************************************************************/
 
 ChoiceType:
@@ -1278,38 +1329,58 @@ AlternativeTypeList:
 
 /**********************************************************************/
 
-optTypePrefix:
-    empty
+optTags:
+    Tags
     |
-    TypePrefix
+    empty
+    {
+        $$ = rb_ary_new();
+        rb_ary_push(crefs, $$);
+    }
     ;
 
-TypePrefix:
-    Tag
-    |
-    Tag IMPLICIT
-    {   
-        $$ = $Tag;
-        rb_hash_aset($Tag, ID2SYM(rb_intern("type")), ID2SYM(rb_intern("EXPLICIT")));        
-    }
-    |
-    Tag EXPLICIT
-    {   
-        $$ = $Tag;
-        rb_hash_aset($Tag, ID2SYM(rb_intern("type")), ID2SYM(rb_intern("EXPLICIT")));        
-    }
-    ;
-    
-Tag:
-    '[' encodingreference ':' Class ']'
+Tags:
+    Tags Tag
     {
-        $$ = $Class;            
+        rb_ary_push($$, $Tag);
     }
     |
-    '[' Class ']'
+    Tag
+    {
+        $$ = rb_ary_new();
+        rb_ary_push(crefs, $$);
+        rb_ary_push($$, $Tag);
+    }   
+    ;
+
+Tag:
+    '[' encodingreference ':' Class ']' TagType
     {
         $$ = $Class;
+        rb_hash_aset($$, ID2SYM(rb_intern("type")), $TagType);
     }
+    |
+    '[' Class ']' TagType
+    {
+        $$ = $Class;
+        rb_hash_aset($$, ID2SYM(rb_intern("type")), $TagType);
+    }
+    ;
+
+TagType:
+    IMPLICIT
+    {
+        $$ = ID2SYM(rb_intern("IMPLICIT"));
+        rb_ary_push(crefs, $$);
+    }
+    |
+    EXPLICIT
+    {
+        $$ = ID2SYM(rb_intern("EXPLICIT"));
+        rb_ary_push(crefs, $$);
+    }
+    |
+    empty
     ;
 
 Class:
@@ -1354,10 +1425,35 @@ ClassNumber:
 
 /**********************************************************************/
 
+optConstraints:
+    Constraints
+    |
+    empty
+    {
+        $$ = rb_ary_new();
+        rb_ary_push(crefs, $$);
+    }
+    ;
+
+Constraints:
+    Constraint
+    {
+        $$ = rb_ary_new();
+        rb_ary_push(crefs, $$);
+        rb_ary_push($$, $Constraint);        
+    }
+    |
+    Constraints Constraint
+    {
+        rb_ary_push($$, $Constraint);
+    }
+    ;
+
 Constraint:
     '(' ConstraintSpec ExceptionSpec ')'
     {
         $$ = $ConstraintSpec;
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("Constraint")));
     }
     ;
 
@@ -1375,15 +1471,15 @@ ElementSetSpecs:
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
         rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
+        rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qfalse);
     }
     |
     ElementSetSpec[root] ',' ELLIPSES
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);        
+        rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
         rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
-
         rb_hash_aset($root, ID2SYM(rb_intern("top")), Qtrue);
     }
     |
@@ -1392,12 +1488,9 @@ ElementSetSpecs:
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
         rb_hash_aset($$, ID2SYM(rb_intern("root")), $root);
-        
+        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $additional);        
         rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
-        rb_hash_aset($$, ID2SYM(rb_intern("additional")), $additional);
-
         rb_hash_aset($root, ID2SYM(rb_intern("top")), Qtrue);
-        rb_hash_aset($additional, ID2SYM(rb_intern("additional")), Qtrue);
     }
     ;
 
@@ -1446,7 +1539,6 @@ NextElements:
         rb_hash_aset(mark, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
 
         rb_ary_unshift(rb_hash_aref($$, ID2SYM(rb_intern("set"))), mark);
-
     }
     |
     IntersectionMark Elements NextElements[next]
