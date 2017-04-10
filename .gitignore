@@ -1,3 +1,4 @@
+test/input/pos_dlms_pdu.asn1
 *.gem
 *.o
 *.so

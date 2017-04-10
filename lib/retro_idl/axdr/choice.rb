@@ -1,12 +1,10 @@
 module RetroIDL::AXDR
 
-    class INTEGER
+    class CHOICE
 
         attr_reader :value
-
-        
         def self.decode(input)
-            
+            tag = Tag.decode(input)
             
         end
         def initialize(value)

@@ -1,21 +1,18 @@
 module RetroIDL::AXDR
 
-    class INTEGER
+    class NULL
 
         attr_reader :value
-
-        
         def self.decode(input)
-            
-            
+            self.new
         end
-        def initialize(value)
-            @value = value
+        def initialize
+            @value = nil            
         end
         def encode
-            
+            ""
         end
-        
+
     end
 
 end

@@ -39,7 +39,18 @@ module RetroIDL
                         alternatives = 
                         Class.new(klass) do
 
-                        end        
+                        end
+                    when OCTETSTRING, VisibleString
+                        
+                    when INTEGER
+                        values = type.constraints.values
+                        Class.new(AXDR.const_get(type.type)) do
+                            @type = type
+                            @values = values
+                        end
+                            
+                        
+                        
                     else
                         Class.new(AXDR.const_get(type.type)) do
                             @type = type
