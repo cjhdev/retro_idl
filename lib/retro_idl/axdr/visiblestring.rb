@@ -1,6 +1,6 @@
 module RetroIDL::AXDR
 
-    class VisibleString < OCTETSTRING
+    class VisibleStringType < OctetStringType
     end
 
 end

@@ -20,7 +20,7 @@
 
 module RetroIDL
 
-    class CHOICE < BaseType
+    class ChoiceType < BaseType
 
         def initialize(mod, opts)
 

@@ -1,6 +1,6 @@
 module RetroIDL::AXDR
 
-    class ENUMERATED < INTEGER
+    class EnumeratedType < IntegerType
 
         def self.type
             @type

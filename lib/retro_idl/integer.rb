@@ -21,7 +21,7 @@
 module RetroIDL
 
     # X.680 section 19
-    class INTEGER < BaseType
+    class IntegerType < BaseType
 
         TAG_CLASS_NUMBER = 2
         TAG_CLASS = :universal
@@ -43,6 +43,8 @@ module RetroIDL
                 @numberList = ValueList.new(mod, opts[:numberList], NamedNumber)
             end
         end
+
+        
 
     end
 

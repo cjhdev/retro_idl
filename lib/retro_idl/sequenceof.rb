@@ -19,7 +19,7 @@
 
 module RetroIDL
 
-    class SEQUENCEOF < BaseType
+    class SequenceOfType < BaseType
 
         TAG_CLASS_NUMBER = 16
         TAG_CLASS = :universal

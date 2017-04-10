@@ -1,6 +1,6 @@
 module RetroIDL::AXDR
 
-    class NULL
+    class NullType
 
         attr_reader :value
         def self.decode(input)

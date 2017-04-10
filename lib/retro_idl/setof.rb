@@ -19,10 +19,16 @@
 
 module RetroIDL
 
-    # BuiltinValue aggregation
-    #
-    # X.680 section 17.2
-    class BuiltinValue < BaseValue
+    class SetOfType < BaseType
+
+        TAG_CLASS_NUMBER = 17
+        TAG_CLASS = :universal
+
+        def initialize(mod, opts)
+            super(mod, opts)
+            @type = RetroIDL.const_get(opts[:type][:class]).new( mod, opts[:type] )
+        end
 
     end
+
 end

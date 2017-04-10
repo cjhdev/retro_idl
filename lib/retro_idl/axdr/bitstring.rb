@@ -1,6 +1,6 @@
 module RetroIDL::AXDR
 
-    class BITSTRING
+    class BitStringType
     
     end
 

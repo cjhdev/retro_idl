@@ -1,6 +1,6 @@
 module RetroIDL::AXDR
 
-    class BOOLEAN
+    class BooleanType
 
         attr_reader :value
         def self.decode(input)

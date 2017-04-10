@@ -19,7 +19,7 @@
 
 module RetroIDL
 
-    class BOOLEAN < BaseType
+    class BooleanType < BaseType
 
         TAG_CLASS_NUMBER = 1
         TAG_CLASS = :universal

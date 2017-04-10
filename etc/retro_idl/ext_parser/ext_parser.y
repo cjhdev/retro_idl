@@ -505,26 +505,17 @@ ValueAssignment:
 /**********************************************************************/
 
 Value:
+    IntegerValue
+    |
     BooleanValue
-    |
-    NULL
-    |
-    SignedNumber
     |
     RealValue
     |
-    identifier
+    EnumeratedValue
     |
-    identifier ':' Value[subvalue]
-    {
-        $$ = rb_hash_new();
-        rb_ary_push(crefs, $$);
-        rb_hash_aset($$, $identifier, $subvalue);
-    }
+    OctetStringValue
     |
-    bstring
-    |
-    hstring
+    ChoiceValue
     |
     '{' '}'
     {
@@ -541,12 +532,6 @@ Value:
     {
         $$ = $ValueList;
     }
-    ;
-
-BooleanValue:
-    TRUE
-    |
-    FALSE
     ;
 
 NamedValueList:
@@ -661,7 +646,7 @@ UnrestrictedCharacterStringType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("CharacterString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("CharacterStringType")));
     }
     ;
     
@@ -670,91 +655,91 @@ RestrictedCharacterStringType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BMPString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BMPStringType")));
     }
     |
     GeneralString
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("GeneralString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("GeneralStringType")));
     }    
     |    
     GraphicString
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("GraphicString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("GraphicStringType")));
     }    
     |    
     IA5String
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("IA5String")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("IA5StringType")));
     }    
     |    
     ISO646String
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ISO646String")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ISO646StringType")));
     }    
     |    
     NumericString
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("NumericString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("NumericStringType")));
     }    
     |    
     PrintableString
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("PrintableString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("PrintableStringType")));
     }    
     |    
     TeletexString
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("TeletexString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("TeletexStringType")));
     }    
     |    
     T61String
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("T61String")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("T61StringType")));
     }    
     |    
     UniversalString
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("UniversalString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("UniversalStringType")));
     }    
     |    
     UTF8String
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("UTF8String")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("UTF8StringType")));
     }    
     |    
     VideotexString
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("VideotexString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("VideotexStringType")));
     }    
     |    
     VisibleString
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("VisibleString")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("VisibleStringType")));
     }    
     ;
 
@@ -777,7 +762,7 @@ ObjectIdentifierType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("OBJECTIDENTIFIER")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ObjectIdentifierType")));
     }
     ;
 
@@ -789,26 +774,45 @@ BooleanType:
     {    
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BOOLEAN")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BooleanType")));
     }
+    ;
+
+BooleanValue:
+    BooleanValueValue
+    {
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BooleanValue")));
+        rb_hash_aset($$, ID2SYM(rb_intern("value")), $BooleanValueValue);
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
+    }
+    ;
+
+BooleanValueValue:
+    TRUE
+    |
+    FALSE
     ;
 
 /**********************************************************************/
 
 IntegerType:
-    INTEGER
+    INTEGER optNamedNumberList
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("INTEGER")));        
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("IntegerType")));
+        rb_hash_aset($$, ID2SYM(rb_intern("numberList")), $optNamedNumberList);
     }
+    ;
+
+optNamedNumberList:
+    empty
     |
-    INTEGER '{' NamedNumberList '}'
+    '{' NamedNumberList '}'
     {
-        $$ = rb_hash_new();
-        rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("INTEGER")));
-        rb_hash_aset($$, ID2SYM(rb_intern("numberList")), $NamedNumberList);
+        $$ = $NamedNumberList;
     }
     ;
 
@@ -847,13 +851,24 @@ SignedNumber:
     number
     ;
 
+IntegerValue:
+    NumberOrIdentifier
+    {
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("IntegerValue")));
+        rb_hash_aset($$, ID2SYM(rb_intern("value")), $NumberOrIdentifier);
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
+    }
+    ;
+
 /**********************************************************************/
 
 EnumeratedType:
     ENUMERATED '{' Enumerations '}'
     {
         $$ = $Enumerations;
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ENUMERATED")));        
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("EnumeratedType")));        
     }
     ;
 
@@ -919,6 +934,18 @@ EnumerationItem:
     NamedNumber
     ;
 
+EnumeratedValue:
+    identifier
+    {
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("EnumeratedValue")));
+        rb_hash_aset($$, ID2SYM(rb_intern("value")), $identifier);
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
+    }
+    ;
+    
+
 /**********************************************************************/
 
 RealType:
@@ -926,11 +953,23 @@ RealType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("REAL")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("RealType")));
     }
     ;
 
+
 RealValue:
+    RealValueValue
+    {
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("RealValue")));
+        rb_hash_aset($$, ID2SYM(rb_intern("value")), $RealValueValue);
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
+    }
+    ;
+
+RealValueValue:
     NumericRealValue
     |
     SpecialRealValue
@@ -951,19 +990,12 @@ SpecialRealValue:
 /**********************************************************************/
 
 BitStringType:    
-    BIT STRING
+    BIT STRING optNamedNumberList
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BITSTRING")));        
-    }
-    |
-    BIT STRING '{' NamedNumberList '}'
-    {
-        $$ = rb_hash_new();
-        rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BITSTRING")));
-        rb_hash_aset($$, ID2SYM(rb_intern("bitList")), $NamedNumberList);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("BitStringType")));
+        rb_hash_aset($$, ID2SYM(rb_intern("bitList")), $optNamedNumberList);
     }
     ;
     
@@ -974,8 +1006,25 @@ OctetStringType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("OCTETSTRING")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("OctetStringType")));
     }
+    ;
+
+OctetStringValue:
+    OctetStringValueValue
+    {
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("OctetStringValue")));
+        rb_hash_aset($$, ID2SYM(rb_intern("value")), $OctetStringValueValue);
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
+    }
+    ;
+
+OctetStringValueValue:
+    bstring
+    |
+    hstring
     ;
 
 /**********************************************************************/
@@ -985,9 +1034,10 @@ NullType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("NULL")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("NullType")));
     }
     ;
+    
     
 /**********************************************************************/    
 
@@ -996,14 +1046,14 @@ SequenceType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCE")));  
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SequenceType")));  
     }
     |
     SEQUENCE '{' ELLIPSES ExceptionSpec OptionalExtensionMarker '}'
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCE")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SequenceType")));
         rb_hash_aset($$, ID2SYM(rb_intern("extensible")), Qtrue);
         rb_hash_aset($$, ID2SYM(rb_intern("exception")), $ExceptionSpec); 
     }
@@ -1011,7 +1061,7 @@ SequenceType:
     SEQUENCE '{' ComponentTypeLists '}'
     {
         $$ = $ComponentTypeLists;
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCE")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SequenceType")));
     }
     ;
     
@@ -1173,7 +1223,7 @@ SetType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SET"))); 
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SetType"))); 
     }
     |
     SET '{' ELLIPSES ExceptionSpec OptionalExtensionMarker '}'
@@ -1184,7 +1234,7 @@ SetType:
     SET '{' ComponentTypeLists '}'
     {
         $$ = $ComponentTypeLists;
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SET")));        
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SetType")));        
     }
     ;
 
@@ -1195,7 +1245,7 @@ SequenceOfType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SEQUENCEOF")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SequenceOfType")));
         rb_hash_aset($$, ID2SYM(rb_intern("type")), $TypeOrNamedType);
         rb_hash_aset($$, ID2SYM(rb_intern("constraints")), $OfTypeVariant);
 }
@@ -1235,7 +1285,7 @@ SetOfType:
     {
         $$ = rb_hash_new();
         rb_ary_push(crefs, $$);
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SETOF")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("SetOfType")));
         rb_hash_aset($$, ID2SYM(rb_intern("type")), $TypeOrNamedType);
         rb_hash_aset($$, ID2SYM(rb_intern("constraints")), $OfTypeVariant);
     }    
@@ -1246,7 +1296,7 @@ ChoiceType:
     CHOICE '{' AlternativeTypeLists '}'
     {
         $$ = $AlternativeTypeLists;
-        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("CHOICE")));
+        rb_hash_aset($$, ID2SYM(rb_intern("class")), ID2SYM(rb_intern("ChoiceType")));
     }
     ;
 
@@ -1324,6 +1374,17 @@ AlternativeTypeList:
     AlternativeTypeList ',' NamedType
     {
         rb_ary_push($$, $NamedType);
+    }
+    ;
+
+ChoiceValue:
+    identifier ':' Value
+    {
+        $$ = rb_hash_new();
+        rb_ary_push(crefs, $$);
+        rb_hash_aset($$, ID2SYM(rb_intern("value")), $Value);
+        rb_hash_aset($$, ID2SYM(rb_intern("key")), $identifier);
+        rb_hash_aset($$, ID2SYM(rb_intern("location")), newLocation(filename, crefs, &@$));
     }
     ;
 

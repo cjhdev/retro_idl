@@ -20,9 +20,9 @@
 
 module RetroIDL
 
-    class SequenceType < BaseType
+    class SetType < BaseType
 
-        TAG_CLASS_NUMBER = 16
+        TAG_CLASS_NUMBER = 17
         TAG_CLASS = :universal
 
         def initialize(mod, opts)

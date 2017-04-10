@@ -1,6 +1,7 @@
 module RetroIDL::AXDR
 
-    class OCTETSTRING
+    class OctetStringType
+        
         def self.min
             @min
         end
@@ -9,7 +10,7 @@ module RetroIDL::AXDR
         end
         attr_reader :value
         def self.decode(input)
-            if @min == @max
+            if @min and @max and @min == @max
                 length = @min
             else
                 length = Length.decode(input)
@@ -29,7 +30,7 @@ module RetroIDL::AXDR
         end
         def encode
             out = ""
-            if self.class.min == self.class.max
+            if self.class.min and self.class.max and self.class.min == self.class.max
                 out << Length.new(@value.size).encode
             end
             out << @value        

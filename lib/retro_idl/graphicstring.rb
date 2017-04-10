@@ -19,7 +19,7 @@
 
 module RetroIDL
 
-    class GraphicString < BaseType
+    class GraphicStringType < BaseType
 
         TAG_CLASS_NUMBER = 25
         TAG_CLASS = :universal

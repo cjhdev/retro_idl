@@ -1,7 +1,7 @@
 
 module  RetroIDL
 
-    class BITSTRING < BaseType
+    class BitStringType < BaseType
 
         TAG_CLASS_NUMBER = 3
         TAG_CLASS = :universal

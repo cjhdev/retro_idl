@@ -166,9 +166,7 @@ require "retro_idl/ext_parser"
 
 require 'retro_idl/tag'
 
-require 'retro_idl/constraint'
 require 'retro_idl/base_value'
-require 'retro_idl/builtin_value'
 require 'retro_idl/defined_value'
 require 'retro_idl/value_assignment'
 require 'retro_idl/base_type'
@@ -194,5 +192,11 @@ require 'retro_idl/boolean'
 require 'retro_idl/choice'
 require 'retro_idl/sequence'
 require 'retro_idl/sequenceof'
+require 'retro_idl/setof'
+require 'retro_idl/set'
+
+require 'retro_idl/constraint'
 
 require 'retro_idl/module'
+
+

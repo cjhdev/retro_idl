@@ -19,7 +19,7 @@
 
 module RetroIDL
 
-    class UTF8String < BaseType
+    class UTF8StringType < BaseType
 
         TAG_CLASS_NUMBER = 12
         TAG_CLASS = :universal

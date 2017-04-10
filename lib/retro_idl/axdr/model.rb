@@ -31,9 +31,9 @@ module RetroIDL
 
             private
 
+=begin
                 def _model_type(type)
-                    klass = AXDR.const_get(type.type)
-                
+                    klass = AXDR.const_get(type.type)                
                     case klass
                     when CHOICE
                         alternatives = 
@@ -41,8 +41,26 @@ module RetroIDL
 
                         end
                     when OCTETSTRING, VisibleString
-                        
+                        if type.constraint
+                            min = type.constraint.extended.minSize
+                            max = type.constraint.extended.maxSize                                                    
+                        else
+                            min = nil
+                            max = nil
+                        end
+                        Class.new(AXDR.const_get(type.type)) do
+                            @min = min
+                            @max = max                            
+                        end
+
                     when INTEGER
+                        if type.constraint
+                            min = type.constraint.root.minValue
+                            max = type.constraint.root.maxValue
+                        else
+                            min = nil
+                            max = nil
+                        end 
                         values = type.constraints.values
                         Class.new(AXDR.const_get(type.type)) do
                             @type = type
@@ -57,6 +75,8 @@ module RetroIDL
                         end
                     end
                 end
+=end
+            
 
         end
     end

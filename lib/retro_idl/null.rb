@@ -19,7 +19,7 @@
 
 module RetroIDL
 
-    class NULL < BaseType
+    class NullType < BaseType
 
         TAG_CLASS_NUMBER = 5
         TAG_CLASS = :universal

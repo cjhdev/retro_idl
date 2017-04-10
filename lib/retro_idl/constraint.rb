@@ -19,7 +19,19 @@
 
 module RetroIDL
 
+=begin
+A constraint gives you a set of permitted values, and/or, field sizes
+
+IntegerType:
+- permitted values
+
+
+
+=end
+
     class Constraints
+
+        attr_reader :constraints
         
         def initialize(mod, type, constraints)
             @constraints = constraints.inject([]){|out,c|out << Constraint.new(mod, type, c)}            
@@ -27,6 +39,18 @@ module RetroIDL
             @mod = mod
         end
 
+        # @return [Set] root constraint set
+        def root
+        end
+
+        # @return [Set] extended constraint set
+        def extended
+        end
+
+        def validate
+            @constraints.each{|c|c.validate}
+        end
+        
     end
 
     class Constraint
@@ -47,9 +71,17 @@ module RetroIDL
             
         end
 
+        def validate
+            @root.each{|e|e.validate}
+            
+            @root.each{|e|e.validate}
+        end
+        
     end
 
     class ElementSetSpec
+
+        include Enumerable
 
         def initialize(mod, type, opts)
             @mod = mod
@@ -57,6 +89,10 @@ module RetroIDL
             @location = opts[:location]
             @type = type
             @set = opts[:set].inject([]){|out,e|out << RetroIDL.const_get(e[:class]).new(mod, type, e)}
+        end
+
+        def each(&block)
+            @set.each{|set|block.call(set)}
         end
 
         def evaluate(value)
@@ -86,12 +122,21 @@ module RetroIDL
     end
 
     class Element
+
         def initialize(mod, type, opts)
             @mod = mod
+            @type = mod
         end
+        
     end
 
     class SingleValue < Element
+
+        include Comparable
+
+        def <=>(other)
+            @value.value == other.value
+        end
 
         def initialize(mod, type, opts)
             @mod = mod
@@ -101,13 +146,28 @@ module RetroIDL
             @value = opts[:value]                        
         end
 
-        def evaluate(value)
-            value == @value.value
+        def validate
+            if !@value.represents? @type
+                STDERR.puts "#{@location} error: SingleValue constraint value not valid for this type"
+            end
+            true
         end
 
     end
 
     class ValueRange < Element
+
+        include Comparable
+
+        VALID_TYPES = [
+            IntegerType,
+            RealType,
+            VisibleStringType
+        ]
+
+        def <=>(other)
+            Range.new(@upper, @lower) == other
+        end
 
         def initialize(mod, type, opts)
             @location = opts[:location]
@@ -122,16 +182,43 @@ module RetroIDL
         def evaluate(value)
             Range.new(@lower.value, @upper.value).include? value
         end
+
+        def validate
+
+            if !VALID_TYPES.include? @type.type
+                STDERR.puts "#{@location} error: ValueRange constraint not valid for this type"
+                raise            
+            end
+
+            true
+
+        end
         
     end
 
     class SizeConstraint < Element
+
+        VALID_TYPES = [
+            BitStringType,
+            OctetStringType,
+            VisibleStringType,
+            SequenceOfType,
+            SetOfType
+        ]
 
         def initialize(mod, type, opts)
             @location = opts[:location]
             @type = opts[:type]
             @constraint = Constraint.new(mod, @type, opts[:constraint])
             @mod = mod
+        end
+
+        def validate
+            if !VALID_TYPES.include? @type.type
+                STDERR.puts "#{@location} error: ValueRange constraint not valid for this type"
+                raise            
+            end
+            
         end
 
     end

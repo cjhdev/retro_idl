@@ -19,7 +19,7 @@
 
 module RetroIDL
 
-    class OCTETSTRING <BaseType
+    class OctetStringType < BaseType
 
         TAG_CLASS_NUMBER = 4
         TAG_CLASS = :universal

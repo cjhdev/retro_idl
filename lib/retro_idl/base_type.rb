@@ -21,7 +21,7 @@ module RetroIDL
 
     class BaseType
 
-        attr_reader :id, :tags, :constraints, :location
+        attr_reader :id, :location
 
         # Common type object initialisation
         #
@@ -44,12 +44,27 @@ module RetroIDL
             
         end
 
+        def constraints
+            @constraints
+        end
+
+        def tags
+            @tags
+        end
+
         def type
             self.class.to_s.split("::").last
         end
         
         def self.===(otherClass)
             self == otherClass                
+        end
+
+        def validate
+            @tags.each do |t|
+                t.validate
+            end
+            @constraints.validate
         end
 
     end

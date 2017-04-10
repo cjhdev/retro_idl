@@ -19,7 +19,7 @@
 
 module RetroIDL
 
-    class REAL < BaseType
+    class RealType < BaseType
 
         TAG_CLASS_NUMBER = 9
         TAG_CLASS = :universal

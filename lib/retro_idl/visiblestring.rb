@@ -19,7 +19,7 @@
 
 module RetroIDL
 
-    class VisibleString < BaseType
+    class VisibleStringType < BaseType
 
         TAG_CLASS_NUMBER = 26
         TAG_CLASS = :universal

@@ -1,6 +1,6 @@
 module RetroIDL::AXDR
 
-    class CHOICE
+    class ChoiceType
 
         attr_reader :value
         def self.decode(input)

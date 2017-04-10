@@ -20,7 +20,7 @@
 # X.680 section 20
 module RetroIDL
 
-    class ENUMERATED < BaseType
+    class EnumeratedType < BaseType
 
         TAG_CLASS_NUMBER = 10
         TAG_CLASS = :universal
